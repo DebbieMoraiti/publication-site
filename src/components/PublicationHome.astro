@@ -22,7 +22,7 @@ const schema = publicationWebsiteSchema(lang);
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
       <section class="publication-masthead content-container">
-        <p class="publication-kicker">Independent publication</p>
+        <p class="publication-kicker">{lang === 'el' ? 'Ανεξάρτητη έκδοση' : 'Independent publication'}</p>
         <h1>{publication.identity.name}</h1>
         <p class="publication-tagline">{publication.identity.tagline[lang]}</p>
         <p class="publication-intro">{publication.intro[lang]}</p>
@@ -35,7 +35,9 @@ const schema = publicationWebsiteSchema(lang);
             <p class="story-meta">{featured.topic[lang]} · {featured.date}</p>
             <h2 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h2>
             <p>{featured.dek[lang]}</p>
-            <span class="story-status">{lang === 'el' ? 'Προσχέδιο' : 'Draft'}</span>
+            {featured.status === 'draft' && (
+              <span class="story-status">{lang === 'el' ? 'Προσχέδιο' : 'Draft'}</span>
+            )}
           </div>
           {featured.image ? (
             <figure class="feature-image">
@@ -56,7 +58,7 @@ const schema = publicationWebsiteSchema(lang);
         </div>
         <div class="editorial-grid">
           {latest.map((article, index) => (
-            <article class="story-card" id={index === 0 ? 'people' : 'ideas'}>
+            <article class="story-card">
               {article.image ? (
                 <figure class="story-card__image story-card__media">
                   <img src={article.image} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
