@@ -1,0 +1,38 @@
+name: Dependency repair
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-dependency-repair
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: npm
+
+      - name: Install current lock
+        run: npm ci
+
+      - name: Repair production dependencies
+        run: |
+          npm install sharp@0.35.5 --save-exact
+          npm audit fix --omit=dev
+          npm audit --omit=dev --audit-level=high
+          echo "PACKAGE_JSON_B64=$(base64 -w0 package.json)"
+          echo "PACKAGE_LOCK_B64=$(base64 -w0 package-lock.json)"
