@@ -4,10 +4,11 @@ async function get(path, expectedType) {
   const response = await fetch(`${base}${path}`, { redirect: 'follow' });
   if (!response.ok) throw new Error(`${path} returned ${response.status}`);
   const type = response.headers.get('content-type') || '';
-  if (expectedType && !type.includes(expectedType)) {
+  const accepted = Array.isArray(expectedType) ? expectedType : expectedType ? [expectedType] : [];
+  if (accepted.length && !accepted.some((value) => type.includes(value))) {
     throw new Error(`${path} has unexpected content-type: ${type}`);
   }
-  return expectedType === 'image/png' ? response.arrayBuffer() : response.text();
+  return accepted.includes('image/png') ? response.arrayBuffer() : response.text();
 }
 
 function must(text, fragment, label) {
