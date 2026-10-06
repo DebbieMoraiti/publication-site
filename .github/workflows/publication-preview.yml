@@ -39,7 +39,7 @@ jobs:
       - name: Repair audited dependencies
         run: |
           npm install sharp@0.35.5 --save-exact
-          npm audit fix
+          npm audit fix --omit=dev
           echo "PACKAGE_JSON_B64=$(base64 -w0 package.json)"
           echo "PACKAGE_LOCK_B64=$(base64 -w0 package-lock.json)"
 
