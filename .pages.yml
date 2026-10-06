@@ -9,6 +9,8 @@ media:
 
 settings:
   hide: true
+  content:
+    merge: true
 
 components:
   shortCopy:
@@ -44,17 +46,18 @@ components:
         label: Ελληνικά
         type: text
 
-  paragraphCopy:
+  requiredLongCopy:
     type: object
+    required: true
     fields:
       - name: en
-        label: English paragraphs
+        label: English
         type: text
-        list: true
+        required: true
       - name: el
-        label: Ελληνικές παράγραφοι
+        label: Ελληνικά
         type: text
-        list: true
+        required: true
 
 content:
   - name: publication
@@ -100,8 +103,10 @@ content:
         label: Slug
         type: string
         required: true
-        pattern: "^[a-z0-9-]+$"
-        description: Lowercase Latin letters, digits and hyphens. Keep stable after publication.
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: "Use lowercase Latin letters, digits and hyphens only."
+        description: Keep this stable after publication; it becomes part of the article URL.
       - name: type
         label: Format / Τύπος
         type: select
@@ -127,7 +132,7 @@ content:
         label: Featured on homepage / Κεντρικό στην αρχική
         type: boolean
         default: false
-        description: Keep only one story featured at a time.
+        description: Only one article may be featured. The build rejects multiple featured stories.
       - name: date
         label: Publication date / Ημερομηνία
         type: date
@@ -156,26 +161,51 @@ content:
         label: Tags / Ετικέτες
         type: string
         list: true
-        description: Lowercase reusable tags, e.g. music, everyday-life, web.
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: "Use lowercase Latin letters, digits and hyphens only."
+        description: Reuse existing tags when possible, e.g. music, live-music, web.
       - name: title
         label: Title / Τίτλος
         component: titleCopy
       - name: dek
         label: Summary / Υπότιτλος
-        component: longCopy
-      - name: topic
-        label: Display topic label / Εμφανιζόμενο θέμα
-        component: shortCopy
-        description: Optional editorial label; the topic collection controls taxonomy.
+        component: requiredLongCopy
       - name: image
         label: Hero image / Κεντρική εικόνα
         type: image
       - name: imageAlt
         label: Image description / Περιγραφή εικόνας
         component: shortCopy
-      - name: body
-        label: Article body / Κείμενο άρθρου
-        component: paragraphCopy
+        description: Required in both languages when a hero image is used; the build validates this.
+      - name: sections
+        label: Article sections / Ενότητες άρθρου
+        type: block
+        list: true
+        blockKey: type
+        description: Build the article from paragraphs, subheadings and quotes. Drafts may be incomplete; published articles must contain content.
+        blocks:
+          - name: paragraph
+            label: Paragraph / Παράγραφος
+            fields:
+              - name: text
+                label: Text / Κείμενο
+                component: requiredLongCopy
+          - name: heading
+            label: Subheading / Υπότιτλος ενότητας
+            fields:
+              - name: text
+                label: Heading / Υπότιτλος
+                component: requiredLongCopy
+          - name: quote
+            label: Quote / Απόσπασμα
+            fields:
+              - name: text
+                label: Quote / Απόσπασμα
+                component: requiredLongCopy
+              - name: attribution
+                label: Attribution / Απόδοση
+                component: shortCopy
 
   - name: authors
     label: Authors / Συντάκτες
@@ -195,7 +225,9 @@ content:
         label: Author slug
         type: string
         required: true
-        pattern: "^[a-z0-9-]+$"
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: "Use lowercase Latin letters, digits and hyphens only."
       - name: name
         label: Public name / Δημόσιο όνομα
         type: string
@@ -220,6 +252,9 @@ content:
           - name: url
             label: HTTPS URL
             type: string
+            pattern:
+              regex: "^https://.+$"
+              message: "Use a full HTTPS URL."
 
   - name: topics
     label: Topics / Θεματικές
@@ -239,7 +274,9 @@ content:
         label: Topic slug
         type: string
         required: true
-        pattern: "^[a-z0-9-]+$"
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: "Use lowercase Latin letters, digits and hyphens only."
       - name: label
         label: Label / Ονομασία
         component: titleCopy
