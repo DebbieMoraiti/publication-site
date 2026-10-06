@@ -6,6 +6,7 @@ import { sortedVisibleArticles } from '../content/publication-data';
 import { topicBySlug } from '../content/editorial';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
+import { publicationAuthorSchema } from '../lib/publication-schema';
 
 interface Author {
   slug: string;
@@ -16,9 +17,10 @@ interface Author {
 interface Props { lang: LanguageCode; author: Author; }
 const { lang, author } = Astro.props;
 const authored = sortedVisibleArticles().filter((article) => article.author === author.slug);
+const schema = publicationAuthorSchema(lang, author);
 ---
 
-<BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]}>
+<BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]} structuredData={schema}>
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
