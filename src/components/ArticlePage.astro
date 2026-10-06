@@ -31,6 +31,7 @@ const related = moreFromTopic(article, 3);
   structuredData={schema}
   ogType="article"
   socialImage={article.image}
+  socialImageAlt={article.imageAlt?.[lang] || article.title[lang]}
   skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}
 >
   <div class="site-shell publication-shell" id="top">
