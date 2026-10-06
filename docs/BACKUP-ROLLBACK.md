@@ -1,46 +1,25 @@
 # Backup and rollback
 
-The Git repository is the source for content JSON, uploaded media, site
-configuration and code. Cloudflare holds deployed versions; Formspree holds
-submissions. Pages CMS collaborator invitations and external account/DNS
-settings are separate from the repository. Back up each service according
-to its owner and retention needs; a Git backup alone does not include those
-other records.
+The Git repository is the source of truth for publication content, configuration, uploaded media and code. Generated output in `dist/` and responsive image variants can be rebuilt.
 
-## Make and check a repository backup
+## Repository backup
 
-- Keep a private, access-controlled Git backup outside the working directory.
-  One method is `git clone --mirror <client-repository-url> <backup-directory>`.
-  Check that the backup has the expected branches and commits. Repeat the
-  backup before major changes and test restoration to a temporary private
-  repository or location. Preserve uploaded images in Git; generated image
-  variants and `dist/` can be rebuilt.
-- Record the client repository URL, last good commit, Cloudflare Worker name,
-  active deployment/version and domain in private operational notes. Export
-  Formspree submissions if the client needs their own retained copy.
-- Keep account recovery and DNS access details in a secure system outside Git.
+Before major changes, keep a private Git backup or mirror outside the working directory. Record the last known good commit and the active deployment in private operational notes.
 
-## A CMS save breaks the build
+Uploaded source images live in Git; generated variants do not need separate backup.
 
-Open the Cloudflare build log and identify the bad commit. Correct the JSON
-or uploaded file in the client branch, run `npm run check` and `npm run build`,
-and save/push the correction. A failed build does not itself promote a new
-successful production version. Confirm the active live site, then review the
-next preview before merging or saving another production change.
+## A content or CMS change breaks the build
+
+1. Open the GitHub Actions or deployment build log.
+2. Identify the first failing commit or validation error.
+3. Correct the JSON/content/image source.
+4. Run `npm run check` and `npm run build`.
+5. Push the correction and verify the preview before continuing.
+
+A failed build does not replace the last successful GitHub Pages deployment.
 
 ## A successful deployment is wrong
 
-Use **Workers & Pages → your Worker → Deployments**, locate the last known
-good deployed version, and choose its **Rollback** action. This immediately
-changes the active deployment; verify the public domain after doing so.
-Rollback is an operational recovery, not a Git source fix: revert or repair
-the bad change in the client's repository too, so the next `main` build does
-not reintroduce it. For a content-only mistake, restore the correct file from
-a known good Git commit through a reviewed change.
+Revert or repair the bad Git commit, then let the deployment workflow publish the corrected build. If Cloudflare is used later, its deployment rollback can be used as an operational recovery, but the Git source must still be fixed so the issue is not reintroduced.
 
-Cloudflare's [rollback guide](https://developers.cloudflare.com/workers/versions-and-deployments/rollbacks/)
-describes the dashboard path and version limits. GitHub's
-[repository backup guide](https://docs.github.com/en/repositories/archiving-a-github-repository/backing-up-a-repository)
-describes Git backups and restoration. The default starter has static assets
-only; if a future client adds Cloudflare data bindings, review the rollback
-limits for those resources separately.
+Do not store credentials, account recovery data or DNS secrets in this repository.
