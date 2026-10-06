@@ -1,0 +1,15 @@
+---
+import { siteConfig } from '../../config';
+import type { LanguageCode } from '../../i18n/ui';
+
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+---
+
+<section class="hero-shell" id="hero" aria-labelledby="page-title">
+  <div class="content-container">
+    {siteConfig.identity.eyebrow?.[lang]?.trim() && <p class="eyebrow">{siteConfig.identity.eyebrow[lang]}</p>}
+    <h1 id="page-title">{siteConfig.identity.name}</h1>
+    {siteConfig.identity.tagline?.[lang]?.trim() && <p class="hero-intro">{siteConfig.identity.tagline[lang]}</p>}
+  </div>
+</section>

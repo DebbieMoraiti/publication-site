@@ -1,0 +1,67 @@
+---
+import type { LanguageCode } from '../i18n/ui';
+import { formEndpoint } from '../features/optional';
+
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+const copy = lang === 'el' ? {
+  heading: 'Στείλτε μήνυμα', name: 'Όνομα', email: 'Email', message: 'Μήνυμα', send: 'Αποστολή',
+  sending: 'Αποστολή…', success: 'Το μήνυμά σας στάλθηκε. Ευχαριστούμε!',
+  failure: 'Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά ή χρησιμοποιήστε το email επικοινωνίας.',
+  limit: 'Πολλά μηνύματα σε σύντομο διάστημα. Περιμένετε λίγο και δοκιμάστε ξανά.',
+} : {
+  heading: 'Send a message', name: 'Name', email: 'Email', message: 'Message', send: 'Send message',
+  sending: 'Sending…', success: 'Your message was sent. Thank you!',
+  failure: 'Could not send your message. Please try again or use the contact email.',
+  limit: 'Too many messages in a short period. Please wait and try again.',
+};
+---
+
+{formEndpoint && (
+  <form class="contact-form" action={formEndpoint} method="POST" data-contact-form>
+    <h3>{copy.heading}</h3>
+    <label>{copy.name}<input type="text" name="name" autocomplete="name" required maxlength="120" /></label>
+    <label>{copy.email}<input type="email" name="email" autocomplete="email" required maxlength="254" /></label>
+    <label>{copy.message}<textarea name="message" required maxlength="5000" rows="6"></textarea></label>
+    <div class="form-honeypot" aria-hidden="true">
+      <label>Leave this field empty<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <button type="submit" data-submit data-send={copy.send} data-sending={copy.sending}>{copy.send}</button>
+    <p class="form-status" role="status" aria-live="polite" data-status data-success={copy.success} data-failure={copy.failure} data-limit={copy.limit}></p>
+  </form>
+)}
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const button = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    form.addEventListener('submit', async (event) => {
+      if (button.disabled) { event.preventDefault(); return; }
+      if (!form.reportValidity()) { event.preventDefault(); return; }
+      event.preventDefault();
+      button.disabled = true;
+      button.textContent = button.dataset.sending ?? '';
+      status.textContent = '';
+      status.dataset.state = '';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) {
+          status.textContent = response.status === 429 ? status.dataset.limit ?? '' : status.dataset.failure ?? '';
+          status.dataset.state = 'error';
+          return;
+        }
+        form.reset();
+        status.textContent = status.dataset.success ?? '';
+        status.dataset.state = 'success';
+      } catch {
+        status.textContent = status.dataset.failure ?? '';
+        status.dataset.state = 'error';
+      } finally {
+        button.disabled = false;
+        button.textContent = button.dataset.send ?? '';
+      }
+    });
+  });
+</script>

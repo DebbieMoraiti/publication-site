@@ -1,0 +1,85 @@
+{
+  "menu": {
+    "enabled": true,
+    "sticky": true
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "label": { "en": "Home", "el": "Αρχική" },
+      "enabled": true,
+      "order": 10,
+      "showInMenu": false
+    },
+    {
+      "id": "about",
+      "label": { "en": "About", "el": "Σχετικά" },
+      "enabled": true,
+      "order": 20,
+      "showInMenu": true
+    },
+    {
+      "id": "projects",
+      "label": { "en": "Projects", "el": "Σχήματα" },
+      "enabled": true,
+      "order": 30,
+      "showInMenu": true
+    },
+    {
+      "id": "discography",
+      "label": { "en": "Discography", "el": "Δισκογραφία" },
+      "enabled": true,
+      "order": 40,
+      "showInMenu": true
+    },
+    {
+      "id": "live",
+      "label": { "en": "Live", "el": "Εμφανίσεις" },
+      "enabled": true,
+      "order": 50,
+      "showInMenu": true
+    },
+    {
+      "id": "media",
+      "label": { "en": "Media", "el": "Πολυμέσα" },
+      "enabled": true,
+      "order": 60,
+      "showInMenu": true
+    },
+    {
+      "id": "services",
+      "label": { "en": "Teaching & Services", "el": "Διδασκαλία & Υπηρεσίες" },
+      "enabled": true,
+      "order": 70,
+      "showInMenu": true
+    },
+    {
+      "id": "contact",
+      "label": { "en": "Contact", "el": "Επικοινωνία" },
+      "enabled": true,
+      "order": 80,
+      "showInMenu": true
+    },
+    {
+      "id": "pressKit",
+      "label": { "en": "Press Kit", "el": "Υλικό για ΜΜΕ" },
+      "enabled": false,
+      "order": 90,
+      "showInMenu": true
+    }
+  ],
+  "detailPages": {
+    "projects": false,
+    "discography": false,
+    "live": true
+  },
+  "live": {
+    "archiveEnabled": true
+  },
+  "features": {
+    "bilingual": true,
+    "cms": true,
+    "audioIntro": false,
+    "contactForm": false
+  }
+}

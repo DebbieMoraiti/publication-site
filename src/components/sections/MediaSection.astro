@@ -1,0 +1,36 @@
+---
+import media from '../../content/media.json';
+import type { LanguageCode } from '../../i18n/ui';
+import { safeEmbed, safeLink } from '../../content/links';
+import { siteConfig } from '../../config';
+
+interface MediaItem {
+  title: Record<LanguageCode, string>;
+  embedUrl?: string;
+  url?: string;
+}
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+const embedAllowed = siteConfig.privacy.allowThirdPartyEmbeds;
+const items = (media.items as MediaItem[] ?? []).filter((item) => item?.title?.[lang]?.trim() && ((embedAllowed && safeEmbed(item.embedUrl)) || safeLink(item.url)));
+---
+
+{media.intro?.[lang]?.trim() && <p class="section-intro">{media.intro[lang]}</p>}
+{items.length > 0 && (
+  <ul class="content-cards">
+    {items.map((item) => (
+      <li>
+        <article class="content-card">
+          {embedAllowed && safeEmbed(item.embedUrl) && (
+            <div class="video-frame">
+              <iframe src={safeEmbed(item.embedUrl)} title={item.title[lang]} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          )}
+          <div class="card-body">
+            {safeLink(item.url) ? <h3><a href={safeLink(item.url)}>{item.title[lang]}</a></h3> : <h3>{item.title[lang]}</h3>}
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+)}

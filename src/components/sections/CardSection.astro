@@ -1,0 +1,42 @@
+---
+import type { LanguageCode } from '../../i18n/ui';
+import { safeLink } from '../../content/links';
+import ResponsiveImage from '../ResponsiveImage.astro';
+
+type Bilingual = Record<LanguageCode, string>;
+interface Card {
+  title: Bilingual;
+  subtitle?: Bilingual;
+  description?: Bilingual;
+  image?: string;
+  imageAlt?: Bilingual;
+  imagePositionX?: number;
+  imagePositionY?: number;
+  imageZoom?: number;
+  url?: string;
+}
+interface Props { lang: LanguageCode; intro: Bilingual; items: Card[] }
+
+const { lang, intro, items } = Astro.props;
+const visibleItems = (items ?? []).filter((item) => item?.title?.[lang]?.trim());
+---
+
+{intro?.[lang]?.trim() && <p class="section-intro">{intro[lang]}</p>}
+{visibleItems.length > 0 && (
+  <ul class="content-cards">
+    {visibleItems.map((item) => (
+      <li>
+        <article class="content-card">
+          <ResponsiveImage src={item.image} alt={item.imageAlt?.[lang] ?? ''} variant="card" positionX={item.imagePositionX} positionY={item.imagePositionY} zoom={item.imageZoom} />
+          <div class="card-body">
+            {safeLink(item.url) ? (
+              <h3><a href={safeLink(item.url)}>{item.title[lang]}</a></h3>
+            ) : <h3>{item.title[lang]}</h3>}
+            {item.subtitle?.[lang]?.trim() && <p class="card-subtitle">{item.subtitle[lang]}</p>}
+            {item.description?.[lang]?.trim() && <p>{item.description[lang]}</p>}
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+)}

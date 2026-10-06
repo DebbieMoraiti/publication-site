@@ -1,0 +1,12 @@
+---
+import DemoHome from '../../components/DemoHome.astro';
+import { secondaryLanguages } from '../../i18n/routes';
+
+export function getStaticPaths() {
+  return secondaryLanguages.map(({ code }) => ({ params: { lang: code } }));
+}
+
+const lang = Astro.params.lang as 'en' | 'el';
+---
+
+<DemoHome lang={lang} />

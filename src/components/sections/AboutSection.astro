@@ -1,0 +1,13 @@
+---
+import about from '../../content/about.json';
+import ResponsiveImage from '../ResponsiveImage.astro';
+import type { LanguageCode } from '../../i18n/ui';
+
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+const paragraphs = (about.paragraphs?.[lang] ?? []).filter((paragraph) => paragraph?.trim());
+---
+
+{about.intro?.[lang]?.trim() && <p class="section-intro">{about.intro[lang]}</p>}
+{paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+<ResponsiveImage src={about.image} alt={about.imageAlt?.[lang] ?? ''} variant="portrait" positionX={about.imagePositionX} positionY={about.imagePositionY} zoom={about.imageZoom} />

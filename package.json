@@ -1,0 +1,31 @@
+{
+  "name": "artist-website-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/build-images.mjs",
+    "prebuild": "node scripts/build-images.mjs",
+    "precheck": "node scripts/build-images.mjs",
+    "postbuild": "node scripts/sanitize-deployed-images.mjs && node scripts/security-headers.mjs",
+    "check": "astro check",
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "7.3.3",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/node": "26.6.2",
+    "typescript": "6.0.3",
+    "wrangler": "4.136.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

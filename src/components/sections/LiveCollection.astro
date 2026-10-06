@@ -1,0 +1,84 @@
+---
+import { enabledSections, moduleConfig, siteConfig } from '../../config';
+import live from '../../content/live.json';
+import { safeLink } from '../../content/links';
+import { languagePath } from '../../i18n/routes';
+import { displayDate, organizeEvents, todayInZone, type LiveEvent } from '../../live/events';
+import type { LanguageCode } from '../../i18n/ui';
+import ResponsiveImage from '../ResponsiveImage.astro';
+
+interface Props { lang: LanguageCode; archive: boolean }
+const { lang, archive } = Astro.props;
+const { upcoming, past } = organizeEvents((live.items ?? []) as LiveEvent[], todayInZone(siteConfig.localization.timeZone));
+const archiveAvailable = enabledSections.some((section) => section.id === 'live') &&
+  moduleConfig.detailPages.live && moduleConfig.live.archiveEnabled;
+const labels = lang === 'el'
+  ? { upcoming: 'Επόμενες εμφανίσεις', past: 'Παλαιότερες εμφανίσεις', tickets: 'Εισιτήρια', archive: 'Όλες οι εμφανίσεις' }
+  : { upcoming: 'Upcoming performances', past: 'Past performances', tickets: 'Tickets', archive: 'All live dates' };
+const groupId = archive ? 'archive' : 'home';
+---
+
+<div data-live-module data-time-zone={siteConfig.localization.timeZone}>
+  {archive ? <h2 id={`${groupId}-upcoming`}>{labels.upcoming}</h2> : <h3 id={`${groupId}-upcoming`}>{labels.upcoming}</h3>}
+  <ul class="live-list" aria-labelledby={`${groupId}-upcoming`} data-live-upcoming>
+    {upcoming.map((event) => (
+      <li class="live-item" data-live-event data-event-date={event.date} data-event-id={event.id}>
+        <ResponsiveImage src={event.poster} alt={event.posterAlt?.[lang] || event.title[lang]} variant="poster" />
+        <div class="live-details">
+          {archive ? <h3>{event.title[lang]}</h3> : <h4>{event.title[lang]}</h4>}
+          {(event.venue?.trim() || event.city?.trim()) && <p>{[event.venue?.trim(), event.city?.trim()].filter(Boolean).join(' · ')}</p>}
+        </div>
+        <time datetime={event.date}>{displayDate(event.date, lang)}</time>
+        {safeLink(event.ticketUrl?.[lang]) && <a href={safeLink(event.ticketUrl?.[lang])}>{labels.tickets}</a>}
+      </li>
+    ))}
+  </ul>
+  {live.emptyUpcoming?.[lang]?.trim() && <p data-live-empty-upcoming hidden={upcoming.length > 0}>{live.emptyUpcoming[lang]}</p>}
+
+  {archive && (
+    <section class="live-archive-group" aria-labelledby={`${groupId}-past`}>
+      <h2 id={`${groupId}-past`}>{labels.past}</h2>
+      <ul class="live-list" aria-labelledby={`${groupId}-past`} data-live-past>
+        {past.map((event) => (
+          <li class="live-item" data-live-event data-event-date={event.date} data-event-id={event.id}>
+            <ResponsiveImage src={event.poster} alt={event.posterAlt?.[lang] || event.title[lang]} variant="poster" />
+            <div class="live-details">
+              <h3>{event.title[lang]}</h3>
+              {(event.venue?.trim() || event.city?.trim()) && <p>{[event.venue?.trim(), event.city?.trim()].filter(Boolean).join(' · ')}</p>}
+            </div>
+            <time datetime={event.date}>{displayDate(event.date, lang)}</time>
+            {safeLink(event.ticketUrl?.[lang]) && <a href={safeLink(event.ticketUrl?.[lang])}>{labels.tickets}</a>}
+          </li>
+        ))}
+      </ul>
+      {live.emptyPast?.[lang]?.trim() && <p data-live-empty-past hidden={past.length > 0}>{live.emptyPast[lang]}</p>}
+    </section>
+  )}
+
+  {!archive && archiveAvailable && <p><a href={languagePath(lang, 'live')}>{labels.archive}</a></p>}
+</div>
+
+<script>
+  import { todayInZone } from '../../live/events';
+
+  document.querySelectorAll<HTMLElement>('[data-live-module]').forEach((root) => {
+    const today = todayInZone(root.dataset.timeZone ?? 'UTC');
+    const upcomingList = root.querySelector<HTMLElement>('[data-live-upcoming]');
+    const pastList = root.querySelector<HTMLElement>('[data-live-past]');
+    if (!upcomingList) return;
+    const events = Array.from(root.querySelectorAll<HTMLElement>('[data-live-event]'));
+    const upcoming = events.filter((event) => (event.dataset.eventDate ?? '') >= today)
+      .sort((a, b) => (a.dataset.eventDate ?? '').localeCompare(b.dataset.eventDate ?? '') ||
+        (a.dataset.eventId ?? '').localeCompare(b.dataset.eventId ?? ''));
+    const past = events.filter((event) => (event.dataset.eventDate ?? '') < today)
+      .sort((a, b) => (b.dataset.eventDate ?? '').localeCompare(a.dataset.eventDate ?? '') ||
+        (a.dataset.eventId ?? '').localeCompare(b.dataset.eventId ?? ''));
+    upcomingList.append(...upcoming);
+    if (pastList) pastList.append(...past);
+    else past.forEach((event) => event.remove());
+    const emptyUpcoming = root.querySelector<HTMLElement>('[data-live-empty-upcoming]');
+    const emptyPast = root.querySelector<HTMLElement>('[data-live-empty-past]');
+    if (emptyUpcoming) emptyUpcoming.hidden = upcoming.length > 0;
+    if (emptyPast) emptyPast.hidden = past.length > 0;
+  });
+</script>

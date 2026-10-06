@@ -1,0 +1,22 @@
+{
+  "intro": {
+    "en": "A short introduction to the artist belongs here.",
+    "el": "Εδώ μπαίνει μια σύντομη παρουσίαση του καλλιτέχνη."
+  },
+  "paragraphs": {
+    "en": [
+      "Replace this sample with the artist's biography."
+    ],
+    "el": [
+      "Αντικαταστήστε αυτό το δείγμα με το βιογραφικό του καλλιτέχνη."
+    ]
+  },
+  "image": "",
+  "imageAlt": {
+    "en": "",
+    "el": ""
+  },
+  "imagePositionX": 50,
+  "imagePositionY": 50,
+  "imageZoom": 1
+}

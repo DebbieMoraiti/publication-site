@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+import { siteConfig, themeConfig } from '../config';
+import { absoluteUrl, alternates, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
+import { buildStructuredData } from '../lib/schema';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: LanguageCode;
+  skipText?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  lang = siteConfig.localization.defaultLanguage as LanguageCode,
+  skipText = 'Skip to content',
+  noindex = false,
+} = Astro.props;
+
+const page = pageFromPath(Astro.url.pathname);
+const canonical = absoluteUrl(languagePath(lang, page));
+const translations = alternates(page);
+const pageTitle = title ?? `${siteConfig.identity.name} — ${siteConfig.seo.titleSuffix[lang]}`;
+const pageDescription = description ?? siteConfig.seo.description[lang];
+const image = absoluteUrl(siteConfig.seo.shareImage.trim() || '/social-share.png');
+const locale = lang === 'el' ? 'el_GR' : 'en_US';
+const graph = buildStructuredData(lang, page, pageTitle, pageDescription);
+const structuredData = graph ? JSON.stringify(graph).replace(/</g, '\\u003c') : undefined;
+
+const themeVariables = [
+  `--color-background: ${themeConfig.colors.background}`,
+  `--color-surface: ${themeConfig.colors.surface}`,
+  `--color-text: ${themeConfig.colors.text}`,
+  `--color-text-muted: ${themeConfig.colors.textMuted}`,
+  `--color-accent: ${themeConfig.colors.accent}`,
+  `--color-accent-text: ${themeConfig.colors.accentText}`,
+  `--color-border: ${themeConfig.colors.border}`,
+  `--font-body: ${themeConfig.typography.bodyFont}`,
+  `--font-heading: ${themeConfig.typography.headingFont}`,
+  `--font-size-base: ${themeConfig.typography.baseSize}`,
+  `--space-page-inline: ${themeConfig.spacing.pageInline}`,
+  `--space-section-block: ${themeConfig.spacing.sectionBlock}`,
+  `--content-width: ${themeConfig.spacing.contentWidth}`,
+  `--radius-button: ${themeConfig.radii.button}`,
+  `--radius-card: ${themeConfig.radii.card}`,
+  `--background-page: ${themeConfig.backgrounds.page}`,
+  `--background-hero: ${themeConfig.backgrounds.hero}`,
+].join(';');
+---
+
+<!doctype html>
+<html lang={lang} style={themeVariables}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={pageDescription} />
+    {(noindex || !siteConfig.seo.indexable) && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={canonical} />
+    {translations.map(({ lang: alternateLanguage, url }) => (
+      <link rel="alternate" hreflang={alternateLanguage} href={url} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl('/')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.identity.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:locale:alternate" content={lang === 'el' ? 'en_US' : 'el_GR'} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={siteConfig.identity.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={image} />
+    {structuredData && <script type="application/ld+json" set:html={structuredData} />}
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{skipText}</a>
+    <slot />
+  </body>
+</html>

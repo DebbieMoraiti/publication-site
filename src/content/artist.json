@@ -1,0 +1,33 @@
+{
+  "identity": {
+    "name": "Artist Name",
+    "eyebrow": {
+      "en": "Config-driven starter",
+      "el": "Πρότυπο με κεντρικές ρυθμίσεις"
+    },
+    "tagline": {
+      "en": "A flexible foundation for an independent artist website.",
+      "el": "Μια ευέλικτη βάση για την ιστοσελίδα ενός ανεξάρτητου καλλιτέχνη."
+    }
+  },
+  "contact": {
+    "email": ""
+  },
+  "socials": [
+    {
+      "platform": "instagram",
+      "url": "",
+      "verifiedPublic": false
+    },
+    {
+      "platform": "youtube",
+      "url": "",
+      "verifiedPublic": false
+    },
+    {
+      "platform": "facebook",
+      "url": "",
+      "verifiedPublic": false
+    }
+  ]
+}

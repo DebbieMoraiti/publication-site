@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config';
+---
+
+<BaseLayout noindex title={`Image preview — ${siteConfig.identity.name}`}>
+  <main id="main-content" class="content-container image-preview-tool">
+    <h1>Image preview <small>/ Προεπισκόπηση εικόνας</small></h1>
+    <p>Choose an image from your device. It stays in your browser; this tool does not upload or save it. Copy the three numbers into the matching Pages CMS fields.</p>
+    <p>Επίλεξε εικόνα από τη συσκευή σου. Παραμένει στον browser· δεν αποθηκεύεται εδώ. Αντέγραψε τις τρεις τιμές στα αντίστοιχα πεδία του Pages CMS.</p>
+    <div class="preview-controls">
+      <label>Image / Εικόνα <input id="preview-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif" /></label>
+      <label>Frame / Πλαίσιο <select id="preview-frame"><option value="card">Card 16:9 / Κάρτα</option><option value="portrait">Portrait 4:3 / Πορτρέτο</option></select></label>
+      <label>Horizontal focus / Οριζόντια θέση <input id="preview-x" type="range" min="0" max="100" value="50" /><output for="preview-x">50</output>%</label>
+      <label>Vertical focus / Κάθετη θέση <input id="preview-y" type="range" min="0" max="100" value="50" /><output for="preview-y">50</output>%</label>
+      <label>Zoom / Μεγέθυνση <input id="preview-zoom" type="range" min="1" max="2" step="0.05" value="1" /><output for="preview-zoom">1</output></label>
+    </div>
+    <div id="preview-box" class="responsive-image responsive-image--card" aria-label="Selected crop preview">
+      <img id="preview-image" alt="" hidden />
+    </div>
+    <p id="preview-status" role="status">Select an image to preview. / Επίλεξε εικόνα για προεπισκόπηση.</p>
+    <p><a href="/">← Home / Αρχική</a></p>
+  </main>
+</BaseLayout>
+
+<style>
+  .image-preview-tool { padding-block: 3rem 6rem; }
+  .image-preview-tool h1 { max-width: none; font-size: clamp(2rem, 5vw, 3.5rem); }
+  .image-preview-tool small { display: block; font-size: .45em; margin-top: .5em; }
+  .preview-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1.5rem; margin-block: 2rem; }
+  .preview-controls label { display: grid; align-content: start; gap: .5rem; }
+  .preview-controls input, .preview-controls select { max-width: 100%; }
+  #preview-box { max-width: 48rem; width: 100%; border: 1px solid var(--color-border); background: var(--color-surface); }
+  #preview-box img[hidden] { display: none; }
+</style>
+
+<script>
+  const fileInput = document.querySelector<HTMLInputElement>('#preview-file')!;
+  const frame = document.querySelector<HTMLSelectElement>('#preview-frame')!;
+  const box = document.querySelector<HTMLElement>('#preview-box')!;
+  const preview = document.querySelector<HTMLImageElement>('#preview-image')!;
+  const status = document.querySelector<HTMLElement>('#preview-status')!;
+  const controls = ['x', 'y', 'zoom'] as const;
+  let objectUrl = '';
+  function update() {
+    for (const key of controls) {
+      const input = document.querySelector<HTMLInputElement>(`#preview-${key}`)!;
+      document.querySelector<HTMLOutputElement>(`output[for="preview-${key}"]`)!.value = input.value;
+      box.style.setProperty(`--image-${key}`, key === 'zoom' ? input.value : `${input.value}%`);
+    }
+    box.classList.toggle('responsive-image--portrait', frame.value === 'portrait');
+    box.classList.toggle('responsive-image--card', frame.value === 'card');
+  }
+  for (const key of controls) document.querySelector(`#preview-${key}`)!.addEventListener('input', update);
+  frame.addEventListener('change', update);
+  fileInput.addEventListener('change', () => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    const file = fileInput.files?.[0];
+    if (!file || !['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type) || file.size > 12 * 1024 * 1024) {
+      preview.hidden = true;
+      status.textContent = 'Choose a JPG, PNG, WebP or AVIF image up to 12 MB. / Επίλεξε εικόνα έως 12 MB.';
+      return;
+    }
+    objectUrl = URL.createObjectURL(file);
+    preview.src = objectUrl;
+    preview.hidden = false;
+    status.textContent = file.name;
+  });
+  window.addEventListener('pagehide', () => { if (objectUrl) URL.revokeObjectURL(objectUrl); });
+  update();
+</script>

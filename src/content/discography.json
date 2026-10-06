@@ -1,0 +1,16 @@
+{
+  "intro": {
+    "en": "Releases or other works can appear here in a single list.",
+    "el": "Εδώ μπορούν να εμφανιστούν κυκλοφορίες ή άλλα έργα σε μία λίστα."
+  },
+  "items": [
+    {
+      "title": { "en": "Example release", "el": "Ενδεικτική κυκλοφορία" },
+      "subtitle": { "en": "Release details", "el": "Στοιχεία κυκλοφορίας" },
+      "description": { "en": "Add the actual title, artist, year and listening link.", "el": "Προσθέστε τον πραγματικό τίτλο, καλλιτέχνη, έτος και σύνδεσμο ακρόασης." },
+      "image": "",
+      "imageAlt": { "en": "", "el": "" },
+      "url": ""
+    }
+  ]
+}

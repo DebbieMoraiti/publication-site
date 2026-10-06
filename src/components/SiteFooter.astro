@@ -1,0 +1,51 @@
+---
+import { enabledSections, siteConfig } from '../config';
+import { ui, type LanguageCode } from '../i18n/ui';
+import { safeEmail, safeLink } from '../content/links';
+
+interface Props {
+  lang: LanguageCode;
+}
+
+const { lang } = Astro.props;
+const copy = ui[lang];
+const contactEnabled = enabledSections.some((section) => section.id === 'contact');
+const visibleSocials = contactEnabled ? (siteConfig.socials ?? []).filter((social) => safeLink(social.url)) : [];
+const email = contactEnabled && siteConfig.privacy.publishPublicEmail ? safeEmail(siteConfig.contact?.email) : '';
+const creditUrl = safeLink(siteConfig.credit.url);
+const showCredit =
+  siteConfig.credit.enabled &&
+  siteConfig.credit.name.trim().length > 0 &&
+  creditUrl.length > 0;
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong>{siteConfig.identity.name}</strong>
+      <p>{copy.footerDescription}</p>
+    </div>
+
+    {(email || visibleSocials.length > 0) && (
+      <div class="footer-links">
+        {email && <a href={`mailto:${email}`}>{email}</a>}
+        {visibleSocials.map((social) => (
+          <a href={safeLink(social.url)} rel="me noopener" target="_blank">{social.platform}</a>
+        ))}
+      </div>
+    )}
+
+    <div class="footer-meta">
+      <span>© {new Date().getFullYear()} {siteConfig.identity.name}</span>
+      <a href="#top">{copy.backToTop}</a>
+      {showCredit && (
+        <span>
+          {siteConfig.credit.label}{' '}
+          <a href={creditUrl} rel="noopener noreferrer" target="_blank">
+            {siteConfig.credit.name}
+          </a>
+        </span>
+      )}
+    </div>
+  </div>
+</footer>

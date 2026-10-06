@@ -1,0 +1,37 @@
+{
+  "colors": {
+    "background": "#f4f4f5",
+    "surface": "#ffffff",
+    "text": "#18181b",
+    "textMuted": "#52525b",
+    "accent": "#2563eb",
+    "accentText": "#ffffff",
+    "border": "#d4d4d8"
+  },
+  "typography": {
+    "bodyFont": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "headingFont": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "baseSize": "16px"
+  },
+  "spacing": {
+    "pageInline": "clamp(1rem, 4vw, 2rem)",
+    "sectionBlock": "clamp(3rem, 8vw, 6rem)",
+    "contentWidth": "70rem"
+  },
+  "radii": {
+    "button": "999px",
+    "card": "1rem"
+  },
+  "buttons": {
+    "background": "#2563eb",
+    "text": "#ffffff"
+  },
+  "cards": {
+    "background": "#ffffff",
+    "border": "#d4d4d8"
+  },
+  "backgrounds": {
+    "page": "#f4f4f5",
+    "hero": "linear-gradient(135deg, #ffffff 0%, #eff6ff 100%)"
+  }
+}

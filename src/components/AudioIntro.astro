@@ -1,0 +1,86 @@
+---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { siteConfig } from '../config';
+import { audioSource } from '../features/optional';
+import type { LanguageCode } from '../i18n/ui';
+
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+if (audioSource && !existsSync(path.resolve('public', audioSource.slice(1)))) {
+  throw new Error(`Audio intro file not found: ${audioSource}`);
+}
+const copy = lang === 'el'
+  ? { play: 'Αναπαραγωγή εισαγωγικού ήχου', stop: 'Διακοπή εισαγωγικού ήχου', blocked: 'Ο browser απέτρεψε την αυτόματη αναπαραγωγή. Πατήστε το κουμπί ήχου.', failed: 'Δεν ήταν δυνατή η αναπαραγωγή του ήχου.' }
+  : { play: 'Play audio intro', stop: 'Stop audio intro', blocked: 'Automatic playback was blocked. Use the audio button to play.', failed: 'Could not play the audio intro.' };
+---
+
+{audioSource && (
+  <div class="audio-control" data-audio-control data-autoplay={String(siteConfig.audio.autoplayOncePerTab)}>
+    <button class="audio-toggle" type="button" aria-pressed="false" aria-label={copy.play} title={copy.play}
+      data-audio-toggle data-play-label={copy.play} data-stop-label={copy.stop} data-blocked-label={copy.blocked} data-failed-label={copy.failed}>
+      <span class="audio-glyph" aria-hidden="true">♫</span>
+      <span class="audio-off-line" aria-hidden="true"></span>
+    </button>
+    <audio src={audioSource} preload="none" data-intro-audio></audio>
+    <span class="visually-hidden" role="status" aria-live="polite" data-audio-status></span>
+  </div>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-audio-control]').forEach((control) => {
+    const button = control.querySelector<HTMLButtonElement>('[data-audio-toggle]')!;
+    const audio = control.querySelector<HTMLAudioElement>('[data-intro-audio]')!;
+    const status = control.querySelector<HTMLElement>('[data-audio-status]')!;
+    let requested = false;
+    let playAttempt = 0;
+    const setPlaying = (playing: boolean) => {
+      button.setAttribute('aria-pressed', String(playing));
+      button.setAttribute('aria-label', playing ? button.dataset.stopLabel ?? '' : button.dataset.playLabel ?? '');
+      button.title = button.getAttribute('aria-label') ?? '';
+    };
+    const start = async (automatic = false) => {
+      const attempt = ++playAttempt;
+      requested = true;
+      audio.muted = false;
+      setPlaying(true);
+      try {
+        await audio.play();
+        if (attempt !== playAttempt) return;
+        if (!requested) {
+          audio.muted = true;
+          audio.pause();
+          audio.currentTime = 0;
+        } else status.textContent = '';
+      } catch {
+        if (attempt !== playAttempt || !requested) return;
+        requested = false;
+        setPlaying(false);
+        status.textContent = automatic ? button.dataset.blockedLabel ?? '' : button.dataset.failedLabel ?? '';
+      }
+    };
+    button.addEventListener('click', () => {
+      if (requested || !audio.paused) {
+        playAttempt++;
+        requested = false;
+        audio.muted = true;
+        audio.pause();
+        audio.currentTime = 0;
+        setPlaying(false);
+        status.textContent = '';
+      } else void start();
+    });
+    audio.addEventListener('play', () => { if (requested) setPlaying(true); else audio.pause(); });
+    audio.addEventListener('pause', () => { if (!requested) setPlaying(false); });
+    audio.addEventListener('ended', () => { requested = false; setPlaying(false); });
+    if (control.dataset.autoplay === 'true' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const key = `artist-audio-attempted:${audio.currentSrc || audio.src}`;
+      let attempted = false;
+      try { attempted = sessionStorage.getItem(key) === '1'; } catch { attempted = true; }
+      if (!attempted) {
+        try { sessionStorage.setItem(key, '1'); } catch { /* Autoplay is optional. */ }
+        void start(true);
+      }
+    }
+  });
+</script>

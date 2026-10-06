@@ -1,0 +1,21 @@
+---
+import contact from '../../content/contact.json';
+import { siteConfig } from '../../config';
+import type { LanguageCode } from '../../i18n/ui';
+import { safeEmail, safeLink } from '../../content/links';
+import ContactForm from '../ContactForm.astro';
+
+interface Props { lang: LanguageCode }
+const { lang } = Astro.props;
+const socials = (siteConfig.socials ?? []).filter((social) => safeLink(social.url));
+const email = siteConfig.privacy.publishPublicEmail ? safeEmail(siteConfig.contact?.email) : '';
+---
+
+{contact.intro?.[lang]?.trim() && <p class="section-intro">{contact.intro[lang]}</p>}
+{(email || socials.length > 0) && (
+  <ul class="contact-links">
+    {email && <li><a href={`mailto:${email}`}>{email}</a></li>}
+    {socials.map((social) => <li><a href={safeLink(social.url)} rel="me noopener" target="_blank">{social.platform}</a></li>)}
+  </ul>
+)}
+<ContactForm lang={lang} />
