@@ -17,9 +17,9 @@ const labels = lang === 'el'
     <a class="editorial-brand" href={languagePath(lang)}>{publication.identity.name}</a>
     <nav class="editorial-nav" aria-label={labels.menu}>
       <a href={homeSection('stories')}>{labels.stories}</a>
-      <a href={homeSection('people')}>{labels.people}</a>
-      <a href={homeSection('ideas')}>{labels.ideas}</a>
-      <a href={homeSection('culture')}>{labels.culture}</a>
+      <a href={languagePath(lang, 'topics/people')}>{labels.people}</a>
+      <a href={languagePath(lang, 'topics/ideas')}>{labels.ideas}</a>
+      <a href={languagePath(lang, 'topics/culture')}>{labels.culture}</a>
       <a href={languagePath(lang, 'archive')}>{labels.archive}</a>
     </nav>
     <nav class="editorial-languages" aria-label={lang === 'el' ? 'Γλώσσα' : 'Language'}>
