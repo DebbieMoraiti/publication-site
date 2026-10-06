@@ -1,5 +1,6 @@
 import { absoluteUrl, languagePath, type LanguageCode } from '../i18n/routes';
 import publication from '../content/publication.json';
+import { topicBySlug } from '../content/editorial';
 
 type Localized = { en: string; el: string };
 type Author = { slug: string; name: string; role?: Localized; bio?: Localized };
@@ -14,7 +15,7 @@ type Article = {
   image?: string;
   title: Localized;
   dek: Localized;
-  topic: Localized;
+  topic?: Localized;
 };
 
 export function publicationWebsiteSchema(lang: LanguageCode) {
@@ -48,6 +49,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
   const url = absoluteUrl(languagePath(lang, `articles/${article.slug}`));
   const authorUrl = author ? absoluteUrl(languagePath(lang, `authors/${author.slug}`)) : undefined;
   const topicUrl = absoluteUrl(languagePath(lang, `topics/${article.topicSlug}`));
+  const topicLabel = topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug;
   const articleType = article.type === 'essay' ? 'Article' : 'BlogPosting';
   const articleImage = article.image?.startsWith('/') ? absoluteUrl(article.image) : undefined;
 
@@ -71,7 +73,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         dateModified: article.date,
         inLanguage: lang,
         keywords: article.tags ?? [],
-        articleSection: article.topic[lang],
+        articleSection: topicLabel,
         image: articleImage,
         isPartOf: { '@id': `${home}#website` },
         mainEntityOfPage: { '@id': `${url}#webpage` },
@@ -97,7 +99,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         '@id': `${url}#breadcrumb`,
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: publication.identity.name, item: home },
-          { '@type': 'ListItem', position: 2, name: article.topic[lang], item: topicUrl },
+          { '@type': 'ListItem', position: 2, name: topicLabel, item: topicUrl },
           { '@type': 'ListItem', position: 3, name: article.title[lang], item: url },
         ],
       },
