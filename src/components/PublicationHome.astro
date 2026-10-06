@@ -6,7 +6,7 @@ import publication from '../content/publication.json';
 import { visibleArticles } from '../content/publication-data';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
 import { topicBySlug } from '../content/editorial';
-import { languagePath, type LanguageCode } from '../i18n/routes';
+import { assetPath, languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
@@ -42,7 +42,7 @@ const schema = publicationWebsiteSchema(lang);
           </div>
           {featured.image ? (
             <figure class="feature-image">
-              <img src={featured.image} alt={featured.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+              <img src={assetPath(featured.image)} alt={featured.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
             </figure>
           ) : (
             <div class="feature-placeholder" aria-hidden="true">
@@ -62,7 +62,7 @@ const schema = publicationWebsiteSchema(lang);
             <article class="story-card">
               {article.image ? (
                 <figure class="story-card__image story-card__media">
-                  <img src={article.image} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
+                  <img src={assetPath(article.image)} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
                 </figure>
               ) : (
                 <div class="story-card__image" aria-hidden="true"></div>
