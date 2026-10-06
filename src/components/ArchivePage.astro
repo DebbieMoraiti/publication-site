@@ -6,18 +6,23 @@ import { sortedVisibleArticles } from '../content/publication-data';
 import { authorBySlug, topicBySlug } from '../content/editorial';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
+import { publicationCollectionSchema } from '../lib/publication-schema';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
 const sorted = sortedVisibleArticles();
 const authorMap = authorBySlug;
 const topicMap = topicBySlug;
+const pageTitle = lang === 'el' ? 'Αρχείο' : 'Archive';
+const pageDescription = lang === 'el' ? 'Όλες οι δημοσιεύσεις του publication.' : 'All stories published by the publication.';
+const schema = publicationCollectionSchema(lang, 'archive', pageTitle, pageDescription);
 ---
 
 <BaseLayout
   lang={lang}
-  title={`${lang === 'el' ? 'Αρχείο' : 'Archive'} — ${publication.identity.name}`}
-  description={lang === 'el' ? 'Όλες οι δημοσιεύσεις του publication.' : 'All stories published by the publication.'}
+  title={`${pageTitle} — ${publication.identity.name}`}
+  description={pageDescription}
+  structuredData={schema}
 >
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
