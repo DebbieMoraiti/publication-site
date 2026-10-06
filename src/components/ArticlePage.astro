@@ -6,7 +6,7 @@ import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
 import { articleNeighbors, moreFromTopic } from '../content/publication-data';
 import { publicationArticleSchema } from '../lib/publication-schema';
-import { languagePath, type LanguageCode } from '../i18n/routes';
+import { assetPath, languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props {
   lang: LanguageCode;
@@ -67,7 +67,7 @@ const related = moreFromTopic(article, 3);
 
         {article.image ? (
           <figure class="article-hero">
-            <img src={article.image} alt={article.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+            <img src={assetPath(article.image)} alt={article.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
           </figure>
         ) : (
           <div class="article-hero-placeholder" aria-hidden="true"></div>
