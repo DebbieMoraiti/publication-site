@@ -3,8 +3,8 @@ import TagPage from '../../../components/TagPage.astro';
 import { visibleArticles } from '../../../content/publication-data';
 import { secondaryLanguages } from '../../../i18n/routes';
 
-const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
 export function getStaticPaths() {
+  const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
   return secondaryLanguages.flatMap(({ code }) =>
     tags.map((tag) => ({ params: { lang: code, slug: tag }, props: { tag } })),
   );
