@@ -29,8 +29,8 @@ const [home, greekHome, article, greekArticle, rss, greekRss, sitemap, robots] =
   get('/el/', 'text/html'),
   get(`/articles/${articleSlug}/`, 'text/html'),
   get(`/el/articles/${articleSlug}/`, 'text/html'),
-  get('/rss.xml', 'application/rss+xml'),
-  get('/el/rss.xml', 'application/rss+xml'),
+  get('/rss.xml', 'application/xml'),
+  get('/el/rss.xml', 'application/xml'),
   get('/sitemap.xml', 'application/xml'),
   get('/robots.txt', 'text/plain'),
 ]);
