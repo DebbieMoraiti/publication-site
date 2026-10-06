@@ -19,6 +19,10 @@ export const secondaryLanguages = languages.filter(
   (language) => language.code !== defaultLanguage,
 ) as { code: LanguageCode; label: string }[];
 
+export function assetPath(pathname: string): string {
+  return withBase(pathname);
+}
+
 function withBase(pathname: string): string {
   if (!pathname.startsWith('/') || pathname.startsWith('//')) {
     throw new Error('Site paths must be root-relative.');
