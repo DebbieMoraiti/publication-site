@@ -1028,3 +1028,33 @@ p {
     word-break: normal;
   }
 }
+
+
+.article-body h2 {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.article-body blockquote {
+  margin: clamp(2.5rem, 6vw, 4rem) 0;
+  padding: 0 0 0 clamp(1rem, 3vw, 1.5rem);
+  border-left: 2px solid var(--color-text);
+}
+
+.article-body blockquote p {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  line-height: 1.45;
+}
+
+.article-body blockquote cite {
+  display: block;
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-style: normal;
+  font-weight: 700;
+}
