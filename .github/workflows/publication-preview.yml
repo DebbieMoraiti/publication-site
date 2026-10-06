@@ -1,5 +1,7 @@
 name: Publication preview
 
+# Automatic live preview for the independent publication.
+
 on:
   push:
     branches:
