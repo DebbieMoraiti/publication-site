@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../config';
+import { languagePath } from '../i18n/routes';
 ---
 
 <BaseLayout noindex title={`Image preview — ${siteConfig.identity.name}`}>
@@ -19,7 +20,7 @@ import { siteConfig } from '../config';
       <img id="preview-image" alt="" hidden />
     </div>
     <p id="preview-status" role="status">Select an image to preview. / Επίλεξε εικόνα για προεπισκόπηση.</p>
-    <p><a href="/">← Home / Αρχική</a></p>
+    <p><a href={languagePath(siteConfig.localization.defaultLanguage as 'en' | 'el')}>← Home / Αρχική</a></p>
   </main>
 </BaseLayout>
 
