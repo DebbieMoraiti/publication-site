@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
 import { visibleArticles } from '../content/publication-data';
+import { topicBySlug } from '../content/editorial';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 
@@ -28,7 +29,7 @@ const authored = visibleArticles().filter((article) => article.author === author
         <div class="taxonomy-list">
           {authored.map((article) => (
             <article>
-              <p class="story-meta">{article.topic[lang]} · {article.date}</p>
+              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · {article.date}</p>
               <h2><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h2>
               <p>{article.dek[lang]}</p>
             </article>
