@@ -5,7 +5,6 @@ import path from 'node:path';
 const dist = path.resolve('dist');
 const site = JSON.parse(await readFile('src/config/site.json', 'utf8'));
 const hashes = new Set();
-const contactFormEnabled = Boolean(site.contact?.formEndpoint);
 const embedsEnabled = site.privacy?.allowThirdPartyEmbeds === true;
 
 async function htmlFiles(folder) {
@@ -40,12 +39,8 @@ const policy = [
   embedsEnabled
     ? "frame-src https://www.youtube-nocookie.com https://player.vimeo.com"
     : "frame-src 'none'",
-  contactFormEnabled
-    ? "connect-src 'self' https://formspree.io"
-    : "connect-src 'self'",
-  contactFormEnabled
-    ? "form-action 'self' https://formspree.io"
-    : "form-action 'self'",
+  "connect-src 'self'",
+  "form-action 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
