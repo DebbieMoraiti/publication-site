@@ -18,18 +18,41 @@ type Article = {
   topic?: Localized;
 };
 
+function rootUrl() {
+  return absoluteUrl('/');
+}
+
+function websiteId() {
+  return `${rootUrl()}#website`;
+}
+
+function publisherId() {
+  return `${rootUrl()}#publisher`;
+}
+
+function publisherNode() {
+  return {
+    '@type': 'Organization',
+    '@id': publisherId(),
+    name: publication.identity.name,
+    url: rootUrl(),
+  };
+}
+
 export function publicationWebsiteSchema(lang: LanguageCode) {
   const home = absoluteUrl(languagePath(lang));
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      publisherNode(),
       {
         '@type': 'WebSite',
-        '@id': `${home}#website`,
-        url: home,
+        '@id': websiteId(),
+        url: rootUrl(),
         name: publication.identity.name,
         description: publication.identity.tagline[lang],
-        inLanguage: lang,
+        publisher: { '@id': publisherId() },
+        inLanguage: ['en', 'el'],
       },
       {
         '@type': 'CollectionPage',
@@ -38,7 +61,98 @@ export function publicationWebsiteSchema(lang: LanguageCode) {
         name: publication.identity.name,
         description: publication.identity.tagline[lang],
         inLanguage: lang,
-        isPartOf: { '@id': `${home}#website` },
+        isPartOf: { '@id': websiteId() },
+        publisher: { '@id': publisherId() },
+      },
+    ],
+  };
+}
+
+export function publicationCollectionSchema(
+  lang: LanguageCode,
+  page: string,
+  name: string,
+  description: string,
+) {
+  const home = absoluteUrl(languagePath(lang));
+  const url = absoluteUrl(languagePath(lang, page));
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      publisherNode(),
+      {
+        '@type': 'WebSite',
+        '@id': websiteId(),
+        url: rootUrl(),
+        name: publication.identity.name,
+        publisher: { '@id': publisherId() },
+        inLanguage: ['en', 'el'],
+      },
+      {
+        '@type': 'CollectionPage',
+        '@id': `${url}#webpage`,
+        url,
+        name,
+        description,
+        inLanguage: lang,
+        isPartOf: { '@id': websiteId() },
+        breadcrumb: { '@id': `${url}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${url}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: publication.identity.name, item: home },
+          { '@type': 'ListItem', position: 2, name, item: url },
+        ],
+      },
+    ],
+  };
+}
+
+export function publicationAuthorSchema(lang: LanguageCode, author: Author) {
+  const home = absoluteUrl(languagePath(lang));
+  const url = absoluteUrl(languagePath(lang, `authors/${author.slug}`));
+  const personId = `${url}#person`;
+  const description = author.bio?.[lang] || author.role?.[lang] || author.name;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      publisherNode(),
+      {
+        '@type': 'WebSite',
+        '@id': websiteId(),
+        url: rootUrl(),
+        name: publication.identity.name,
+        publisher: { '@id': publisherId() },
+        inLanguage: ['en', 'el'],
+      },
+      {
+        '@type': 'Person',
+        '@id': personId,
+        name: author.name,
+        url,
+        description,
+      },
+      {
+        '@type': 'ProfilePage',
+        '@id': `${url}#webpage`,
+        url,
+        name: author.name,
+        description,
+        inLanguage: lang,
+        isPartOf: { '@id': websiteId() },
+        mainEntity: { '@id': personId },
+        breadcrumb: { '@id': `${url}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${url}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: publication.identity.name, item: home },
+          { '@type': 'ListItem', position: 2, name: author.name, item: url },
+        ],
       },
     ],
   };
@@ -56,12 +170,14 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      publisherNode(),
       {
         '@type': 'WebSite',
-        '@id': `${home}#website`,
-        url: home,
+        '@id': websiteId(),
+        url: rootUrl(),
         name: publication.identity.name,
-        inLanguage: lang,
+        publisher: { '@id': publisherId() },
+        inLanguage: ['en', 'el'],
       },
       {
         '@type': articleType,
@@ -70,12 +186,12 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         headline: article.title[lang],
         description: article.dek[lang],
         datePublished: article.date,
-        dateModified: article.date,
         inLanguage: lang,
         keywords: article.tags ?? [],
         articleSection: topicLabel,
         image: articleImage,
-        isPartOf: { '@id': `${home}#website` },
+        isPartOf: { '@id': websiteId() },
+        publisher: { '@id': publisherId() },
         mainEntityOfPage: { '@id': `${url}#webpage` },
         author: author ? {
           '@type': 'Person',
@@ -91,7 +207,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         name: article.title[lang],
         description: article.dek[lang],
         inLanguage: lang,
-        isPartOf: { '@id': `${home}#website` },
+        isPartOf: { '@id': websiteId() },
         breadcrumb: { '@id': `${url}#breadcrumb` },
       },
       {
