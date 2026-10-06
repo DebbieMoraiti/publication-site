@@ -3,8 +3,8 @@ import TagPage from '../../components/TagPage.astro';
 import { visibleArticles } from '../../content/publication-data';
 import { siteConfig } from '../../config';
 
-const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
 export function getStaticPaths() {
+  const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
   return tags.map((tag) => ({ params: { slug: tag }, props: { tag } }));
 }
 const { tag } = Astro.props;
