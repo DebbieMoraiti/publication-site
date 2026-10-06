@@ -32,6 +32,8 @@ const related = moreFromTopic(article, 3);
   ogType="article"
   socialImage={article.image}
   socialImageAlt={article.imageAlt?.[lang] || article.title[lang]}
+  publishedTime={article.date}
+  articleSection={topic?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug}
   skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}
 >
   <div class="site-shell publication-shell" id="top">
