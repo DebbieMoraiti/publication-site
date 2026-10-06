@@ -4,6 +4,7 @@ import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
 import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
+import { articleNeighbors, moreFromTopic } from '../content/publication-data';
 import { publicationArticleSchema } from '../lib/publication-schema';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 
@@ -18,6 +19,8 @@ const sections = article.sections ?? [];
 const author = authorBySlug.get(article.author);
 const topic = topicBySlug.get(article.topicSlug);
 const schema = publicationArticleSchema(lang, article, author);
+const { newer, older } = articleNeighbors(article);
+const related = moreFromTopic(article, 3);
 ---
 
 <BaseLayout
@@ -35,9 +38,13 @@ const schema = publicationArticleSchema(lang, article, author);
     <main id="main-content" tabindex="-1">
       <article class="article-page content-container">
         <header class="article-header">
-          <a class="article-back" href={languagePath(lang)}>
-            ← {lang === 'el' ? 'Αρχική' : 'Home'}
-          </a>
+          <nav class="editorial-breadcrumbs" aria-label={lang === 'el' ? 'Πλοήγηση' : 'Breadcrumb'}>
+            <a href={languagePath(lang)}>{lang === 'el' ? 'Αρχική' : 'Home'}</a>
+            <span aria-hidden="true">/</span>
+            <a href={languagePath(lang, `topics/${article.topicSlug}`)}>{topic?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug}</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{article.title[lang]}</span>
+          </nav>
           <p class="story-meta">
             <a href={languagePath(lang, `topics/${article.topicSlug}`)}>{topic?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug}</a>
             {' · '}{article.date}
@@ -83,6 +90,47 @@ const schema = publicationArticleSchema(lang, article, author);
             </p>
           )}
         </div>
+
+        {related.length > 0 && (
+          <section class="article-related" aria-labelledby="related-heading">
+            <div class="section-heading-row">
+              <h2 id="related-heading">{lang === 'el' ? 'Περισσότερα από αυτή τη θεματική' : 'More from this topic'}</h2>
+              <a href={languagePath(lang, `topics/${article.topicSlug}`)}>
+                {lang === 'el' ? 'Όλα τα άρθρα' : 'View topic'}
+              </a>
+            </div>
+            <div class="article-related__grid">
+              {related.map((item) => (
+                <article>
+                  <p class="story-meta">{item.date}</p>
+                  <h3><a href={languagePath(lang, `articles/${item.slug}`)}>{item.title[lang]}</a></h3>
+                  <p>{item.dek[lang]}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {(newer || older) && (
+          <nav class="article-pager" aria-label={lang === 'el' ? 'Πλοήγηση άρθρων' : 'Article navigation'}>
+            <div>
+              {newer && (
+                <a href={languagePath(lang, `articles/${newer.slug}`)}>
+                  <span>{lang === 'el' ? '← Νεότερο' : '← Newer'}</span>
+                  <strong>{newer.title[lang]}</strong>
+                </a>
+              )}
+            </div>
+            <div>
+              {older && (
+                <a href={languagePath(lang, `articles/${older.slug}`)}>
+                  <span>{lang === 'el' ? 'Παλαιότερο →' : 'Older →'}</span>
+                  <strong>{older.title[lang]}</strong>
+                </a>
+              )}
+            </div>
+          </nav>
+        )}
       </article>
     </main>
     <EditorialFooter lang={lang} />
