@@ -9,13 +9,16 @@ const escapeXml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
 
 export const GET: APIRoute = () => {
   const publicArticles = articles.filter((article) => article.status === 'published');
+  const usedAuthorSlugs = new Set(publicArticles.map((article) => article.author));
+  const usedTopicSlugs = new Set(publicArticles.map((article) => article.topicSlug));
   const tags = [...new Set(publicArticles.flatMap((article) => article.tags ?? []))];
+
   const pages = [
     '',
     'archive',
     ...publicArticles.map((article) => `articles/${article.slug}`),
-    ...authors.map((author) => `authors/${author.slug}`),
-    ...topics.map((topic) => `topics/${topic.slug}`),
+    ...authors.filter((author) => usedAuthorSlugs.has(author.slug)).map((author) => `authors/${author.slug}`),
+    ...topics.filter((topic) => usedTopicSlugs.has(topic.slug)).map((topic) => `topics/${topic.slug}`),
     ...tags.map((tag) => `tags/${tag}`),
   ];
 
