@@ -12,6 +12,7 @@ interface Props {
   structuredData?: Record<string, unknown>;
   ogType?: 'website' | 'article';
   socialImage?: string;
+  socialImageAlt?: string;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   structuredData: providedStructuredData,
   ogType = 'website',
   socialImage,
+  socialImageAlt,
 } = Astro.props;
 
 const page = pageFromPath(Astro.url.pathname);
@@ -30,7 +32,11 @@ const canonical = absoluteUrl(languagePath(lang, page));
 const translations = alternates(page);
 const pageTitle = title ?? `${siteConfig.identity.name} — ${siteConfig.seo.titleSuffix[lang]}`;
 const pageDescription = description ?? siteConfig.seo.description[lang];
-const image = absoluteUrl((socialImage?.startsWith('/') ? socialImage : '') || siteConfig.seo.shareImage.trim() || '/social-share.png');
+const customSocialImage = socialImage?.startsWith('/') ? socialImage : '';
+const imagePath = customSocialImage || siteConfig.seo.shareImage.trim() || '/social-share.png';
+const image = absoluteUrl(imagePath);
+const imageAlt = socialImageAlt?.trim() || pageTitle;
+const isGeneratedShareImage = imagePath === '/social-share.png';
 const locale = lang === 'el' ? 'el_GR' : 'en_US';
 const structuredData = providedStructuredData
   ? JSON.stringify(providedStructuredData).replace(/</g, '\\u003c')
@@ -78,13 +84,14 @@ const themeVariables = [
     <meta property="og:locale" content={locale} />
     <meta property="og:locale:alternate" content={lang === 'el' ? 'en_US' : 'el_GR'} />
     <meta property="og:image" content={image} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={siteConfig.identity.name} />
+    {isGeneratedShareImage && <meta property="og:image:width" content="1200" />}
+    {isGeneratedShareImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={imageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     {structuredData && <script type="application/ld+json" set:html={structuredData} />}
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
