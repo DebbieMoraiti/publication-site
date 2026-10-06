@@ -6,17 +6,21 @@ import { sortedVisibleArticles } from '../content/publication-data';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 import { topicBySlug } from '../content/editorial';
+import { publicationCollectionSchema } from '../lib/publication-schema';
 
 interface Props { lang: LanguageCode; tag: string; }
 const { lang, tag } = Astro.props;
 const related = sortedVisibleArticles().filter((article) => article.tags?.includes(tag));
 const label = tag.replace(/-/g, ' ');
+const pageDescription = lang === 'el' ? `Άρθρα με την ετικέτα ${label}.` : `Stories tagged ${label}.`;
+const schema = publicationCollectionSchema(lang, `tags/${tag}`, `#${label}`, pageDescription);
 ---
 
 <BaseLayout
   lang={lang}
   title={`#${label} — ${publication.identity.name}`}
-  description={lang === 'el' ? `Άρθρα με την ετικέτα ${label}.` : `Stories tagged ${label}.`}
+  description={pageDescription}
+  structuredData={schema}
 >
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
