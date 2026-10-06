@@ -1,9 +1,15 @@
 export type LanguageCode = 'en' | 'el';
 export type Localized = { en: string; el: string };
 
+export type ArticleSection = {
+  type: 'paragraph' | 'heading' | 'quote';
+  text: Localized;
+  attribution?: Localized;
+};
+
 export type Article = {
   slug: string;
-  type: string;
+  type: 'feature' | 'profile' | 'essay' | 'interview' | 'review' | 'update';
   status: 'draft' | 'published';
   featured: boolean;
   date: string;
@@ -12,9 +18,10 @@ export type Article = {
   tags?: string[];
   title: Localized;
   dek: Localized;
-  topic: Localized;
+  topic?: Localized;
   image?: string;
   imageAlt?: Partial<Localized>;
+  sections?: ArticleSection[];
   body?: { en?: string[]; el?: string[] };
 };
 
