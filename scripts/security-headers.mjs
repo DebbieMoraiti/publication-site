@@ -22,7 +22,7 @@ if (!pages.length) throw new Error('No HTML pages found for CSP generation.');
 for (const file of pages) {
   const html = await readFile(file, 'utf8');
   for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
-    if (/\bsrc\s*=/.test(match[1]) || !match[2]) continue;
+    if (/\bsrc\s*=/.test(match[1]) || /\btype\s*=\s*["']application\/ld\+json["']/i.test(match[1]) || !match[2]) continue;
     const digest = createHash('sha256').update(match[2], 'utf8').digest('base64');
     hashes.add(`'sha256-${digest}'`);
   }
