@@ -3,7 +3,13 @@ import publication from '../content/publication.json';
 import { topicBySlug } from '../content/editorial';
 
 type Localized = { en: string; el: string };
-type Author = { slug: string; name: string; role?: Localized; bio?: Localized };
+type Author = {
+  slug: string;
+  name: string;
+  role?: Localized;
+  bio?: Localized;
+  links?: { label?: string; url?: string }[];
+};
 type Article = {
   slug: string;
   type: string;
@@ -28,6 +34,19 @@ function websiteId() {
 
 function publisherId() {
   return `${rootUrl()}#publisher`;
+}
+
+function publicHttpsUrls(links: Author['links'] = []) {
+  return [...new Set(links.flatMap((link) => {
+    const value = link.url?.trim();
+    if (!value) return [];
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && !url.username && !url.password ? [url.href] : [];
+    } catch {
+      return [];
+    }
+  }))];
 }
 
 function publisherNode() {
@@ -134,6 +153,7 @@ export function publicationAuthorSchema(lang: LanguageCode, author: Author) {
         name: author.name,
         url,
         description,
+        sameAs: publicHttpsUrls(author.links),
       },
       {
         '@type': 'ProfilePage',
