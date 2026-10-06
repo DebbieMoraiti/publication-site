@@ -7,6 +7,7 @@ interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
 const page = pageFromPath(Astro.url.pathname);
 const homeSection = (id: string) => page ? `${languagePath(lang)}#${id}` : `#${id}`;
+const isCurrent = (target: string) => page === target || page.startsWith(`${target}/`);
 const labels = lang === 'el'
   ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση' }
   : { stories: 'Stories', people: 'People', ideas: 'Ideas', culture: 'Culture', archive: 'Archive', menu: 'Navigation' };
@@ -16,11 +17,11 @@ const labels = lang === 'el'
   <div class="editorial-header__inner content-container">
     <a class="editorial-brand" href={languagePath(lang)}>{publication.identity.name}</a>
     <nav class="editorial-nav" aria-label={labels.menu}>
-      <a href={homeSection('stories')}>{labels.stories}</a>
-      <a href={languagePath(lang, 'topics/people')}>{labels.people}</a>
-      <a href={languagePath(lang, 'topics/ideas')}>{labels.ideas}</a>
-      <a href={languagePath(lang, 'topics/culture')}>{labels.culture}</a>
-      <a href={languagePath(lang, 'archive')}>{labels.archive}</a>
+      <a href={homeSection('stories')} aria-current={!page ? 'page' : undefined}>{labels.stories}</a>
+      <a href={languagePath(lang, 'topics/people')} aria-current={isCurrent('topics/people') ? 'page' : undefined}>{labels.people}</a>
+      <a href={languagePath(lang, 'topics/ideas')} aria-current={isCurrent('topics/ideas') ? 'page' : undefined}>{labels.ideas}</a>
+      <a href={languagePath(lang, 'topics/culture')} aria-current={isCurrent('topics/culture') ? 'page' : undefined}>{labels.culture}</a>
+      <a href={languagePath(lang, 'archive')} aria-current={isCurrent('archive') ? 'page' : undefined}>{labels.archive}</a>
     </nav>
     <nav class="editorial-languages" aria-label={lang === 'el' ? 'Γλώσσα' : 'Language'}>
       {siteConfig.localization.languages.map((language) => (
