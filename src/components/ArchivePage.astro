@@ -33,7 +33,7 @@ const topicMap = topicBySlug;
               <article class="archive-item">
                 <time datetime={article.date}>{article.date}</time>
                 <div>
-                  <p class="story-meta">{topic?.label[lang] ?? article.topic[lang]}</p>
+                  <p class="story-meta">{topic?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug}</p>
                   <h2><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h2>
                   <p>{article.dek[lang]}</p>
                   {author && <a class="archive-author" href={languagePath(lang, `authors/${author.slug}`)}>{author.name}</a>}
