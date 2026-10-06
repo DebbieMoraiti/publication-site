@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
-import { visibleArticles } from '../content/publication-data';
+import { sortedVisibleArticles } from '../content/publication-data';
 import { topicBySlug } from '../content/editorial';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
@@ -15,7 +15,7 @@ interface Author {
 }
 interface Props { lang: LanguageCode; author: Author; }
 const { lang, author } = Astro.props;
-const authored = visibleArticles().filter((article) => article.author === author.slug);
+const authored = sortedVisibleArticles().filter((article) => article.author === author.slug);
 ---
 
 <BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]}>
@@ -23,9 +23,15 @@ const authored = visibleArticles().filter((article) => article.author === author
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
       <section class="taxonomy-page content-container">
+        <nav class="editorial-breadcrumbs" aria-label={lang === 'el' ? 'Πλοήγηση' : 'Breadcrumb'}>
+          <a href={languagePath(lang)}>{lang === 'el' ? 'Αρχική' : 'Home'}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{author.name}</span>
+        </nav>
         <p class="publication-kicker">{author.role?.[lang]}</p>
         <h1>{author.name}</h1>
         {author.bio?.[lang] && <p class="taxonomy-intro">{author.bio[lang]}</p>}
+        <p class="taxonomy-count">{authored.length} {lang === 'el' ? (authored.length === 1 ? 'άρθρο' : 'άρθρα') : (authored.length === 1 ? 'story' : 'stories')}</p>
         <div class="taxonomy-list">
           {authored.map((article) => (
             <article>
