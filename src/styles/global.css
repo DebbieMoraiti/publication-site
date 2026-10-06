@@ -1251,3 +1251,357 @@ h3 {
 .story-card__media {
   overflow: hidden;
 }
+
+
+/* Publication responsive polish */
+.publication-shell {
+  min-width: 0;
+}
+
+.editorial-header__inner {
+  padding-block: 0.15rem;
+}
+
+.editorial-nav a,
+.editorial-languages a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  position: relative;
+}
+
+.editorial-nav a[aria-current='page'] {
+  color: var(--color-text);
+}
+
+.editorial-nav a[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0.35rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+}
+
+.publication-masthead {
+  max-width: 70rem;
+}
+
+.publication-masthead h1,
+.article-header h1,
+.archive-page > h1,
+.taxonomy-page > h1,
+.feature-copy h2,
+.story-card h3 {
+  text-wrap: balance;
+}
+
+.publication-intro,
+.article-dek,
+.archive-item p,
+.taxonomy-list p {
+  text-wrap: pretty;
+}
+
+.editorial-feature,
+.editorial-grid,
+.archive-item {
+  min-width: 0;
+}
+
+.feature-image,
+.story-card__media,
+.article-hero {
+  background: #e7e5df;
+}
+
+.story-card__image {
+  min-height: 0;
+}
+
+.article-header {
+  width: min(100%, 62rem);
+}
+
+.article-body {
+  width: min(100%, 42rem);
+}
+
+.article-body p {
+  line-height: 1.82;
+}
+
+.taxonomy-list > article:last-child,
+.archive-item:last-child {
+  border-bottom: 0;
+}
+
+.editorial-footer a {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 64rem) {
+  .publication-masthead {
+    padding-block: clamp(4.5rem, 9vw, 7rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  .publication-masthead h1 {
+    font-size: clamp(4rem, 11vw, 7.5rem);
+  }
+
+  .feature-copy h2,
+  .publication-note h2 {
+    font-size: clamp(2.4rem, 5.5vw, 4.6rem);
+  }
+
+  .article-header h1 {
+    font-size: clamp(3rem, 7vw, 6rem);
+  }
+}
+
+@media (max-width: 52rem) {
+  html {
+    scroll-padding-top: 7.5rem;
+  }
+
+  .editorial-header {
+    backdrop-filter: blur(1rem);
+  }
+
+  .editorial-header__inner {
+    gap: 0 1rem;
+    padding-top: 0.25rem;
+  }
+
+  .editorial-brand {
+    min-height: 3.5rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .editorial-languages {
+    gap: 0.25rem;
+  }
+
+  .editorial-languages a {
+    min-width: 2.75rem;
+    justify-content: center;
+  }
+
+  .editorial-nav {
+    gap: 0.2rem 1.15rem;
+    margin-inline: calc(-1 * var(--space-page-inline));
+    padding: 0.35rem var(--space-page-inline) 0.55rem;
+    scroll-padding-inline: var(--space-page-inline);
+    overscroll-behavior-inline: contain;
+  }
+
+  .editorial-nav a {
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    font-size: 0.78rem;
+  }
+
+  .editorial-nav a[aria-current='page']::after {
+    bottom: 0.2rem;
+  }
+
+  .publication-masthead {
+    padding-block: clamp(3.5rem, 10vw, 5rem) clamp(2.75rem, 8vw, 4rem);
+  }
+
+  .publication-masthead h1 {
+    margin-top: 0.8rem;
+    font-size: clamp(3rem, 16vw, 5.75rem);
+    line-height: 0.88;
+  }
+
+  .publication-tagline {
+    margin-top: clamp(1.75rem, 7vw, 2.75rem);
+    font-size: clamp(1.35rem, 6vw, 2rem);
+  }
+
+  .publication-intro {
+    margin-top: 1rem;
+  }
+
+  .editorial-feature {
+    padding-block: clamp(2.75rem, 8vw, 4.5rem);
+  }
+
+  .feature-copy h2,
+  .publication-note h2 {
+    max-width: 16ch;
+    font-size: clamp(2.2rem, 10vw, 3.6rem);
+  }
+
+  .feature-image,
+  .feature-placeholder {
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .latest-section {
+    padding-block: clamp(3.5rem, 9vw, 5rem);
+  }
+
+  .editorial-grid {
+    gap: 3rem;
+  }
+
+  .story-card__image {
+    margin-bottom: 1.2rem;
+  }
+
+  .story-card h3 {
+    max-width: 22ch;
+    font-size: clamp(1.65rem, 7vw, 2.35rem);
+  }
+
+  .publication-note {
+    padding-block: clamp(4rem, 12vw, 6rem);
+  }
+
+  .article-page,
+  .archive-page,
+  .taxonomy-page {
+    padding-block: clamp(2.75rem, 8vw, 4.5rem) clamp(4rem, 11vw, 6rem);
+  }
+
+  .article-back {
+    margin-bottom: 2rem;
+  }
+
+  .article-header h1 {
+    max-width: 15ch;
+    font-size: clamp(2.65rem, 11vw, 4.6rem);
+    line-height: 0.96;
+  }
+
+  .article-dek {
+    margin-top: 1.5rem;
+    font-size: clamp(1.12rem, 4.8vw, 1.45rem);
+  }
+
+  .article-hero,
+  .article-hero-placeholder {
+    margin-top: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .article-body {
+    margin-top: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .article-body p {
+    font-size: clamp(1.02rem, 3vw, 1.12rem);
+    line-height: 1.76;
+  }
+
+  .archive-page > h1,
+  .taxonomy-page > h1 {
+    font-size: clamp(3rem, 14vw, 5.5rem);
+    line-height: 0.94;
+  }
+
+  .archive-list,
+  .taxonomy-list {
+    margin-top: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .archive-item {
+    grid-template-columns: minmax(5.5rem, 0.2fr) minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .archive-item h2,
+  .taxonomy-list h2 {
+    font-size: clamp(1.55rem, 6vw, 2.15rem);
+  }
+
+  .editorial-footer__inner {
+    gap: 1.75rem;
+    padding-block: 2.5rem;
+  }
+}
+
+@media (max-width: 39rem) {
+  .publication-kicker,
+  .story-meta {
+    font-size: 0.7rem;
+    letter-spacing: 0.085em;
+  }
+
+  .publication-masthead h1 {
+    font-size: clamp(2.8rem, 17vw, 4.6rem);
+  }
+
+  .section-heading-row {
+    margin-bottom: 2rem;
+  }
+
+  .section-heading-row h2 {
+    font-size: clamp(1.9rem, 9vw, 2.7rem);
+  }
+
+  .feature-copy h2,
+  .publication-note h2 {
+    font-size: clamp(2rem, 10.5vw, 3rem);
+  }
+
+  .archive-item {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    padding-block: 1.6rem;
+  }
+
+  .archive-item time {
+    order: -1;
+  }
+
+  .article-tags {
+    gap: 0.4rem;
+  }
+
+  .article-tags li {
+    padding: 0.38rem 0.62rem;
+  }
+
+  .editorial-footer__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial-footer__meta {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 22rem) {
+  .editorial-header__inner {
+    gap: 0 0.5rem;
+  }
+
+  .editorial-brand {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+
+  .publication-masthead {
+    padding-top: 3rem;
+  }
+
+  .publication-tagline {
+    font-size: 1.3rem;
+  }
+
+  .feature-copy h2,
+  .publication-note h2,
+  .article-header h1 {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
