@@ -2,14 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
-import { visibleArticles } from '../content/publication-data';
+import { sortedVisibleArticles } from '../content/publication-data';
 import { authorBySlug, topicBySlug } from '../content/editorial';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
-const sorted = [...visibleArticles()].sort((a, b) => b.date.localeCompare(a.date));
+const sorted = sortedVisibleArticles();
 const authorMap = authorBySlug;
 const topicMap = topicBySlug;
 ---
@@ -23,8 +23,14 @@ const topicMap = topicBySlug;
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
       <section class="archive-page content-container">
+        <nav class="editorial-breadcrumbs" aria-label={lang === 'el' ? 'Πλοήγηση' : 'Breadcrumb'}>
+          <a href={languagePath(lang)}>{lang === 'el' ? 'Αρχική' : 'Home'}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{lang === 'el' ? 'Αρχείο' : 'Archive'}</span>
+        </nav>
         <p class="publication-kicker">{lang === 'el' ? 'Όλο το περιεχόμενο' : 'All stories'}</p>
         <h1>{lang === 'el' ? 'Αρχείο' : 'Archive'}</h1>
+        <p class="taxonomy-count">{sorted.length} {lang === 'el' ? (sorted.length === 1 ? 'άρθρο' : 'άρθρα') : (sorted.length === 1 ? 'story' : 'stories')}</p>
         <div class="archive-list">
           {sorted.map((article) => {
             const author = authorMap.get(article.author);
