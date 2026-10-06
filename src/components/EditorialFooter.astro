@@ -1,0 +1,20 @@
+---
+import publication from '../content/publication.json';
+import type { LanguageCode } from '../i18n/routes';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+---
+
+<footer class="editorial-footer">
+  <div class="editorial-footer__inner content-container">
+    <div>
+      <strong>{publication.identity.name}</strong>
+      <p>{publication.identity.tagline[lang]}</p>
+    </div>
+    <div class="editorial-footer__meta">
+      <span>© {new Date().getFullYear()} {publication.identity.name}</span>
+      <a href="#top">{lang === 'el' ? 'Επιστροφή στην κορυφή' : 'Back to top'}</a>
+    </div>
+  </div>
+</footer>

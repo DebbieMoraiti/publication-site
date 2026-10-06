@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import { visibleArticles } from '../content/publication-data';
+import { authorBySlug, topicBySlug } from '../content/editorial';
+import publication from '../content/publication.json';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+const sorted = [...visibleArticles()].sort((a, b) => b.date.localeCompare(a.date));
+const authorMap = authorBySlug;
+const topicMap = topicBySlug;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${lang === 'el' ? 'Αρχείο' : 'Archive'} — ${publication.identity.name}`}
+  description={lang === 'el' ? 'Όλες οι δημοσιεύσεις του publication.' : 'All stories published by the publication.'}
+>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="archive-page content-container">
+        <p class="publication-kicker">{lang === 'el' ? 'Όλο το περιεχόμενο' : 'All stories'}</p>
+        <h1>{lang === 'el' ? 'Αρχείο' : 'Archive'}</h1>
+        <div class="archive-list">
+          {sorted.map((article) => {
+            const author = authorMap.get(article.author);
+            const topic = topicMap.get(article.topicSlug);
+            return (
+              <article class="archive-item">
+                <time datetime={article.date}>{article.date}</time>
+                <div>
+                  <p class="story-meta">{topic?.label[lang] ?? article.topic[lang]}</p>
+                  <h2><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h2>
+                  <p>{article.dek[lang]}</p>
+                  {author && <a class="archive-author" href={languagePath(lang, `authors/${author.slug}`)}>{author.name}</a>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

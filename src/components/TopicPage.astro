@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import { visibleArticles } from '../content/publication-data';
+import publication from '../content/publication.json';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Topic { slug: string; label: { en: string; el: string }; }
+interface Props { lang: LanguageCode; topic: Topic; }
+const { lang, topic } = Astro.props;
+const related = visibleArticles().filter((article) => article.topicSlug === topic.slug);
+---
+
+<BaseLayout lang={lang} title={`${topic.label[lang]} — ${publication.identity.name}`} description={topic.label[lang]}>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="taxonomy-page content-container">
+        <p class="publication-kicker">{lang === 'el' ? 'Θέμα' : 'Topic'}</p>
+        <h1>{topic.label[lang]}</h1>
+        <div class="taxonomy-list">
+          {related.map((article) => (
+            <article>
+              <p class="story-meta">{article.date}</p>
+              <h2><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h2>
+              <p>{article.dek[lang]}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

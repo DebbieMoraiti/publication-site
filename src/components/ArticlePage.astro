@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import publication from '../content/publication.json';
+import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
+import { publicationArticleSchema } from '../lib/publication-schema';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Props {
+  lang: LanguageCode;
+  article: Article;
+}
+
+const { lang, article } = Astro.props;
+const body = article.body?.[lang] ?? [];
+const author = authorBySlug.get(article.author);
+const topic = topicBySlug.get(article.topicSlug);
+const schema = publicationArticleSchema(lang, article, author);
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${article.title[lang]} — ${publication.identity.name}`}
+  description={article.dek[lang]}
+  noindex={article.status !== 'published'}
+  structuredData={schema}
+  ogType="article"
+  socialImage={article.image}
+  skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}
+>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <article class="article-page content-container">
+        <header class="article-header">
+          <a class="article-back" href={languagePath(lang)}>
+            ← {lang === 'el' ? 'Αρχική' : 'Home'}
+          </a>
+          <p class="story-meta">
+            <a href={languagePath(lang, `topics/${article.topicSlug}`)}>{topic?.label[lang] ?? article.topic[lang]}</a>
+            {' · '}{article.date}
+          </p>
+          <h1>{article.title[lang]}</h1>
+          <p class="article-dek">{article.dek[lang]}</p>
+          {author && (
+            <p class="article-byline">
+              {lang === 'el' ? 'Από ' : 'By '}
+              <a href={languagePath(lang, `authors/${author.slug}`)}>{author.name}</a>
+            </p>
+          )}
+          {article.tags && article.tags.length > 0 && (
+            <ul class="article-tags" aria-label={lang === 'el' ? 'Ετικέτες' : 'Tags'}>
+              {article.tags.map((tag) => <li><a href={languagePath(lang, `tags/${tag}`)}>{tag}</a></li>)}
+            </ul>
+          )}
+        </header>
+
+        {article.image ? (
+          <figure class="article-hero">
+            <img src={article.image} alt={article.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+          </figure>
+        ) : (
+          <div class="article-hero-placeholder" aria-hidden="true"></div>
+        )}
+
+        <div class="article-body">
+          {body.length > 0 ? body.map((paragraph) => <p>{paragraph}</p>) : (
+            <p class="article-placeholder">
+              {lang === 'el'
+                ? 'Το άρθρο είναι ακόμη προσχέδιο. Το layout είναι έτοιμο για το τελικό κείμενο.'
+                : 'This story is still a draft. The layout is ready for the final copy.'}
+            </p>
+          )}
+        </div>
+      </article>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

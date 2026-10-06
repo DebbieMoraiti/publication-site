@@ -1,64 +1,110 @@
-# Editing with Pages CMS
+# Editing the publication with Pages CMS
 
-Pages CMS edits files in the GitHub repository. This starter's `.pages.yml`
-exposes the fixed JSON content files under `src/content/` and media uploads in
-`public/uploads/`. It does **not** expose technical settings such as domain,
-language, SEO, theme, section order, or Formspree endpoint. A save creates a
-Git commit; the connected Cloudflare build then runs for that branch.
+Pages CMS edits the publication content stored in this GitHub repository. The
+publication branch exposes editorial content and media only. Technical settings
+such as the final domain, indexing, deployment, security headers and build
+configuration stay outside the CMS and require code review.
 
-## Connect the correct repository
+## Connect the publication branch
 
-1. Go to [Pages CMS](https://app.pagescms.org/) and sign in with GitHub. Install
-   or update its GitHub App for the **individual client's repository**. Check
-   the selected repository in the GitHub App installation; do not grant access
-   to unrelated client repositories.
-2. Open the client's repository and choose the intended branch. Pages CMS
-   reads `.pages.yml` from that branch. `main` is production in this setup;
-   use a client branch and its preview for a review cycle when appropriate.
-3. For an editor who has no GitHub account, invite a Pages CMS collaborator
-   by their own email to that repository, then test their sign-in and a real
-   content save. A collaborator can edit content and media in the configured
-   repository, but cannot manage `.pages.yml` or other collaborators. Never
-   give them the site owner's password. Confirm the actual permissions with
-   the invited account before handoff.
+1. Go to Pages CMS and sign in with GitHub.
+2. Open this repository and select the `publication-bootstrap` branch while the
+   publication is still in development.
+3. Pages CMS reads `.pages.yml` from the selected branch.
+4. Do not edit the Artist Website Starter production `main` branch through this
+   publication workflow.
 
-## Edit and preview
+## Publication identity
 
-- Edit the artist name and hero text in **Artist & social links**. Text has
-  separate `en` and `el` fields. Leave optional contact/social fields blank
-  when unavailable; public email must be a dedicated public professional address and social
-  links must use HTTPS. The email still remains hidden unless publication is
-  explicitly enabled in the technical privacy config. Mark a social profile
-  `verifiedPublic` only after confirming it is an official public identity.
-- About, Projects, Discography, Media, Live, Services, Contact and optional
-  Press Kit are separate entries. A card needs a title in each language.
-  Blank optional image/link fields render no broken placeholders. To remove a
-  sample card, delete its item in the list and save.
-- Upload JPG, PNG, WebP or AVIF under 12 MB and 40 megapixels. Add `imageAlt`
-  or `posterAlt` descriptions in both languages. For card and portrait crops,
-  use `/image-preview/` to choose X/Y focus (0–100) and zoom (1–2); copy the
-  values into the CMS fields. A bad or oversized image fails the build. The
-  deployed upload copy is metadata-sanitized, but source uploads may still carry
-  EXIF/GPS data in Git history; strip sensitive metadata before committing images.
-- For an event, use a **unique** lowercase ID with letters, digits or hyphens,
-  `YYYY-MM-DD` date, and titles in both languages. The time zone is in
-  `src/config/site.json`. Past dates go to the archive, provided the Live
-  section and archive flags are enabled. Ticket URLs can differ by language.
-- Media embeds are disabled by default for privacy. When explicitly enabled,
-  they accept a YouTube `/embed/VIDEO_ID` or Vimeo
-  `player.vimeo.com/video/ID` HTTPS player URL. For other sources, use the
-  external HTTPS link field. Do not paste a regular YouTube watch URL into
-  `embedUrl`.
-- Save, inspect the commit and Cloudflare build, then open both language
-  routes on that branch's preview. Check the image, link, and section you
-  changed. If a build fails, correct the content and save again; see
-  [backup and rollback](BACKUP-ROLLBACK.md).
+**Publication / Ταυτότητα** controls the temporary publication name, tagline and
+homepage introduction. The name can stay as `Working Title` until the final
+brand and domain are chosen.
 
-Section visibility and order belong in `src/config/modules.json` and require a
-code review/deploy. A hidden Press Kit is still editable in CMS but does not
-appear on the public site until its section is enabled.
+## Articles
 
-Pages CMS's [quick start](https://pagescms.org/docs/quick-start/) and
-[collaborator guide](https://pagescms.org/docs/configuration/collaborators/)
-describe its current access flow. This repository's `.pages.yml` is the source
-of truth for the fields actually available here.
+Articles are stored as individual JSON files under `src/content/articles/`.
+
+Use **Articles → New** in Pages CMS to create a story. The CMS creates one file per article and lets you select the author and topic from existing collections.
+
+Each story has:
+
+- a unique lowercase `slug`;
+- a format such as feature, profile, essay or interview;
+- `draft` or `published` status;
+- one publication date;
+- an author slug;
+- a topic slug;
+- optional tags;
+- bilingual title, summary and display topic;
+- optional hero image and bilingual alt text;
+- bilingual paragraph lists for the article body.
+
+### Drafts and publishing
+
+Keep a story as **draft** while writing or reviewing it. Draft article routes are
+built for preview but use `noindex`, and drafts are excluded from the sitemap
+and RSS feed.
+
+Change status to **published** only when the story is ready to be public. Before
+publishing, confirm:
+
+- English and Greek copy are intentional;
+- author and topic slugs exist;
+- the publication date is correct;
+- hero image rights/permission are clear;
+- meaningful images have useful alt text;
+- no private contact details, location data or other sensitive personal data
+  are present;
+- external claims and links have been checked.
+
+### Featured story
+
+Only one article should have **Featured on homepage** enabled at a time. The
+build validates this rule.
+
+## Authors
+
+Authors are stored as individual JSON files under `src/content/authors/`.
+
+The `slug` is the stable internal identifier referenced by articles. Public
+name, role and bio can be edited later without changing article references.
+
+Only add public professional links. Never add private email addresses, private
+social profiles or personal contact information.
+
+## Topics and tags
+
+Topics are stored as individual JSON files under `src/content/topics/`. They are curated sections such as People, Ideas, Culture, Music and Digital.
+Each topic has a stable slug and bilingual display label.
+
+Tags are lighter metadata added directly to articles. Keep them lowercase,
+short and reusable. Do not create near-duplicates such as `web`, `websites`
+and `website` unless there is a deliberate distinction.
+
+## Images
+
+Uploads go to `public/uploads/`. Accepted formats are JPG, JPEG, PNG, WebP and
+AVIF.
+
+Before committing photographs:
+
+- confirm permission to publish them;
+- remove sensitive EXIF/GPS metadata when needed;
+- use a suitable web resolution;
+- provide bilingual alt text for meaningful images.
+
+The existing build pipeline retains the starter's image/security protections,
+but source uploads can still remain in Git history.
+
+## Review workflow
+
+1. Save the CMS entry.
+2. Review the generated Git commit.
+3. Open the branch preview.
+4. Check the article in both languages.
+5. Check mobile layout, links, image crop, author/topic/tag pages and archive.
+6. Only then change the story to `published`.
+
+The final publication will receive its own repository before launch. The current
+branch is an implementation workspace and must not be merged into the Artist
+Website Starter production branch.

@@ -1,0 +1,38 @@
+---
+import { siteConfig } from '../config';
+import publication from '../content/publication.json';
+import { languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+const page = pageFromPath(Astro.url.pathname);
+const homeSection = (id: string) => page ? `${languagePath(lang)}#${id}` : `#${id}`;
+const labels = lang === 'el'
+  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση' }
+  : { stories: 'Stories', people: 'People', ideas: 'Ideas', culture: 'Culture', archive: 'Archive', menu: 'Navigation' };
+---
+
+<header class="editorial-header">
+  <div class="editorial-header__inner content-container">
+    <a class="editorial-brand" href={languagePath(lang)}>{publication.identity.name}</a>
+    <nav class="editorial-nav" aria-label={labels.menu}>
+      <a href={homeSection('stories')}>{labels.stories}</a>
+      <a href={homeSection('people')}>{labels.people}</a>
+      <a href={homeSection('ideas')}>{labels.ideas}</a>
+      <a href={homeSection('culture')}>{labels.culture}</a>
+      <a href={languagePath(lang, 'archive')}>{labels.archive}</a>
+    </nav>
+    <nav class="editorial-languages" aria-label={lang === 'el' ? 'Γλώσσα' : 'Language'}>
+      {siteConfig.localization.languages.map((language) => (
+        <a
+          href={languagePath(language.code as LanguageCode, page)}
+          lang={language.code}
+          hreflang={language.code}
+          aria-current={lang === language.code ? 'page' : undefined}
+        >
+          {language.code === 'el' ? 'ΕΛ' : 'EN'}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

@@ -1,33 +1,15 @@
 {
   "identity": {
-    "name": "Artist Name",
+    "name": "Working Title",
     "eyebrow": {
-      "en": "Config-driven starter",
-      "el": "Πρότυπο με κεντρικές ρυθμίσεις"
+      "en": "Independent publication",
+      "el": "Ανεξάρτητο publication"
     },
     "tagline": {
-      "en": "A flexible foundation for an independent artist website.",
-      "el": "Μια ευέλικτη βάση για την ιστοσελίδα ενός ανεξάρτητου καλλιτέχνη."
+      "en": "Stories, people and ideas from everyday life.",
+      "el": "Ιστορίες, άνθρωποι και ιδέες από την καθημερινή ζωή."
     }
   },
-  "contact": {
-    "email": ""
-  },
-  "socials": [
-    {
-      "platform": "instagram",
-      "url": "",
-      "verifiedPublic": false
-    },
-    {
-      "platform": "youtube",
-      "url": "",
-      "verifiedPublic": false
-    },
-    {
-      "platform": "facebook",
-      "url": "",
-      "verifiedPublic": false
-    }
-  ]
+  "contact": { "email": "" },
+  "socials": []
 }

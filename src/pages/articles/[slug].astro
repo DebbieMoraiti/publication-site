@@ -1,0 +1,14 @@
+---
+import ArticlePage from '../../components/ArticlePage.astro';
+import { visibleArticles } from '../../content/publication-data';
+import { siteConfig } from '../../config';
+
+export function getStaticPaths() {
+  return visibleArticles().map((article) => ({ params: { slug: article.slug }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const lang = siteConfig.localization.defaultLanguage as 'en' | 'el';
+---
+
+<ArticlePage lang={lang} article={article} />

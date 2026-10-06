@@ -1,3 +1,4 @@
+import { validatePublicationContent } from '../content/validate-publication';
 import modules from './modules.json';
 import site from './site.json';
 import theme from './theme.json';
@@ -13,8 +14,14 @@ const editable = artist as ArtistContent;
 
 // CMS saves can omit blank fields. Normalize editorial data here, while keeping
 // domain, languages, SEO, developer credit and form settings in site.json.
+validatePublicationContent();
+
 export const siteConfig = {
   ...site,
+  seo: {
+    ...site.seo,
+    siteUrl: import.meta.env.PUBLIC_SITE_URL?.trim() || site.seo.siteUrl,
+  },
   identity: {
     name: editable.identity?.name?.trim() || 'Artist Name',
     eyebrow: {

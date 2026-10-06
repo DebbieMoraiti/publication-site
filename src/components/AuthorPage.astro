@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import { visibleArticles } from '../content/publication-data';
+import publication from '../content/publication.json';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Author {
+  slug: string;
+  name: string;
+  role?: { en: string; el: string };
+  bio?: { en: string; el: string };
+}
+interface Props { lang: LanguageCode; author: Author; }
+const { lang, author } = Astro.props;
+const authored = visibleArticles().filter((article) => article.author === author.slug);
+---
+
+<BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]}>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="taxonomy-page content-container">
+        <p class="publication-kicker">{author.role?.[lang]}</p>
+        <h1>{author.name}</h1>
+        {author.bio?.[lang] && <p class="taxonomy-intro">{author.bio[lang]}</p>}
+        <div class="taxonomy-list">
+          {authored.map((article) => (
+            <article>
+              <p class="story-meta">{article.topic[lang]} · {article.date}</p>
+              <h2><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h2>
+              <p>{article.dek[lang]}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

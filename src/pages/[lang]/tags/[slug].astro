@@ -1,0 +1,15 @@
+---
+import TagPage from '../../../components/TagPage.astro';
+import { visibleArticles } from '../../../content/publication-data';
+import { secondaryLanguages } from '../../../i18n/routes';
+
+const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
+export function getStaticPaths() {
+  return secondaryLanguages.flatMap(({ code }) =>
+    tags.map((tag) => ({ params: { lang: code, slug: tag }, props: { tag } })),
+  );
+}
+const { tag } = Astro.props;
+const lang = Astro.params.lang as 'en' | 'el';
+---
+<TagPage lang={lang} tag={tag} />

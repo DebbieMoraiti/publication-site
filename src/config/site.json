@@ -1,39 +1,25 @@
 {
   "localization": {
     "defaultLanguage": "en",
-    "timeZone": "UTC",
+    "timeZone": "Europe/Athens",
     "languages": [
-      {
-        "code": "en",
-        "label": "English"
-      },
-      {
-        "code": "el",
-        "label": "Ελληνικά"
-      }
+      { "code": "en", "label": "English" },
+      { "code": "el", "label": "Ελληνικά" }
     ]
   },
-  "contact": {
-    "formEndpoint": ""
-  },
-  "audio": {
-    "src": "",
-    "autoplayOncePerTab": false
-  },
-  "branding": {
-    "logo": "",
-    "favicon": ""
-  },
+  "contact": { "formEndpoint": "" },
+  "audio": { "src": "", "autoplayOncePerTab": false },
+  "branding": { "logo": "", "favicon": "" },
   "seo": {
     "siteUrl": "https://artist-website-starter.moraitidebbie.workers.dev",
     "indexable": false,
     "titleSuffix": {
-      "en": "Official Website",
-      "el": "Επίσημη ιστοσελίδα"
+      "en": "Independent publication",
+      "el": "Ανεξάρτητο publication"
     },
     "description": {
-      "en": "Official website for an independent artist.",
-      "el": "Επίσημη ιστοσελίδα ανεξάρτητου καλλιτέχνη."
+      "en": "Stories, people and ideas from everyday life.",
+      "el": "Ιστορίες, άνθρωποι και ιδέες από την καθημερινή ζωή."
     },
     "shareImage": ""
   },

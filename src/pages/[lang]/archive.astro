@@ -1,12 +1,10 @@
 ---
-import PublicationHome from '../../components/PublicationHome.astro';
+import ArchivePage from '../../components/ArchivePage.astro';
 import { secondaryLanguages } from '../../i18n/routes';
 
 export function getStaticPaths() {
   return secondaryLanguages.map(({ code }) => ({ params: { lang: code } }));
 }
-
 const lang = Astro.params.lang as 'en' | 'el';
 ---
-
-<PublicationHome lang={lang} />
+<ArchivePage lang={lang} />

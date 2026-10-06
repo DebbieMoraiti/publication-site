@@ -1,0 +1,35 @@
+{
+  "slug": "ideas-placeholder",
+  "type": "essay",
+  "status": "draft",
+  "featured": false,
+  "date": "2026-10-02",
+  "author": "editor",
+  "topicSlug": "ideas",
+  "tags": [
+    "ideas",
+    "essay",
+    "digital-life"
+  ],
+  "title": {
+    "en": "Ideas that start in ordinary places",
+    "el": "Ιδέες που ξεκινούν από συνηθισμένα μέρη"
+  },
+  "dek": {
+    "en": "Essays and observations can sit naturally beside music, culture and digital life.",
+    "el": "Δοκίμια και παρατηρήσεις μπορούν να συνυπάρχουν φυσικά με μουσική, πολιτισμό και ψηφιακή ζωή."
+  },
+  "topic": {
+    "en": "Ideas",
+    "el": "Ιδέες"
+  },
+  "image": "",
+  "imageAlt": {
+    "en": "",
+    "el": ""
+  },
+  "body": {
+    "en": [],
+    "el": []
+  }
+}

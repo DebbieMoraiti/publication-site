@@ -1,0 +1,13 @@
+{
+  "slug": "editor",
+  "name": "Editor",
+  "role": {
+    "en": "Founder & Editor",
+    "el": "Founder & Editor"
+  },
+  "bio": {
+    "en": "Editorial profile placeholder. The public name and bio can be finalized later.",
+    "el": "Προσωρινό editorial profile. Το δημόσιο όνομα και το bio μπορούν να οριστικοποιηθούν αργότερα."
+  },
+  "links": []
+}

@@ -1,0 +1,13 @@
+---
+import TagPage from '../../components/TagPage.astro';
+import { visibleArticles } from '../../content/publication-data';
+import { siteConfig } from '../../config';
+
+const tags = [...new Set(visibleArticles().flatMap((article) => article.tags ?? []))];
+export function getStaticPaths() {
+  return tags.map((tag) => ({ params: { slug: tag }, props: { tag } }));
+}
+const { tag } = Astro.props;
+const lang = siteConfig.localization.defaultLanguage as 'en' | 'el';
+---
+<TagPage lang={lang} tag={tag} />

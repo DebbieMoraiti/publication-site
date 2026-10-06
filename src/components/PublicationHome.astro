@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import publication from '../content/publication.json';
+import { visibleArticles } from '../content/publication-data';
+import { publicationWebsiteSchema } from '../lib/publication-schema';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+const stories = visibleArticles();
+const featured = stories.find((item) => item.featured) ?? stories[0];
+const latest = stories.filter((item) => item.slug !== featured?.slug);
+const title = publication.identity.name;
+const description = publication.identity.tagline[lang];
+const schema = publicationWebsiteSchema(lang);
+---
+
+<BaseLayout title={title} description={description} lang={lang} structuredData={schema} skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="publication-masthead content-container">
+        <p class="publication-kicker">Independent publication</p>
+        <h1>{publication.identity.name}</h1>
+        <p class="publication-tagline">{publication.identity.tagline[lang]}</p>
+        <p class="publication-intro">{publication.intro[lang]}</p>
+      </section>
+
+      {featured && (
+        <section class="editorial-feature content-container" id="stories" aria-labelledby="featured-heading">
+          <div class="feature-rule"></div>
+          <div class="feature-copy">
+            <p class="story-meta">{featured.topic[lang]} · {featured.date}</p>
+            <h2 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h2>
+            <p>{featured.dek[lang]}</p>
+            <span class="story-status">{lang === 'el' ? 'Προσχέδιο' : 'Draft'}</span>
+          </div>
+          {featured.image ? (
+            <figure class="feature-image">
+              <img src={featured.image} alt={featured.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+            </figure>
+          ) : (
+            <div class="feature-placeholder" aria-hidden="true">
+              <span>{lang === 'el' ? 'Χώρος κύριας εικόνας' : 'Feature image area'}</span>
+            </div>
+          )}
+        </section>
+      )}
+
+      <section class="latest-section content-container" aria-labelledby="latest-heading">
+        <div class="section-heading-row">
+          <h2 id="latest-heading">{lang === 'el' ? 'Πρόσφατα' : 'Latest stories'}</h2>
+          <span>{latest.length.toString().padStart(2, '0')}</span>
+        </div>
+        <div class="editorial-grid">
+          {latest.map((article, index) => (
+            <article class="story-card" id={index === 0 ? 'people' : 'ideas'}>
+              {article.image ? (
+                <figure class="story-card__image story-card__media">
+                  <img src={article.image} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
+                </figure>
+              ) : (
+                <div class="story-card__image" aria-hidden="true"></div>
+              )}
+              <p class="story-meta">{article.topic[lang]} · {article.date}</p>
+              <h3><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h3>
+              <p>{article.dek[lang]}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="publication-note content-container" id="culture">
+        <p class="story-meta">{lang === 'el' ? 'Κατεύθυνση' : 'Editorial direction'}</p>
+        <h2>{lang === 'el' ? 'Χωρίς ένα μόνο θέμα.' : 'Not confined to one subject.'}</h2>
+        <p>{lang === 'el'
+          ? 'Μουσική, άνθρωποι, πολιτισμός, τεχνολογία, δημιουργική δουλειά και καθημερινές παρατηρήσεις μπορούν να συνυπάρχουν, αρκεί κάθε δημοσίευση να έχει πραγματικό λόγο ύπαρξης.'
+          : 'Music, people, culture, technology, creative work and everyday observations can live together, as long as every piece has a genuine reason to exist.'}</p>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

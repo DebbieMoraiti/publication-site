@@ -1,5 +1,6 @@
-# Pages CMS reads this file per repository and branch. The editor touches only
-# content JSON files. Technical site, theme and module settings stay separate.
+# Pages CMS configuration for the independent publication.
+# Editorial content and media are editable here; technical settings remain code-reviewed.
+
 media:
   input: public/uploads
   output: /uploads
@@ -19,6 +20,7 @@ components:
       - name: el
         label: Ελληνικά
         type: string
+
   titleCopy:
     type: object
     required: true
@@ -31,6 +33,7 @@ components:
         label: Ελληνικά
         type: string
         required: true
+
   longCopy:
     type: object
     fields:
@@ -40,304 +43,203 @@ components:
       - name: el
         label: Ελληνικά
         type: text
-  card:
+
+  paragraphCopy:
     type: object
     fields:
-      - name: title
-        label: Title / Τίτλος
-        component: titleCopy
-      - name: subtitle
-        label: Subtitle / Υπότιτλος
-        component: shortCopy
-      - name: description
-        label: Description / Περιγραφή
-        component: longCopy
-      - name: image
-        label: Image / Εικόνα
-        type: image
-      - name: imagePositionX
-        label: Horizontal focus (%) / Οριζόντια θέση (%)
-        type: number
-        options: { min: 0, max: 100 }
-        description: 0 = left, 50 = center, 100 = right. Use the image preview to choose.
-      - name: imagePositionY
-        label: Vertical focus (%) / Κάθετη θέση (%)
-        type: number
-        options: { min: 0, max: 100 }
-        description: 0 = top, 50 = center, 100 = bottom.
-      - name: imageZoom
-        label: Zoom / Μεγέθυνση
-        type: number
-        options: { min: 1, max: 2 }
-        description: 1 = original crop; up to 2 = twice as close.
-      - name: imageAlt
-        label: Image description / Περιγραφή εικόνας
-        component: shortCopy
-      - name: url
-        label: Link / Σύνδεσμος
-        type: string
-        description: HTTPS URL or a path starting with /; leave blank for no link.
+      - name: en
+        label: English paragraphs
+        type: text
+        list: true
+      - name: el
+        label: Ελληνικές παράγραφοι
+        type: text
+        list: true
 
 content:
-  - name: artist
-    label: Artist & social links / Καλλιτέχνης και σύνδεσμοι
+  - name: publication
+    label: Publication / Ταυτότητα
     type: file
-    path: src/content/artist.json
+    path: src/content/publication.json
     format: json
-    operations:
-      create: false
-      delete: false
+    operations: { create: false, delete: false }
     fields:
       - name: identity
-        label: Artist identity / Ταυτότητα καλλιτέχνη
+        label: Identity / Ταυτότητα
         type: object
         fields:
           - name: name
-            label: Artist name / Όνομα καλλιτέχνη
+            label: Working publication name / Προσωρινό όνομα
             type: string
             required: true
-          - name: eyebrow
-            label: Above the name / Πάνω από το όνομα
-            component: shortCopy
           - name: tagline
-            label: Hero introduction / Κείμενο αρχικής
+            label: Tagline
             component: longCopy
-      - name: contact
-        label: Contact / Επικοινωνία
-        type: object
-        fields:
-          - name: email
-            label: Public professional email / Δημόσιο επαγγελματικό email
-            type: string
-            description: Use only a public booking/business address. Never add a private personal email. Publication is also controlled by site.json privacy settings.
-      - name: socials
-        label: Social profiles / Κοινωνικά προφίλ
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{platform}'
-        fields:
-          - name: platform
-            label: Platform / Πλατφόρμα
-            type: string
-            required: true
-          - name: url
-            label: Profile URL / Σύνδεσμος προφίλ
-            type: string
-            description: Use only the artist's confirmed public HTTPS profile; leave blank to hide it.
-          - name: verifiedPublic
-            label: Verified public identity for Schema.org / Επιβεβαιωμένη δημόσια ταυτότητα για Schema.org
-            type: boolean
-            default: false
-            description: Enable only after confirming this is an official public profile controlled by or unambiguously belonging to the artist.
-
-  - name: about
-    label: About / Σχετικά
-    type: file
-    path: src/content/about.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
       - name: intro
-        label: Introduction / Εισαγωγή
+        label: Homepage introduction / Εισαγωγή αρχικής
         component: longCopy
-      - name: paragraphs
-        label: Biography / Βιογραφικό
-        type: object
-        fields:
-          - name: en
-            label: English paragraphs
-            type: text
-            list: true
-          - name: el
-            label: Ελληνικές παράγραφοι
-            type: text
-            list: true
+
+  - name: articles
+    label: Articles / Άρθρα
+    type: collection
+    path: src/content/articles
+    format: json
+    filename:
+      template: "{slug}.json"
+      field: false
+    view:
+      primary: slug
+      fields: [slug, status, date, type, author, topicSlug]
+      sort: [date, status, type]
+      search: [slug, title.en, title.el, tags]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        pattern: "^[a-z0-9-]+$"
+        description: Lowercase Latin letters, digits and hyphens. Keep stable after publication.
+      - name: type
+        label: Format / Τύπος
+        type: select
+        required: true
+        options:
+          values:
+            - { name: feature, label: Feature }
+            - { name: profile, label: Profile }
+            - { name: essay, label: Essay }
+            - { name: interview, label: Interview }
+            - { name: review, label: Review }
+            - { name: update, label: Short update }
+      - name: status
+        label: Status / Κατάσταση
+        type: select
+        required: true
+        default: draft
+        options:
+          values:
+            - { name: draft, label: Draft / Προσχέδιο }
+            - { name: published, label: Published / Δημοσιευμένο }
+      - name: featured
+        label: Featured on homepage / Κεντρικό στην αρχική
+        type: boolean
+        default: false
+        description: Keep only one story featured at a time.
+      - name: date
+        label: Publication date / Ημερομηνία
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: author
+        label: Author / Συντάκτης
+        type: reference
+        required: true
+        options:
+          collection: authors
+          search: "name,slug"
+          value: "{fields.slug}"
+          label: "{fields.name}"
+      - name: topicSlug
+        label: Topic / Θεματική
+        type: reference
+        required: true
+        options:
+          collection: topics
+          search: "label.en,label.el,slug"
+          value: "{fields.slug}"
+          label: "{fields.label.en}"
+      - name: tags
+        label: Tags / Ετικέτες
+        type: string
+        list: true
+        description: Lowercase reusable tags, e.g. music, everyday-life, web.
+      - name: title
+        label: Title / Τίτλος
+        component: titleCopy
+      - name: dek
+        label: Summary / Υπότιτλος
+        component: longCopy
+      - name: topic
+        label: Display topic label / Εμφανιζόμενο θέμα
+        component: shortCopy
+        description: Optional editorial label; the topic collection controls taxonomy.
       - name: image
-        label: Portrait / Φωτογραφία
+        label: Hero image / Κεντρική εικόνα
         type: image
-      - name: imagePositionX
-        label: Horizontal focus (%) / Οριζόντια θέση (%)
-        type: number
-        options: { min: 0, max: 100 }
-      - name: imagePositionY
-        label: Vertical focus (%) / Κάθετη θέση (%)
-        type: number
-        options: { min: 0, max: 100 }
-      - name: imageZoom
-        label: Zoom / Μεγέθυνση
-        type: number
-        options: { min: 1, max: 2 }
       - name: imageAlt
         label: Image description / Περιγραφή εικόνας
         component: shortCopy
+      - name: body
+        label: Article body / Κείμενο άρθρου
+        component: paragraphCopy
 
-  - name: projects
-    label: Projects / Σχήματα
-    type: file
-    path: src/content/projects.json
+  - name: authors
+    label: Authors / Συντάκτες
+    type: collection
+    path: src/content/authors
     format: json
-    operations: { create: false, delete: false }
+    filename:
+      template: "{slug}.json"
+      field: false
+    view:
+      primary: name
+      fields: [name, slug]
+      sort: [name]
+      search: [name, slug]
     fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: items
-        label: Projects / Σχήματα
-        component: card
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{fields.title.en}'
-
-  - name: discography
-    label: Discography / Δισκογραφία
-    type: file
-    path: src/content/discography.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: items
-        label: Releases / Κυκλοφορίες
-        component: card
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{fields.title.en}'
-
-  - name: media
-    label: Media / Πολυμέσα
-    type: file
-    path: src/content/media.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: items
-        label: Videos and links / Βίντεο και σύνδεσμοι
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{fields.title.en}'
-        fields:
-          - name: title
-            label: Title / Τίτλος
-            component: titleCopy
-          - name: embedUrl
-            label: Embed URL / Σύνδεσμος ενσωμάτωσης
-            type: string
-            description: Use only an official/public YouTube /embed/VIDEO_ID or Vimeo player.vimeo.com/video/ID URL. Third-party embeds are disabled by default in site.json privacy settings.
-          - name: url
-            label: External link / Εξωτερικός σύνδεσμος
-            type: string
-            description: HTTPS URL; leave blank if the embedded video is enough.
-
-  - name: live
-    label: Live dates / Εμφανίσεις
-    type: file
-    path: src/content/live.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: emptyUpcoming
-        label: No upcoming dates / Χωρίς επόμενες εμφανίσεις
-        component: shortCopy
-      - name: emptyPast
-        label: No archive dates / Χωρίς παλαιότερες εμφανίσεις
-        component: shortCopy
-      - name: items
-        label: Events / Εκδηλώσεις
-        type: object
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{date} — {fields.title.en}'
-        fields:
-          - name: id
-            label: Unique ID / Μοναδικός κωδικός
-            type: string
-            required: true
-            pattern: '^[a-z0-9-]+$'
-            description: Lowercase Latin letters, digits and hyphens; never repeat an ID.
-          - name: date
-            label: Date / Ημερομηνία
-            type: date
-            required: true
-            options:
-              format: yyyy-MM-dd
-          - name: title
-            label: Event title / Τίτλος εμφάνισης
-            component: titleCopy
-          - name: venue
-            label: Venue / Χώρος
-            type: string
-          - name: city
-            label: City / Πόλη
-            type: string
-          - name: poster
-            label: Poster / Αφίσα
-            type: image
-          - name: posterAlt
-            label: Poster description / Περιγραφή αφίσας
-            component: shortCopy
-          - name: ticketUrl
-            label: Ticket links / Σύνδεσμοι εισιτηρίων
-            component: shortCopy
-            description: Use HTTPS URLs. Each language may have its own link.
-
-  - name: services
-    label: Teaching & services / Διδασκαλία και υπηρεσίες
-    type: file
-    path: src/content/services.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: items
-        label: Services / Υπηρεσίες
-        component: card
-        list:
-          collapsible:
-            collapsed: true
-            summary: '{fields.title.en}'
-
-  - name: contact
-    label: Contact text / Κείμενο επικοινωνίας
-    type: file
-    path: src/content/contact.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-
-  - name: pressKit
-    label: Press kit / Υλικό για ΜΜΕ
-    type: file
-    path: src/content/press-kit.json
-    format: json
-    operations: { create: false, delete: false }
-    fields:
-      - name: intro
-        label: Introduction / Εισαγωγή
-        component: longCopy
-      - name: downloadUrl
-        label: Download URL / Σύνδεσμος λήψης
+      - name: slug
+        label: Author slug
         type: string
-        description: HTTPS URL or a path starting with /; leave blank to hide the button.
-      - name: downloadLabel
-        label: Button text / Κείμενο κουμπιού
+        required: true
+        pattern: "^[a-z0-9-]+$"
+      - name: name
+        label: Public name / Δημόσιο όνομα
+        type: string
+        required: true
+      - name: role
+        label: Role / Ρόλος
         component: shortCopy
+      - name: bio
+        label: Bio
+        component: longCopy
+      - name: links
+        label: Public links / Δημόσιοι σύνδεσμοι
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: url
+            label: HTTPS URL
+            type: string
+
+  - name: topics
+    label: Topics / Θεματικές
+    type: collection
+    path: src/content/topics
+    format: json
+    filename:
+      template: "{slug}.json"
+      field: false
+    view:
+      primary: slug
+      fields: [slug, label.en, label.el]
+      sort: [slug]
+      search: [slug, label.en, label.el]
+    fields:
+      - name: slug
+        label: Topic slug
+        type: string
+        required: true
+        pattern: "^[a-z0-9-]+$"
+      - name: label
+        label: Label / Ονομασία
+        component: titleCopy

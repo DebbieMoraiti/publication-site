@@ -1,0 +1,12 @@
+---
+import TopicPage from '../../components/TopicPage.astro';
+import { topics } from '../../content/editorial';
+import { siteConfig } from '../../config';
+
+export function getStaticPaths() {
+  return topics.map((topic) => ({ params: { slug: topic.slug }, props: { topic } }));
+}
+const { topic } = Astro.props;
+const lang = siteConfig.localization.defaultLanguage as 'en' | 'el';
+---
+<TopicPage lang={lang} topic={topic} />
