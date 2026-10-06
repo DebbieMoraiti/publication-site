@@ -3,13 +3,20 @@
     "defaultLanguage": "en",
     "timeZone": "Europe/Athens",
     "languages": [
-      { "code": "en", "label": "English" },
-      { "code": "el", "label": "Ελληνικά" }
+      {
+        "code": "en",
+        "label": "English"
+      },
+      {
+        "code": "el",
+        "label": "Ελληνικά"
+      }
     ]
   },
-  "contact": { "formEndpoint": "" },
-  "audio": { "src": "", "autoplayOncePerTab": false },
-  "branding": { "logo": "", "favicon": "" },
+  "branding": {
+    "logo": "",
+    "favicon": ""
+  },
   "seo": {
     "siteUrl": "https://artist-website-starter.moraitidebbie.workers.dev",
     "indexable": false,
@@ -23,25 +30,6 @@
     },
     "shareImage": ""
   },
-  "schema": {
-    "enabled": false,
-    "entityType": "Person",
-    "entityId": "",
-    "alternateName": "",
-    "description": { "en": "", "el": "" },
-    "image": "",
-    "jobTitles": [],
-    "genres": [],
-    "location": { "name": "" },
-    "founding": { "date": "", "location": "" },
-    "sameAs": [],
-    "subjectOf": [],
-    "members": [],
-    "knowsAbout": [],
-    "includeLiveEvents": false,
-    "eventDetails": [],
-    "discography": []
-  },
   "credit": {
     "enabled": true,
     "label": "Website design & development by",
@@ -49,7 +37,6 @@
     "url": "https://www.linkedin.com/in/debbiemoraiti/"
   },
   "privacy": {
-    "publishPublicEmail": false,
     "allowThirdPartyEmbeds": false
   }
 }
