@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import sharp from 'sharp';
 import { siteConfig, themeConfig } from '../config';
-import type { LanguageCode } from '../i18n/ui';
+import type { LanguageCode } from '../i18n/routes';
 
 const escapeXml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
