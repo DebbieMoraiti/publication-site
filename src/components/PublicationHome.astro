@@ -58,7 +58,7 @@ const schema = publicationWebsiteSchema(lang);
           <span>{latest.length.toString().padStart(2, '0')}</span>
         </div>
         <div class="editorial-grid">
-          {latest.map((article, index) => (
+          {latest.map((article) => (
             <article class="story-card">
               {article.image ? (
                 <figure class="story-card__image story-card__media">
