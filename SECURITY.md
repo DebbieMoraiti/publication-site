@@ -1,97 +1,38 @@
 # Security & Privacy Guidelines
 
-This starter is designed for public artist websites. Treat every repository, CMS
-field, image and integration as potentially public once a client site is launched.
+This repository builds a public editorial website. Treat committed content, images and configuration as potentially public.
 
-## Security model
+## Repository and account security
 
-- Keep secrets out of the repository. Do not commit passwords, API keys, access
-  tokens, private keys, recovery codes, service-account files or private notes.
-- Use GitHub/Cloudflare/Formspree secret stores only when a future server-side
-  integration genuinely requires a secret. The current static starter does not
-  require repository secrets.
-- Use a separate repository, Cloudflare project and optional Formspree project
-  for each artist. Grant each app access only to that repository.
-- Keep the default branch protected from accidental or unauthorized changes.
-  Review production changes through a pull request when practical.
+- Keep passwords, API keys, access tokens, recovery codes and private notes out of Git.
+- Use 2FA/passkeys on GitHub and deployment accounts.
+- Restrict connected apps to only the repositories they need.
+- Review production changes and build status before launch.
+- Enable secret scanning and dependency/security alerts when available.
 
-## Privacy by default
+## Privacy
 
-Do not publish private or unnecessary personal data. In particular, do not put
-home addresses, personal phone numbers, private email addresses, dates of birth,
-government/personal IDs, precise private locations, private travel plans,
-recovery contacts or security answers in CMS content, config, Schema.org data,
-press kits, image metadata or Git history.
+Do not publish unnecessary personal information in articles, author records, metadata, structured data, images or Git history.
 
-The starter defaults to:
+Before committing sensitive photos, remove EXIF/GPS metadata locally. Production uploads are sanitized during the build, but the original source file can remain in Git history.
 
-- no public email publication;
-- no third-party media embeds;
-- no contact form endpoint;
-- no audio autoplay;
-- no indexing while demo/client setup is incomplete;
-- no Schema.org JSON-LD while the starter contains demonstration content;
-- no Schema.org identity links unless individually marked as verified public.
+## Content safety
 
-Enable a public professional email only when it is intentionally published.
-Prefer a dedicated booking/business address rather than a private mailbox.
+Editorial text is rendered as data rather than arbitrary HTML. Do not add unreviewed `set:html`, inline third-party scripts, tracking snippets or arbitrary iframes.
 
-## Public identities and anti-impersonation
-
-Only add social profiles, MusicBrainz, Wikidata, Discogs or similar identifiers
-when they are confirmed public identities for the artist. A profile used in
-Schema.org `sameAs` must be verified by the site owner or through another
-reliable public source before `verifiedPublic` is enabled.
-
-Use the final official HTTPS domain in `seo.siteUrl`. Canonical URLs,
-structured data and official social links should all point consistently to the
-same public identity. Do not add private contact or operational details merely
-to make Schema.org richer.
-
-## CMS and links
-
-Editorial URLs are validated before rendering. Only root-relative links or
-HTTPS URLs without embedded credentials are accepted. Embeds are allowlisted to
-privacy-enhanced YouTube and Vimeo player URLs; arbitrary iframes are not
-created from CMS content.
-
-Do not paste HTML, scripts, tracking snippets, shortened URLs or credentials
-into content fields. Text content is rendered as text by Astro; do not replace
-it with unreviewed `set:html` or `innerHTML`.
-
-## Images and press assets
-
-CMS uploads are limited to JPG/JPEG, PNG, WebP and AVIF. The build validates
-image data and size, creates responsive variants and sanitizes deployed
-`/uploads/` images so EXIF/GPS/device metadata is removed before publication.
-
-Important: source uploads can still contain metadata in Git history. Before
-committing sensitive photos to a repository that may become public, strip EXIF
-metadata locally as well. Never publish photos that reveal a private home,
-private location, badge/ID, access code, vehicle plate or other information
-that creates a doxxing or physical-security risk.
-
-## Forms
-
-The form is disabled until explicitly configured. Use a client-owned Formspree
-project, Restrict to Domain, spam protection and provider CAPTCHA/abuse controls
-where appropriate. The form collects only name, email and message plus a
-honeypot. Do not add sensitive fields unless there is a documented business
-need. Review the provider's retention settings and delete submissions that are
-no longer needed.
+External links and future integrations should use HTTPS and be reviewed before publication.
 
 ## Browser protections
 
-Production builds generate a CSP and security headers. Third-party origins are
-allowed only when the related feature is enabled. Do not weaken CSP to add an
-unreviewed script, iframe, font CDN or analytics provider. Prefer self-hosted
-static assets and HTTPS-only resources.
+Production builds generate security headers and a build-specific Content Security Policy. Third-party frames are disabled by default. Do not weaken the CSP merely to make an unreviewed integration work.
 
-## Dependencies and deployment
+## Images
 
-Use `npm ci`, not `npm install`, in reproducible builds. Direct dependency
-versions are pinned and `package-lock.json` must stay committed. Before
-production changes run:
+Uploads are limited to JPG/JPEG, PNG, WebP and AVIF. The build validates image data and size, creates responsive variants and sanitizes deployed uploads.
+
+## Dependencies
+
+Use reproducible installs:
 
 ```sh
 npm ci
@@ -102,18 +43,6 @@ npm audit --audit-level=moderate
 
 Review unexpected dependency-tree changes before merging.
 
-## GitHub and account controls
+## Indexing
 
-For each production repository:
-
-- enable 2FA/passkeys on owner/editor accounts;
-- restrict GitHub App installations to only required repositories;
-- use a branch ruleset/protection policy for the production branch;
-- require pull requests and successful build checks when the workflow allows;
-- disable force-pushes and branch deletion on production;
-- enable secret scanning and dependency/security alerts when available;
-- periodically remove stale collaborators and third-party app access.
-
-This file contains no credentials. Report suspected leaks by rotating/revoking
-the affected credential first, then removing it from the current tree and Git
-history as required.
+Keep `seo.indexable: false` while the publication contains placeholder content or uses a temporary identity/domain. Enable indexing only after the final public configuration has been reviewed.
