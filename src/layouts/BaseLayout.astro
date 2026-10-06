@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import { siteConfig, themeConfig } from '../config';
 import { absoluteUrl, alternates, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
-import { buildStructuredData } from '../lib/schema';
 
 interface Props {
   title?: string;
@@ -33,8 +32,9 @@ const pageTitle = title ?? `${siteConfig.identity.name} — ${siteConfig.seo.tit
 const pageDescription = description ?? siteConfig.seo.description[lang];
 const image = absoluteUrl((socialImage?.startsWith('/') ? socialImage : '') || siteConfig.seo.shareImage.trim() || '/social-share.png');
 const locale = lang === 'el' ? 'el_GR' : 'en_US';
-const graph = providedStructuredData ?? buildStructuredData(lang, page, pageTitle, pageDescription);
-const structuredData = graph ? JSON.stringify(graph).replace(/</g, '\\u003c') : undefined;
+const structuredData = providedStructuredData
+  ? JSON.stringify(providedStructuredData).replace(/</g, '\\u003c')
+  : undefined;
 
 const themeVariables = [
   `--color-background: ${themeConfig.colors.background}`,
