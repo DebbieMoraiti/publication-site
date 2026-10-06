@@ -2,14 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
-import { visibleArticles } from '../content/publication-data';
+import { sortedVisibleArticles } from '../content/publication-data';
 import publication from '../content/publication.json';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 import { topicBySlug } from '../content/editorial';
 
 interface Props { lang: LanguageCode; tag: string; }
 const { lang, tag } = Astro.props;
-const related = visibleArticles().filter((article) => article.tags?.includes(tag));
+const related = sortedVisibleArticles().filter((article) => article.tags?.includes(tag));
 const label = tag.replace(/-/g, ' ');
 ---
 
@@ -22,8 +22,14 @@ const label = tag.replace(/-/g, ' ');
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
       <section class="taxonomy-page content-container">
+        <nav class="editorial-breadcrumbs" aria-label={lang === 'el' ? 'Πλοήγηση' : 'Breadcrumb'}>
+          <a href={languagePath(lang)}>{lang === 'el' ? 'Αρχική' : 'Home'}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">#{label}</span>
+        </nav>
         <p class="publication-kicker">{lang === 'el' ? 'Ετικέτα' : 'Tag'}</p>
         <h1>#{label}</h1>
+        <p class="taxonomy-count">{related.length} {lang === 'el' ? (related.length === 1 ? 'άρθρο' : 'άρθρα') : (related.length === 1 ? 'story' : 'stories')}</p>
         <div class="taxonomy-list">
           {related.map((article) => (
             <article>
