@@ -62,3 +62,60 @@ jobs:
       - name: Deploy preview
         id: deployment
         uses: actions/deploy-pages@v5
+
+
+  audit:
+    name: Lighthouse audit
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+
+      - name: Audit homepage
+        run: >
+          npx --yes lighthouse@13.5.0
+          https://debbiemoraiti.github.io/publication-site/
+          --chrome-flags="--headless --no-sandbox"
+          --only-categories=performance,accessibility,best-practices,seo
+          --output=json
+          --output-path=./lighthouse-home.json
+
+      - name: Audit article
+        run: >
+          npx --yes lighthouse@13.5.0
+          https://debbiemoraiti.github.io/publication-site/articles/stelios-sioulas-behind-the-kit/
+          --chrome-flags="--headless --no-sandbox"
+          --only-categories=performance,accessibility,best-practices,seo
+          --output=json
+          --output-path=./lighthouse-article.json
+
+      - name: Check Lighthouse thresholds
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const files = ['lighthouse-home.json', 'lighthouse-article.json'];
+          let failed = false;
+          for (const file of files) {
+            const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const scores = Object.fromEntries(
+              Object.entries(report.categories).map(([key, value]) => [key, value.score ?? 0]),
+            );
+            console.log(file, scores);
+            if (scores.performance < 0.85) failed = true;
+            if (scores.accessibility < 0.95) failed = true;
+            if (scores['best-practices'] < 0.95) failed = true;
+          }
+          if (failed) {
+            throw new Error('Lighthouse quality threshold failed.');
+          }
+          NODE
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: lighthouse-*.json
