@@ -5,6 +5,7 @@ import EditorialFooter from './EditorialFooter.astro';
 import publication from '../content/publication.json';
 import { visibleArticles } from '../content/publication-data';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
+import { topicBySlug } from '../content/editorial';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
@@ -32,7 +33,7 @@ const schema = publicationWebsiteSchema(lang);
         <section class="editorial-feature content-container" id="stories" aria-labelledby="featured-heading">
           <div class="feature-rule"></div>
           <div class="feature-copy">
-            <p class="story-meta">{featured.topic[lang]} · {featured.date}</p>
+            <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug} · {featured.date}</p>
             <h2 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h2>
             <p>{featured.dek[lang]}</p>
             {featured.status === 'draft' && (
@@ -66,7 +67,7 @@ const schema = publicationWebsiteSchema(lang);
               ) : (
                 <div class="story-card__image" aria-hidden="true"></div>
               )}
-              <p class="story-meta">{article.topic[lang]} · {article.date}</p>
+              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · {article.date}</p>
               <h3><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h3>
               <p>{article.dek[lang]}</p>
             </article>
