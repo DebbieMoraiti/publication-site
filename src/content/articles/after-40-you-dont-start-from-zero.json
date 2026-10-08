@@ -1,0 +1,182 @@
+{
+  "slug": "after-40-you-dont-start-from-zero",
+  "type": "essay",
+  "status": "published",
+  "featured": false,
+  "date": "2026-10-09",
+  "author": "debbie-moraiti",
+  "topicSlug": "ideas",
+  "tags": [
+    "career-change",
+    "computer-science",
+    "women-in-tech",
+    "lifelong-learning",
+    "personal-essay"
+  ],
+  "title": {
+    "en": "After 40, you don't start from zero",
+    "el": "Μετά τα 40, δεν ξεκινάς από το μηδέν"
+  },
+  "dek": {
+    "en": "What it means to finish a Computer Science degree, change career and build a new professional direction while the rest of life keeps moving.",
+    "el": "Τι σημαίνει να ολοκληρώνεις ένα πτυχίο Πληροφορικής, να αλλάζεις καριέρα και να χτίζεις μια νέα επαγγελματική κατεύθυνση ενώ η υπόλοιπη ζωή συνεχίζεται κανονικά."
+  },
+  "topic": {
+    "en": "Personal essay",
+    "el": "Προσωπικό δοκίμιο"
+  },
+  "image": "/images/after-40-sea.jpg",
+  "imageAlt": {
+    "en": "A woman sitting on a rocky coast, looking toward the sea at sunset.",
+    "el": "Μια γυναίκα καθισμένη σε βραχώδη ακτή, κοιτάζει τη θάλασσα στο ηλιοβασίλεμα."
+  },
+  "sections": [
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "There is a very specific image of how a career is supposed to be built. You study at eighteen, graduate in your twenties, enter a profession and gradually move forward. By forty, supposedly, you know who you are professionally and where you are going. Life, of course, does not always follow that order.",
+        "el": "Υπάρχει μια πολύ συγκεκριμένη εικόνα για το πώς υποτίθεται ότι χτίζεται μια καριέρα. Σπουδάζεις στα δεκαοχτώ, παίρνεις πτυχίο στα είκοσι κάτι, μπαίνεις σε μια δουλειά και προχωράς σταδιακά. Μέχρι τα σαράντα, υποτίθεται ότι έχεις καταλάβει ποιος είσαι επαγγελματικά και προς τα πού πηγαίνεις. Μόνο που η ζωή δεν ακολουθεί πάντα αυτή τη σειρά."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "Sometimes you reach your forties and realize you do not simply want a different job. You want to change direction, learn something new, rebuild the way you work and earn the degree you did not get at the age you were supposedly meant to. And then something much harder than starting a new course begins: trying to fit a new life inside the one you already have.",
+        "el": "Κάποιες φορές φτάνεις μετά τα σαράντα και συνειδητοποιείς ότι δεν θέλεις απλώς μια διαφορετική δουλειά. Θέλεις να αλλάξεις κατεύθυνση, να μάθεις κάτι καινούριο, να ξαναχτίσεις τον τρόπο που δουλεύεις και να πάρεις ένα πτυχίο που δεν πήρες στην ηλικία που υποτίθεται ότι «έπρεπε». Και τότε αρχίζει κάτι πολύ πιο δύσκολο από μια νέα σχολή: η προσπάθεια να χωρέσεις μια καινούρια ζωή μέσα στην ήδη υπάρχουσα."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "There is no pause button",
+        "el": "Δεν υπάρχει pause"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "When you study in your twenties, a large part of your life can revolve around university. After forty, that luxury usually does not exist. Everyday life continues: responsibilities, practical problems, financial pressure, people who need you and days when there simply is not enough energy left. Studying does not replace any of that. It is added on top.",
+        "el": "Όταν σπουδάζεις στα είκοσι, ένα μεγάλο μέρος της ζωής σου μπορεί να περιστρέφεται γύρω από τη σχολή. Μετά τα σαράντα, αυτή η πολυτέλεια συνήθως δεν υπάρχει. Η καθημερινότητα συνεχίζεται: υποχρεώσεις, πρακτικά προβλήματα, οικονομικές πιέσεις, άνθρωποι που σε χρειάζονται και μέρες στις οποίες απλώς δεν περισσεύει αρκετή ενέργεια. Η σχολή δεν αντικαθιστά τίποτα από αυτά. Προστίθεται."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "Somewhere in between, you have to study, submit assignments, understand difficult concepts and keep moving even when your time comes in fragments. In my case, the reason for doing it gradually became clearer. I did not only want a Computer Science degree. I wanted that degree to become a real career change.",
+        "el": "Κάπου ανάμεσα πρέπει να διαβάσεις, να παραδώσεις εργασίες, να καταλάβεις δύσκολες έννοιες και να συνεχίσεις, ακόμη κι όταν ο χρόνος σου έρχεται σε μικρά κομμάτια. Στη δική μου περίπτωση, ο λόγος που το έκανα έγινε σταδιακά πιο συγκεκριμένος. Δεν ήθελα μόνο ένα πτυχίο Πληροφορικής. Ήθελα αυτό το πτυχίο να γίνει πραγματική αλλαγή καριέρας."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "From theory to something real",
+        "el": "Από τη θεωρία στην πράξη"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "There is a long distance between saying “I study Computer Science” and being able to work in the field. At some point I understood that clearly. The degree matters, but it cannot be the only thing. What you learn has to become something that exists outside an exam or an assignment.",
+        "el": "Υπάρχει μεγάλη απόσταση ανάμεσα στο «σπουδάζω Πληροφορική» και στο να μπορείς να δουλέψεις πραγματικά στον χώρο. Κάποια στιγμή το κατάλαβα ξεκάθαρα. Το πτυχίο έχει σημασία, αλλά δεν μπορεί να είναι το μόνο πράγμα. Όσα μαθαίνεις πρέπει να μετατραπούν σε κάτι που υπάρχει έξω από μια εξέταση ή μια εργασία."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "So I started building real projects: websites, a portfolio, GitHub repositories, deployments, domains, responsive layouts, SEO and content structures. Small technical decisions began to matter because there was a real result at the end — something another person could see, use and judge. Each project brought a new problem, and every solved problem became more useful than simply being able to say that I had studied the theory.",
+        "el": "Έτσι άρχισα να χτίζω πραγματικά projects: ιστοσελίδες, portfolio, GitHub repositories, deployments, domains, responsive layouts, SEO και δομές περιεχομένου. Μικρές τεχνικές αποφάσεις απέκτησαν σημασία επειδή στο τέλος υπήρχε πραγματικό αποτέλεσμα — κάτι που ένας άλλος άνθρωπος μπορούσε να δει, να χρησιμοποιήσει και να κρίνει. Κάθε project έφερνε ένα νέο πρόβλημα και κάθε πρόβλημα που λυνόταν ήταν πιο χρήσιμο από το να μπορώ απλώς να πω ότι διάβασα τη θεωρία."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "You are not a beginner at everything",
+        "el": "Δεν είσαι αρχάριος σε όλα"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "The easiest trap when changing career after forty is to believe you are starting from nothing. Technically, in some areas, you are a beginner. There are people in their early twenties who have been coding for years and already have internships and projects behind them. If you compare only years of technical experience, the comparison can become discouraging very quickly.",
+        "el": "Η πιο εύκολη παγίδα όταν αλλάζεις καριέρα μετά τα σαράντα είναι να πιστέψεις ότι ξεκινάς από το μηδέν. Τεχνικά, σε ορισμένα πράγματα, είσαι πράγματι αρχάριος. Υπάρχουν άνθρωποι λίγο πάνω από τα είκοσι που προγραμματίζουν εδώ και χρόνια και έχουν ήδη internships και projects πίσω τους. Αν συγκρίνεις μόνο χρόνια τεχνικής εμπειρίας, η σύγκριση μπορεί πολύ γρήγορα να γίνει αποθαρρυντική."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "But you do not arrive empty-handed. You bring the ability to communicate with people who do not always know exactly what they need, to notice when a project is drifting away from its goal, to organize work, take responsibility and find a way forward when something goes wrong. Experience does not transfer unchanged from one career to another, but it does not disappear either. It changes form.",
+        "el": "Όμως δεν φτάνεις εκεί με άδεια χέρια. Κουβαλάς την ικανότητα να συνεννοείσαι με ανθρώπους που δεν ξέρουν πάντα ακριβώς τι χρειάζονται, να καταλαβαίνεις πότε ένα project απομακρύνεται από τον στόχο του, να οργανώνεις δουλειά, να αναλαμβάνεις ευθύνη και να βρίσκεις λύση όταν κάτι δεν πάει όπως περίμενες. Η εμπειρία δεν μεταφέρεται αυτούσια από μια καριέρα στην άλλη, αλλά ούτε εξαφανίζεται. Αλλάζει μορφή."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "The problem of time",
+        "el": "Το πρόβλημα του χρόνου"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "Changing career is difficult not only because there is a lot to learn, but because you constantly have to decide where your time should go. Study for the course or finish the project? Improve the portfolio or learn the skill employers keep asking for? Build something new or make an existing project better? All of these decisions coexist with life away from the screen.",
+        "el": "Η αλλαγή καριέρας δεν είναι δύσκολη μόνο επειδή έχεις πολλά να μάθεις, αλλά επειδή πρέπει συνεχώς να αποφασίζεις πού θα δώσεις τον χρόνο σου. Να διαβάσω για το μάθημα ή να τελειώσω το project; Να βελτιώσω το portfolio ή να μάθω τη δεξιότητα που ζητούν συνεχώς οι αγγελίες; Να φτιάξω κάτι καινούριο ή να κάνω καλύτερο κάτι που ήδη υπάρχει; Και όλα αυτά συνυπάρχουν με τη ζωή έξω από την οθόνη."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "I do not think there is a perfect balance. There are periods when one thing takes more space and the others fall slightly behind. The point is not to do everything perfectly. It is to keep the direction, even when progress is obvious some weeks and almost invisible in others.",
+        "el": "Δεν νομίζω ότι υπάρχει τέλεια ισορροπία. Υπάρχουν περίοδοι που ένα πράγμα παίρνει περισσότερο χώρο και τα υπόλοιπα μένουν λίγο πίσω. Το ζητούμενο δεν είναι να τα κάνεις όλα άψογα. Είναι να κρατάς την κατεύθυνση, ακόμη κι όταν κάποιες εβδομάδες η πρόοδος φαίνεται καθαρά και άλλες είναι σχεδόν αόρατη."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "A degree as a beginning, not an ending",
+        "el": "Το πτυχίο ως αρχή, όχι ως τέλος"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "This year I am in the final stage of my degree. The closer graduation gets, the less it feels like a finish line. For years it was a distant goal; now it looks more like a point of transition, from “I am studying so that one day I can” to “now I have to do it.” That is exciting, but it is also the part that feels most exposed.",
+        "el": "Φέτος βρίσκομαι στο τελευταίο στάδιο του πτυχίου. Όσο πλησιάζει η αποφοίτηση, τόσο λιγότερο μοιάζει με γραμμή τερματισμού. Για χρόνια ήταν ένας μακρινός στόχος· τώρα μοιάζει περισσότερο με σημείο μετάβασης, από το «σπουδάζω για να μπορέσω κάποτε» στο «τώρα πρέπει να το κάνω». Αυτό είναι συναρπαστικό, αλλά είναι και το σημείο στο οποίο νιώθεις περισσότερο εκτεθειμένος."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "I do not want to present myself as someone with ten years of software-development experience. I do not have that. What I do have is the foundation of my studies, real projects, things I have already built, problems I have already solved and a very concrete willingness to keep learning. That is enough for the beginning to be real.",
+        "el": "Δεν θέλω να παρουσιάσω τον εαυτό μου ως άνθρωπο με δέκα χρόνια εμπειρίας στο software development. Δεν τα έχω. Έχω όμως τη βάση των σπουδών μου, πραγματικά projects, πράγματα που έχω ήδη φτιάξει, προβλήματα που έχω ήδη λύσει και μια πολύ συγκεκριμένη διάθεση να συνεχίσω να μαθαίνω. Και αυτό είναι αρκετό για να είναι πραγματική η αρχή."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "en": "You do not have to become someone else",
+        "el": "Δεν χρειάζεται να γίνεις άλλος άνθρωπος"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "There is a strange idea around major changes: that changing your life means reinventing yourself. I am not sure that is true. Perhaps you simply give more space to a part of yourself that was already there.",
+        "el": "Υπάρχει μια περίεργη ιδέα γύρω από τις μεγάλες αλλαγές: ότι για να αλλάξεις ζωή πρέπει να ξαναεφεύρεις τον εαυτό σου. Δεν είμαι σίγουρη ότι ισχύει. Ίσως απλώς δίνεις περισσότερο χώρο σε μια πλευρά σου που υπήρχε ήδη."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "Curiosity, the need to make things, the satisfaction of finally getting something to work — none of that appeared because I enrolled in a degree. Studying and building projects simply gave those instincts a direction. And perhaps that is one of the advantages of changing direction after forty: you do not have unlimited time, but you know better where it is worth spending it.",
+        "el": "Η περιέργεια, η ανάγκη να φτιάχνεις πράγματα, η ικανοποίηση όταν κάτι που πριν δεν λειτουργούσε τελικά λειτουργεί — τίποτα από αυτά δεν εμφανίστηκε επειδή γράφτηκα σε μια σχολή. Οι σπουδές και τα projects απλώς τους έδωσαν κατεύθυνση. Και ίσως αυτό να είναι ένα από τα πλεονεκτήματα μιας αλλαγής μετά τα σαράντα: δεν έχεις απεριόριστο χρόνο, αλλά ξέρεις καλύτερα πού αξίζει να τον δώσεις."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "en": "I still do not know exactly where this path will end. I do know that I want to keep working in technology and building things that exist beyond an assignment or an exam. Maybe that is what changing career after forty really means: not starting from zero, but starting from where you already are, with everything you carry with you.",
+        "el": "Δεν ξέρω ακόμη ακριβώς πού θα καταλήξει αυτή η διαδρομή. Ξέρω όμως ότι θέλω να συνεχίσω να δουλεύω στον χώρο της τεχνολογίας και να χτίζω πράγματα που υπάρχουν έξω από μια εργασία ή μια εξέταση. Ίσως τελικά αυτό να σημαίνει αλλαγή καριέρας μετά τα σαράντα: όχι να ξεκινάς από το μηδέν, αλλά να ξεκινάς από εκεί που βρίσκεσαι ήδη, με όλα όσα κουβαλάς μαζί σου."
+      }
+    }
+  ]
+}
