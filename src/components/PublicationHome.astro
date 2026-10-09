@@ -5,7 +5,7 @@ import EditorialFooter from './EditorialFooter.astro';
 import ResponsiveImage from './ResponsiveImage.astro';
 import publication from '../content/publication.json';
 import { sortedVisibleArticles } from '../content/publication-data';
-import { formatPublicationDate } from '../lib/editorial-format';
+import { formatPublicationDate, readingTime } from '../lib/editorial-format';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
 import { authorBySlug, topicBySlug } from '../content/editorial';
 import { languagePath, type LanguageCode } from '../i18n/routes';
@@ -33,11 +33,21 @@ const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-
       {featured && (
         <section class="editorial-feature content-container" id="stories" aria-labelledby="featured-heading">
           <div class="feature-copy">
-            <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug} · <time datetime={featured.date}>{formatPublicationDate(featured.date, lang)}</time></p>
+            <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug}</p>
             <h1 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h1>
             <p>{featured.dek[lang]}</p>
-            <p class="feature-byline">{lang === 'el' ? 'Από ' : 'By '}{authorBySlug.get(featured.author)?.name}</p>
-            <a class="story-read-link" href={languagePath(lang, `articles/${featured.slug}`)}>{lang === 'el' ? 'Διάβασε την ιστορία →' : 'Read the story →'}</a>
+            <p class="feature-byline">
+              <span class="feature-byline__item">{lang === 'el' ? 'Από ' : 'By '}{authorBySlug.get(featured.author)?.name}</span>
+              <span class="feature-byline__item">
+                <span class="feature-byline__separator" aria-hidden="true">|</span>
+                <time datetime={featured.date}>{formatPublicationDate(featured.date, lang, 'short')}</time>
+              </span>
+              <span class="feature-byline__item">
+                <span class="feature-byline__separator" aria-hidden="true">|</span>
+                <span>{readingTime(featured, lang)}</span>
+              </span>
+            </p>
+            <a class="story-read-link feature-read-link" href={languagePath(lang, `articles/${featured.slug}`)}>{lang === 'el' ? 'Διάβασε το άρθρο →' : 'Read the article →'}</a>
           </div>
           {featured.image ? (
             <figure class="feature-image">
@@ -84,8 +94,14 @@ const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-
             if (!topic) return null;
             return (
               <a href={languagePath(lang, `topics/${slug}`)}>
+                {topic.image && <ResponsiveImage
+                  src={topic.image}
+                  alt=""
+                  variant="topic"
+                  positionX={topic.imageFocusX}
+                  sizes="(max-width: 624px) calc((100vw - 48px) / 2), (max-width: 832px) calc((100vw - 64px) / 3), 170px"
+                />}
                 <span>{topic.label[lang]}</span>
-                <small>{lang === 'el' ? 'Άνοιγμα θεματικής →' : 'Explore section →'}</small>
               </a>
             );
           })}

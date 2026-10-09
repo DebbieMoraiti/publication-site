@@ -3,5 +3,7 @@
   "label": {
     "en": "Ideas",
     "el": "Ιδέες"
-  }
+  },
+  "image": "/uploads/topics/ideas-typewriter.jpg",
+  "imageFocusX": 50
 }

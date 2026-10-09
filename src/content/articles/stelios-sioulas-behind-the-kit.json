@@ -26,6 +26,8 @@
     "el": "Πρόσωπα στη μουσική"
   },
   "image": "/uploads/stelios-sioulas-press.jpg",
+  "imageCrop": "square",
+  "imageFocusX": 54,
   "imageAlt": {
     "en": "Stelios Sioulas behind the drum kit.",
     "el": "Ο Στέλιος Σιούλας πίσω από το drum kit."
@@ -119,6 +121,14 @@
         "en": "This profile is the starting point for a longer conversation with Stelios Sioulas. The interview will expand on the choices behind his sound, the way he approaches different projects, his years in Thessaloniki and Athens, what he looks for in a collaboration and how his experience as a teacher affects the way he thinks about playing.",
         "el": "Το συγκεκριμένο profile είναι η αφετηρία για μια μεγαλύτερη συζήτηση με τον Στέλιο Σιούλα. Η συνέντευξη που θα ακολουθήσει θα εστιάσει στις επιλογές πίσω από τον ήχο και το παίξιμό του, στον τρόπο με τον οποίο προσεγγίζει διαφορετικά projects, στα χρόνια της Θεσσαλονίκης και της Αθήνας, σε όσα αναζητά από μια συνεργασία και στο πώς η εμπειρία της διδασκαλίας επηρεάζει τον τρόπο με τον οποίο σκέφτεται τα τύμπανα."
       }
+    },
+    {
+      "type": "link",
+      "text": {
+        "en": "Stelios Sioulas — official website",
+        "el": "Στέλιος Σιούλας — επίσημο site"
+      },
+      "url": "https://steliossioulas.gr/"
     }
   ]
 }

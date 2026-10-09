@@ -54,7 +54,7 @@ try {
   await send('Page.enable');
   await mkdir(output, { recursive: true });
   const results = [];
-  const routes = ['', 'contact/', 'articles/after-40-you-dont-start-from-zero/', 'articles/small-moments-big-value/', 'articles/the-prisoners-eightball-sold-out-2026/'];
+  const routes = ['', 'contact/', 'articles/after-40-you-dont-start-from-zero/', 'articles/small-moments-big-value/', 'articles/stelios-sioulas-behind-the-kit/', 'articles/the-prisoners-eightball-sold-out-2026/'];
   for (const width of [320, 360, 390, 430, 768, 1024, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width <= 430 });
     for (const lang of ['en', 'el']) {
@@ -87,6 +87,21 @@ try {
           columns: document.querySelector('.editorial-grid') ? getComputedStyle(document.querySelector('.editorial-grid')).gridTemplateColumns.split(' ').length : null,
           shadow: getComputedStyle(document.querySelector('h1')).textShadow,
           images: document.images.length,
+          homepage: document.querySelector('.editorial-feature') ? {
+            date: document.querySelector('.feature-byline time')?.dateTime,
+            byline: document.querySelector('.feature-byline')?.textContent,
+            featuredFilter: getComputedStyle(document.querySelector('.feature-image img')).filter,
+            storyFilters: Array.from(document.querySelectorAll('.story-card__media img')).map(image => getComputedStyle(image).filter),
+            topics: Array.from(document.querySelectorAll('.topic-rack__grid a')).map(link => ({
+              label: link.textContent.trim(),
+              image: !!link.querySelector('img'),
+              filter: link.querySelector('img') ? getComputedStyle(link.querySelector('img')).filter : null,
+            })),
+          } : null,
+          croppedHero: document.querySelector('.article-hero--cropped img') ? {
+            width: document.querySelector('.article-hero--cropped img').getBoundingClientRect().width,
+            height: document.querySelector('.article-hero--cropped img').getBoundingClientRect().height,
+          } : null,
           contact: document.querySelector('.contact-form') ? {
             mode: document.querySelector('.contact-form').dataset.contactMode,
             action: document.querySelector('.contact-form').action,
@@ -103,6 +118,12 @@ try {
         }
         if (!route && (metrics.cards !== publishedCount || metrics.columns !== (width > 832 ? 3 : width > 624 ? 2 : 1))) {
           throw new Error(`Invalid homepage grid: ${JSON.stringify({ url, metrics })}`);
+        }
+        if (!route && (!metrics.homepage?.date || !/min read|λεπτά? ανάγνωσης/u.test(metrics.homepage.byline || '') || metrics.homepage.featuredFilter.includes('grayscale') || metrics.homepage.storyFilters.some(filter => !filter.includes('grayscale(1)')) || metrics.homepage.topics.length !== 6 || metrics.homepage.topics.some(topic => !topic.label || !topic.image || !topic.filter.includes('grayscale(1)')))) {
+          throw new Error(`Invalid front-page imagery or story details: ${JSON.stringify({ url, metrics })}`);
+        }
+        if (route === 'articles/stelios-sioulas-behind-the-kit/' && (!metrics.croppedHero || Math.abs(metrics.croppedHero.width - metrics.croppedHero.height) > 1)) {
+          throw new Error(`Invalid cropped profile photograph: ${JSON.stringify({ url, metrics })}`);
         }
         if (route === 'contact/' && (!metrics.contact || metrics.contact.fields.length !== 4 || metrics.contact.fields.some(field => !field.label || !field.required) || (metrics.contact.mode === 'unavailable' && (!metrics.contact.buttonDisabled || metrics.contact.fields.some(field => !field.disabled))))) {
           throw new Error(`Invalid accessible Contact form: ${JSON.stringify({ url, metrics })}`);

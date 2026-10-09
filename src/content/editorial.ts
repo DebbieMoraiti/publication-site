@@ -22,6 +22,8 @@ export type Article = {
   dek: Localized;
   topic?: Localized;
   image?: string;
+  imageCrop?: 'square';
+  imageFocusX?: number;
   imageAlt?: Partial<Localized>;
   imageCredit?: Partial<Localized>;
   imageSource?: string;
@@ -40,6 +42,8 @@ export type Author = {
 export type Topic = {
   slug: string;
   label: Localized;
+  image?: string;
+  imageFocusX?: number;
 };
 
 const articleModules = import.meta.glob('./articles/*.json', { eager: true, import: 'default' }) as Record<string, Article>;

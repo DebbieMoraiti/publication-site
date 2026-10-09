@@ -3,5 +3,7 @@
   "label": {
     "en": "Digital",
     "el": "Digital"
-  }
+  },
+  "image": "/uploads/topics/digital-workspace.jpg",
+  "imageFocusX": 50
 }

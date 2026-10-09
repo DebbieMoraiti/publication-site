@@ -3,5 +3,7 @@
   "label": {
     "en": "Culture",
     "el": "Πολιτισμός"
-  }
+  },
+  "image": "/uploads/topics/culture-books.jpg",
+  "imageFocusX": 50
 }

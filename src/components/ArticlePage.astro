@@ -71,8 +71,15 @@ const related = relatedArticles(article, 3);
         </header>
 
         {article.image ? (
-          <figure class="article-hero">
-            <ResponsiveImage src={article.image} alt={article.imageAlt?.[lang] ?? ''} variant="hero" loading="eager" />
+          <figure class:list={['article-hero', { 'article-hero--cropped': article.imageCrop === 'square' }]}>
+            <ResponsiveImage
+              src={article.image}
+              alt={article.imageAlt?.[lang] ?? ''}
+              variant="hero"
+              loading="eager"
+              positionX={article.imageFocusX}
+              sizes={article.imageCrop === 'square' ? '(max-width: 736px) calc(100vw - 32px), 704px' : undefined}
+            />
             {article.imageCredit?.[lang] && <figcaption>
               {article.imageSource ? <a href={article.imageSource}>{article.imageCredit[lang]}</a> : article.imageCredit[lang]}
             </figcaption>}

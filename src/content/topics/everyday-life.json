@@ -3,5 +3,7 @@
   "label": {
     "en": "Everyday Life",
     "el": "Καθημερινότητα"
-  }
+  },
+  "image": "/uploads/small-moments-cat.webp",
+  "imageFocusX": 50
 }

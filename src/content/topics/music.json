@@ -3,5 +3,7 @@
   "label": {
     "en": "Music",
     "el": "Μουσική"
-  }
+  },
+  "image": "/uploads/the-prisoners-live.webp",
+  "imageFocusX": 50
 }
