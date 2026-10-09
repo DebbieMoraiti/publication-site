@@ -45,6 +45,7 @@ const image = absoluteUrl(imagePath);
 const imageAlt = socialImageAlt?.trim() || pageTitle;
 const isGeneratedShareImage = imagePath === '/social-share.png';
 const locale = lang === 'el' ? 'el_GR' : 'en_US';
+const buildRevision = process.env.GITHUB_SHA;
 const structuredData = providedStructuredData
   ? JSON.stringify(providedStructuredData).replace(/</g, '\\u003c')
   : undefined;
@@ -76,6 +77,7 @@ const themeVariables = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={pageDescription} />
+    {buildRevision && <meta name="build-revision" content={buildRevision} />}
     {(noindex || !siteConfig.seo.indexable) && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" type="application/rss+xml" title={`${siteConfig.identity.name} — ${lang.toUpperCase()}`} href={rss} />

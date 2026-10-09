@@ -1,26 +1,38 @@
 ---
 import { siteConfig } from '../config';
 import publication from '../content/publication.json';
-import { languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
+import { assetPath, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
 const page = pageFromPath(Astro.url.pathname);
 const homeSection = (id: string) => page ? `${languagePath(lang)}#${id}` : `#${id}`;
 const isCurrent = (target: string) => page === target || page.startsWith(`${target}/`);
+const logo = siteConfig.branding.logo;
+const wordmarkSizes = page ? '(max-width: 576px) calc(100vw - 32px), 512px' : '(max-width: 928px) calc(100vw - 32px), 864px';
+const wordmarkSrcset = logo === '/brand/storyfields-wordmark.webp'
+  ? [400, 800, 1600].map((width) => `${assetPath(width === 1600 ? logo : `/brand/storyfields-wordmark-${width}.webp`)} ${width}w`).join(', ')
+  : undefined;
 const labels = lang === 'el'
-  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση', edition: 'Ανεξάρτητη έκδοση' }
-  : { stories: 'Stories', people: 'People', ideas: 'Ideas', culture: 'Culture', archive: 'Archive', menu: 'Navigation', edition: 'Independent publication' };
+  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', music: 'Μουσική', everyday: 'Καθημερινότητα', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση', edition: 'Ανεξάρτητη έκδοση', location: 'Αθήνα' }
+  : { stories: 'Stories', people: 'People', ideas: 'Ideas', music: 'Music', everyday: 'Everyday life', culture: 'Culture', archive: 'Archive', menu: 'Navigation', edition: 'Independent publication', location: 'Athens' };
 ---
 
-<header class="editorial-header">
+<header class:list={['editorial-header', { 'editorial-header--compact': !!page }]}>
   <div class="newspaper-topline content-container">
     <span>{labels.edition}</span>
-    <span>Storyfields · Athens</span>
+    <span>Storyfields · {labels.location}</span>
   </div>
 
   <div class="newspaper-masthead content-container">
-    <a class="editorial-brand" href={languagePath(lang)}>{publication.identity.name}</a>
+    <a class="editorial-brand" href={languagePath(lang)} aria-label={publication.identity.name}>
+      {logo ? (
+        <>
+          <img class="editorial-wordmark" src={assetPath(logo)} srcset={wordmarkSrcset} sizes={wordmarkSizes} width="1600" height="255" alt="" decoding="async" fetchpriority="high" />
+          <span class="visually-hidden">{publication.identity.name}</span>
+        </>
+      ) : publication.identity.name}
+    </a>
     <p>{publication.identity.tagline[lang]}</p>
   </div>
 
@@ -29,6 +41,8 @@ const labels = lang === 'el'
       <a href={homeSection('stories')} aria-current={!page ? 'page' : undefined}>{labels.stories}</a>
       <a href={languagePath(lang, 'topics/people')} aria-current={isCurrent('topics/people') ? 'page' : undefined}>{labels.people}</a>
       <a href={languagePath(lang, 'topics/ideas')} aria-current={isCurrent('topics/ideas') ? 'page' : undefined}>{labels.ideas}</a>
+      <a href={languagePath(lang, 'topics/music')} aria-current={isCurrent('topics/music') ? 'page' : undefined}>{labels.music}</a>
+      <a href={languagePath(lang, 'topics/everyday-life')} aria-current={isCurrent('topics/everyday-life') ? 'page' : undefined}>{labels.everyday}</a>
       <a href={languagePath(lang, 'topics/culture')} aria-current={isCurrent('topics/culture') ? 'page' : undefined}>{labels.culture}</a>
       <a href={languagePath(lang, 'archive')} aria-current={isCurrent('archive') ? 'page' : undefined}>{labels.archive}</a>
     </nav>

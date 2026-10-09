@@ -2,11 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
+import ResponsiveImage from './ResponsiveImage.astro';
 import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
-import { articleNeighbors, moreFromTopic } from '../content/publication-data';
+import { articleNeighbors, relatedArticles } from '../content/publication-data';
+import { formatPublicationDate } from '../lib/editorial-format';
 import { publicationArticleSchema } from '../lib/publication-schema';
-import { assetPath, languagePath, type LanguageCode } from '../i18n/routes';
+import { languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props {
   lang: LanguageCode;
@@ -20,7 +22,7 @@ const author = authorBySlug.get(article.author);
 const topic = topicBySlug.get(article.topicSlug);
 const schema = publicationArticleSchema(lang, article, author);
 const { newer, older } = articleNeighbors(article);
-const related = moreFromTopic(article, 3);
+const related = relatedArticles(article, 3);
 ---
 
 <BaseLayout
@@ -50,16 +52,17 @@ const related = moreFromTopic(article, 3);
           </nav>
           <p class="story-meta">
             <a href={languagePath(lang, `topics/${article.topicSlug}`)}>{topic?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug}</a>
-            {' · '}{article.date}
           </p>
           <h1>{article.title[lang]}</h1>
           <p class="article-dek">{article.dek[lang]}</p>
-          {author && (
-            <p class="article-byline">
+          <p class="article-byline">
+            {author && <span>
               {lang === 'el' ? 'Από ' : 'By '}
               <a href={languagePath(lang, `authors/${author.slug}`)}>{author.name}</a>
-            </p>
-          )}
+            </span>}
+            <span aria-hidden="true"> · </span>
+            <time datetime={article.date}>{formatPublicationDate(article.date, lang)}</time>
+          </p>
           {article.tags && article.tags.length > 0 && (
             <ul class="article-tags" aria-label={lang === 'el' ? 'Ετικέτες' : 'Tags'}>
               {article.tags.map((tag) => <li><a href={languagePath(lang, `tags/${tag}`)}>{tag}</a></li>)}
@@ -69,7 +72,10 @@ const related = moreFromTopic(article, 3);
 
         {article.image ? (
           <figure class="article-hero">
-            <img src={assetPath(article.image)} alt={article.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+            <ResponsiveImage src={article.image} alt={article.imageAlt?.[lang] ?? ''} variant="hero" loading="eager" />
+            {article.imageCredit?.[lang] && <figcaption>
+              {article.imageSource ? <a href={article.imageSource}>{article.imageCredit[lang]}</a> : article.imageCredit[lang]}
+            </figcaption>}
           </figure>
         ) : (
           <div class="article-hero-placeholder" aria-hidden="true"></div>
@@ -97,15 +103,15 @@ const related = moreFromTopic(article, 3);
         {related.length > 0 && (
           <section class="article-related" aria-labelledby="related-heading">
             <div class="section-heading-row">
-              <h2 id="related-heading">{lang === 'el' ? 'Περισσότερα από αυτή τη θεματική' : 'More from this topic'}</h2>
-              <a href={languagePath(lang, `topics/${article.topicSlug}`)}>
-                {lang === 'el' ? 'Όλα τα άρθρα' : 'View topic'}
+              <h2 id="related-heading">{lang === 'el' ? 'Συνέχισε την ανάγνωση' : 'Continue reading'}</h2>
+              <a href={languagePath(lang, 'archive')}>
+                {lang === 'el' ? 'Όλα τα άρθρα' : 'All stories'}
               </a>
             </div>
             <div class="article-related__grid">
               {related.map((item) => (
                 <article>
-                  <p class="story-meta">{item.date}</p>
+                  <p class="story-meta"><time datetime={item.date}>{formatPublicationDate(item.date, lang)}</time></p>
                   <h3><a href={languagePath(lang, `articles/${item.slug}`)}>{item.title[lang]}</a></h3>
                   <p>{item.dek[lang]}</p>
                 </article>

@@ -5,12 +5,14 @@ import { assetPath } from '../i18n/routes';
 interface Props {
   src?: string;
   alt: string;
-  variant: 'portrait' | 'card' | 'poster';
+  variant: 'portrait' | 'card' | 'poster' | 'lead' | 'hero' | 'story';
+  loading?: 'eager' | 'lazy';
+  sizes?: string;
   positionX?: number;
   positionY?: number;
   zoom?: number;
 }
-const { src, alt, variant, positionX, positionY, zoom } = Astro.props;
+const { src, alt, variant, positionX, positionY, zoom, loading = 'lazy', sizes: providedSizes } = Astro.props;
 type Variant = { src: string; width: number };
 type ImageData = { width: number; height: number; avif: Variant[]; webp: Variant[] };
 const images = imageManifest as Record<string, ImageData>;
@@ -20,7 +22,7 @@ const focus = (value: number | undefined) => `${Number.isFinite(Number(value)) &
 const scale = Number.isFinite(Number(zoom)) && zoom !== undefined ? Math.min(2, Math.max(1, Number(zoom))) : 1;
 const style = `--image-x:${focus(positionX)};--image-y:${focus(positionY)};--image-zoom:${scale}`;
 const srcset = (items: { src: string; width: number }[]) => items.map((item) => `${assetPath(item.src)} ${item.width}w`).join(', ');
-const sizes = variant === 'poster' ? '(max-width: 640px) 112px, 160px' : variant === 'card' ? '(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 480px' : '(max-width: 640px) 100vw, 720px';
+const sizes = providedSizes ?? (variant === 'hero' ? '(max-width: 1152px) calc(100vw - 32px), 1088px' : variant === 'lead' ? '(max-width: 832px) calc(100vw - 32px), (max-width: 1280px) 55vw, 640px' : variant === 'story' ? '(max-width: 624px) calc(100vw - 32px), (max-width: 832px) 45vw, (max-width: 1280px) 30vw, 384px' : variant === 'poster' ? '(max-width: 640px) 112px, 160px' : variant === 'card' ? '(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 480px' : '(max-width: 640px) 100vw, 720px');
 ---
 
 {image && (
@@ -33,8 +35,11 @@ const sizes = variant === 'poster' ? '(max-width: 640px) 112px, 160px' : variant
       width={image.width}
       height={image.height}
       alt={alt}
-      loading="lazy"
+      loading={loading}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
       decoding="async"
     />
   </picture>
 )}
+
+{!image && key && <img src={assetPath(key)} alt={alt} loading={loading} decoding="async" />}

@@ -1,10 +1,8 @@
-import { siteConfig } from '../config';
 import { articles, type Article } from './editorial';
 
 export function visibleArticles() {
-  return siteConfig.seo.indexable
-    ? articles.filter((article) => article.status === 'published')
-    : articles;
+  // Publication status is independent of search-engine indexing.
+  return articles.filter((article) => article.status === 'published');
 }
 
 export function sortedVisibleArticles() {
@@ -22,8 +20,12 @@ export function articleNeighbors(article: Article) {
   };
 }
 
-export function moreFromTopic(article: Article, limit = 3) {
+export function relatedArticles(article: Article, limit = 3) {
+  const relevance = (item: Article) =>
+    (item.topicSlug === article.topicSlug ? 10 : 0) +
+    (item.tags ?? []).filter((tag) => article.tags?.includes(tag)).length;
   return sortedVisibleArticles()
-    .filter((item) => item.slug !== article.slug && item.topicSlug === article.topicSlug)
+    .filter((item) => item.slug !== article.slug)
+    .sort((a, b) => relevance(b) - relevance(a))
     .slice(0, limit);
 }

@@ -99,6 +99,11 @@ jobs:
           --output=json
           --output-path=./lighthouse-home.json
 
+      - name: Verify responsive layouts and images
+        env:
+          AUDIT_SITE_URL: https://storyfields.gr
+        run: node scripts/audit-responsive.mjs
+
       - name: Audit article
         run: >
           npx --yes lighthouse@13.5.0
@@ -135,3 +140,10 @@ jobs:
         with:
           name: lighthouse-reports
           path: lighthouse-*.json
+
+      - name: Upload responsive reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-reports
+          path: responsive-reports/

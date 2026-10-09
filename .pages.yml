@@ -178,6 +178,13 @@ content:
         label: Image description / Περιγραφή εικόνας
         component: shortCopy
         description: Required in both languages when a hero image is used; the build validates this.
+      - name: imageCredit
+        label: Image credit / Προέλευση εικόνας
+        component: shortCopy
+      - name: imageSource
+        label: Image source URL / Σύνδεσμος προέλευσης
+        type: string
+        description: Optional public HTTPS link to the official image source.
       - name: sections
         label: Article sections / Ενότητες άρθρου
         type: block

@@ -55,6 +55,8 @@ Older draft articles that still use the legacy paragraph-array `body` continue t
 
 Keep an article as **draft** while writing or reviewing it.
 
+Drafts remain in the repository and CMS, but are excluded from the public homepage, article routes, archives, related stories, RSS and sitemap. This applies while indexing is disabled as well. Set the status to **published** when the English and Greek copy is ready.
+
 Draft routes are built for preview, but:
 
 - they carry `noindex`;

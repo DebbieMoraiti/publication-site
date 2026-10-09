@@ -2,17 +2,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
+import ResponsiveImage from './ResponsiveImage.astro';
 import publication from '../content/publication.json';
-import { visibleArticles } from '../content/publication-data';
+import { sortedVisibleArticles } from '../content/publication-data';
+import { formatPublicationDate } from '../lib/editorial-format';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
-import { topicBySlug } from '../content/editorial';
-import { assetPath, languagePath, type LanguageCode } from '../i18n/routes';
+import { authorBySlug, topicBySlug } from '../content/editorial';
+import { languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
-const stories = visibleArticles();
+const stories = sortedVisibleArticles();
 const featured = stories.find((item) => item.featured) ?? stories[0];
-const latest = stories.filter((item) => item.slug !== featured?.slug);
+const latest = stories;
 const title = publication.identity.name;
 const description = publication.identity.tagline[lang];
 const schema = publicationWebsiteSchema(lang);
@@ -31,16 +33,15 @@ const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-
       {featured && (
         <section class="editorial-feature content-container" id="stories" aria-labelledby="featured-heading">
           <div class="feature-copy">
-            <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug} · {featured.date}</p>
+            <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug} · <time datetime={featured.date}>{formatPublicationDate(featured.date, lang)}</time></p>
             <h1 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h1>
             <p>{featured.dek[lang]}</p>
-            {featured.status === 'draft' && (
-              <span class="story-status">{lang === 'el' ? 'Προσχέδιο' : 'Draft'}</span>
-            )}
+            <p class="feature-byline">{lang === 'el' ? 'Από ' : 'By '}{authorBySlug.get(featured.author)?.name}</p>
+            <a class="story-read-link" href={languagePath(lang, `articles/${featured.slug}`)}>{lang === 'el' ? 'Διάβασε την ιστορία →' : 'Read the story →'}</a>
           </div>
           {featured.image ? (
             <figure class="feature-image">
-              <img src={assetPath(featured.image)} alt={featured.imageAlt?.[lang] ?? ''} loading="eager" decoding="async" />
+              <ResponsiveImage src={featured.image} alt={featured.imageAlt?.[lang] ?? ''} variant="lead" loading="eager" />
             </figure>
           ) : (
             <div class="feature-placeholder" aria-hidden="true">
@@ -50,32 +51,32 @@ const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-
         </section>
       )}
 
-      <section class="latest-section content-container" aria-labelledby="latest-heading">
+      {latest.length > 0 && <section class="latest-section content-container" aria-labelledby="latest-heading">
         <div class="section-heading-row">
-          <h2 id="latest-heading">{lang === 'el' ? 'Τελευταίες ιστορίες' : 'Latest stories'}</h2>
-          <span>{latest.length.toString().padStart(2, '0')}</span>
+          <h2 id="latest-heading">{lang === 'el' ? 'Τελευταίες ιστορίες' : 'Latest Stories'}</h2>
+          <a class="story-read-link" href={languagePath(lang, 'archive')}>{lang === 'el' ? 'Όλες οι ιστορίες →' : 'All stories →'}</a>
         </div>
         <div class="editorial-grid">
           {latest.map((article) => (
             <article class="story-card">
               {article.image ? (
                 <figure class="story-card__image story-card__media">
-                  <img src={assetPath(article.image)} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
+                  <ResponsiveImage src={article.image} alt={article.imageAlt?.[lang] ?? ''} variant="story" />
                 </figure>
               ) : (
                 <div class="story-card__image newspaper-placeholder" aria-hidden="true"></div>
               )}
-              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · {article.date}</p>
+              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · <time datetime={article.date}>{formatPublicationDate(article.date, lang)}</time></p>
               <h3><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h3>
               <p>{article.dek[lang]}</p>
             </article>
           ))}
         </div>
-      </section>
+      </section>}
 
       <section class="topic-rack content-container" aria-labelledby="topics-heading">
         <div class="section-heading-row">
-          <h2 id="topics-heading">{lang === 'el' ? 'Θεματικές' : 'Explore topics'}</h2>
+          <h2 id="topics-heading">{lang === 'el' ? 'Θεματικές' : 'Explore Topics'}</h2>
         </div>
         <div class="topic-rack__grid">
           {topicSlugs.map((slug) => {

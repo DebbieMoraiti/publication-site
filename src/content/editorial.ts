@@ -21,6 +21,8 @@ export type Article = {
   topic?: Localized;
   image?: string;
   imageAlt?: Partial<Localized>;
+  imageCredit?: Partial<Localized>;
+  imageSource?: string;
   sections?: ArticleSection[];
   body?: { en?: string[]; el?: string[] };
 };

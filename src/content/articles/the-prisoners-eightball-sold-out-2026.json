@@ -22,11 +22,16 @@
     "en": "Twenty years into their run as an Iron Maiden tribute band, The Prisoners turned their 3 October anniversary show at Eightball into a sold-out statement — one that drew unusually strong praise from musicians and producers who attended.",
     "el": "Είκοσι χρόνια μετά την αρχή της πορείας τους ως Iron Maiden tribute band, οι The Prisoners μετέτρεψαν το επετειακό live της 3ης Οκτωβρίου στο Eightball σε μια sold-out δήλωση παρουσίας — και απέσπασαν εξαιρετικά ισχυρές κρίσεις από μουσικούς και παραγωγούς που βρέθηκαν εκεί."
   },
-  "image": "",
+  "image": "/uploads/the-prisoners-live.webp",
   "imageAlt": {
-    "en": "",
-    "el": ""
+    "en": "The Prisoners with their audience at Eightball in Thessaloniki.",
+    "el": "Οι The Prisoners με το κοινό τους στο Eightball στη Θεσσαλονίκη."
   },
+  "imageCredit": {
+    "en": "Live photo from The Prisoners’ official website.",
+    "el": "Live φωτογραφία από το επίσημο site των The Prisoners."
+  },
+  "imageSource": "https://uptheprisoners.gr/",
   "sections": [
     {
       "type": "paragraph",

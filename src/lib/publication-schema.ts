@@ -1,5 +1,6 @@
 import { absoluteUrl, languagePath, type LanguageCode } from '../i18n/routes';
 import publication from '../content/publication.json';
+import { siteConfig } from '../config';
 import { topicBySlug } from '../content/editorial';
 
 type Localized = { en: string; el: string };
@@ -55,6 +56,7 @@ function publisherNode() {
     '@id': publisherId(),
     name: publication.identity.name,
     url: rootUrl(),
+    logo: siteConfig.branding.logo ? absoluteUrl(siteConfig.branding.logo) : undefined,
   };
 }
 

@@ -97,6 +97,15 @@ export function validatePublicationContent() {
       requiredText(article.imageAlt?.el, `Article "${article.slug}" Greek image alt text`);
     }
 
+    if (article.imageSource) {
+      try {
+        const url = new URL(article.imageSource);
+        if (url.protocol !== 'https:' || url.username || url.password) throw new Error();
+      } catch {
+        throw new Error(`Article "${article.slug}" has an invalid HTTPS image source.`);
+      }
+    }
+
     for (const [index, section] of (article.sections ?? []).entries()) {
       if (!sectionTypes.has(section.type)) {
         throw new Error(`Article "${article.slug}" section ${index + 1} has invalid type "${section.type}".`);

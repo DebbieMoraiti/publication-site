@@ -25,11 +25,16 @@
     "en": "Profile",
     "el": "Πρόσωπα στη μουσική"
   },
-  "image": "",
+  "image": "/uploads/stelios-sioulas-press.webp",
   "imageAlt": {
-    "en": "",
-    "el": ""
+    "en": "Stelios Sioulas playing drums, from his official press kit.",
+    "el": "Ο Στέλιος Σιούλας στα τύμπανα, από το επίσημο press kit του."
   },
+  "imageCredit": {
+    "en": "Press photo from Stelios Sioulas’ official website.",
+    "el": "Φωτογραφία από το επίσημο press kit του Στέλιου Σιούλα."
+  },
+  "imageSource": "https://steliossioulas.gr/press-kit.html",
   "body": {
     "en": [
       "Stelios Sioulas is the kind of drummer whose musical identity has been shaped less by a single band and more by the constant movement between different projects, stages and musical demands. Based in Athens today, after years of activity and collaborations in Thessaloniki, he has built a long-running presence across metal, rock, tribute projects, recording work and drum teaching.",
