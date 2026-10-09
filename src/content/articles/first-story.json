@@ -2,7 +2,7 @@
   "slug": "first-story",
   "type": "feature",
   "status": "draft",
-  "featured": true,
+  "featured": false,
   "date": "2026-10-04",
   "author": "editor",
   "topicSlug": "ideas",
