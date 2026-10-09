@@ -21,7 +21,7 @@ export function validateContactConfig(config: ContactConfig): ContactConfig {
       throw new Error('contact.formEndpoint must be a public HTTPS POST endpoint without credentials, query parameters or a fragment.');
     }
   }
-  if (!/^[a-z][a-z0-9_-]{0,63}$/i.test(honeypotField) || ['name', 'email', 'subject', 'message'].includes(honeypotField)) {
+  if (!/^[a-z_][a-z0-9_-]{0,63}$/i.test(honeypotField) || ['name', 'email', 'subject', 'message'].includes(honeypotField)) {
     throw new Error('contact.honeypotField must be a separate, valid form field name.');
   }
   return { email, formEndpoint, honeypotField };

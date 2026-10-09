@@ -19,7 +19,7 @@
   },
   "seo": {
     "siteUrl": "https://storyfields.gr",
-    "indexable": false,
+    "indexable": true,
     "titleSuffix": {
       "en": "Independent publication",
       "el": "Ανεξάρτητο publication"
@@ -41,7 +41,7 @@
   },
   "contact": {
     "email": "",
-    "formEndpoint": "",
-    "honeypotField": "website"
+    "formEndpoint": "https://formspree.io/f/xjygwnwe",
+    "honeypotField": "_gotcha"
   }
 }

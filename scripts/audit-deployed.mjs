@@ -2,14 +2,19 @@ import { readdir, readFile } from 'node:fs/promises';
 
 const base = (process.env.AUDIT_SITE_URL || 'https://storyfields.gr').replace(/\/$/, '');
 const expectedRevision = process.env.GITHUB_SHA;
-const contactConfig = JSON.parse(await readFile('src/config/site.json', 'utf8')).contact;
+const siteConfig = JSON.parse(await readFile('src/config/site.json', 'utf8'));
+const contactConfig = siteConfig.contact;
+const indexable = siteConfig.seo.indexable === true;
 
-async function get(path, expectedType) {
+async function get(path, expectedType, { noindex = false } = {}) {
   const accepted = Array.isArray(expectedType) ? expectedType : expectedType ? [expectedType] : [];
   for (let attempt = 0; attempt < 12; attempt++) {
     const response = await fetch(`${base}${path}`, { redirect: 'follow', cache: 'no-store' });
     if (!response.ok) throw new Error(`${path} returned ${response.status}`);
     const type = response.headers.get('content-type') || '';
+    if (indexable && !noindex && accepted.includes('text/html') && /\b(?:noindex|none)\b/i.test(response.headers.get('x-robots-tag') || '')) {
+      throw new Error(`${path} has a blocking X-Robots-Tag header.`);
+    }
     if (accepted.length && !accepted.some((value) => type.includes(value))) {
       throw new Error(`${path} has unexpected content-type: ${type}`);
     }
@@ -29,6 +34,12 @@ function must(text, fragment, label) {
 
 function mustNot(text, fragment, label) {
   if (text.includes(fragment)) throw new Error(`Unexpected ${label}: ${fragment}`);
+}
+
+function auditIndexing(html, label, noindex = false) {
+  const robotsMeta = html.match(/<meta\b[^>]*name="robots"[^>]*>/i)?.[0] || '';
+  const blocked = /\b(?:noindex|none)\b/i.test(robotsMeta);
+  if (blocked !== (!indexable || noindex)) throw new Error(`Incorrect indexing metadata: ${label}`);
 }
 
 const homeUrl = `${base}/`;
@@ -52,7 +63,8 @@ must(home, `rel="canonical" href="${homeUrl}"`, 'home canonical');
 must(home, `hreflang="en" href="${homeUrl}"`, 'English hreflang');
 must(home, `hreflang="el" href="${greekHomeUrl}"`, 'Greek hreflang');
 must(home, `hreflang="x-default" href="${homeUrl}"`, 'x-default');
-must(home, 'name="robots" content="noindex, follow"', 'global noindex');
+auditIndexing(home, 'English homepage');
+auditIndexing(greekHome, 'Greek homepage');
 must(home, '"@type":"Organization"', 'publisher Organization schema');
 must(home, '"@type":"CollectionPage"', 'homepage CollectionPage schema');
 must(home, '"@type":"WebSite"', 'WebSite schema');
@@ -64,7 +76,8 @@ must(article, `rel="canonical" href="${articleUrl}"`, 'article canonical');
 must(article, `hreflang="x-default" href="${articleUrl}"`, 'article x-default');
 must(article, 'property="og:type" content="article"', 'article Open Graph type');
 must(article, 'name="twitter:card" content="summary_large_image"', 'Twitter large card');
-must(article, 'name="robots" content="noindex, follow"', 'global noindex');
+auditIndexing(article, 'English article');
+auditIndexing(greekArticle, 'Greek article');
 must(article, '"@type":"BreadcrumbList"', 'article BreadcrumbList schema');
 must(article, '"@type":"Organization"', 'article publisher schema');
 must(article, '"@type":"Article"', 'essay Article schema');
@@ -77,7 +90,12 @@ must(greekRss, articleSlug, 'published article in Greek RSS');
 
 must(sitemap, 'hreflang="x-default"', 'sitemap x-default alternate');
 must(sitemap, articleSlug, 'published article in sitemap');
-must(robots, 'Disallow: /', 'robots indexing block');
+must(robots, indexable ? 'Allow: /' : 'Disallow: /', 'robots crawl policy');
+if (indexable) mustNot(robots, 'Disallow: /', 'global indexing block');
+must(robots, `Sitemap: ${base}/sitemap.xml`, 'canonical sitemap declaration');
+const imagePreview = await get('/image-preview/', 'text/html', { noindex: true });
+auditIndexing(imagePreview, 'image preview', true);
+mustNot(sitemap, '/image-preview/', 'image preview in sitemap');
 
 await Promise.all(['en', 'el'].map(async (lang) => {
   const prefix = lang === 'el' ? '/el' : '';
@@ -88,7 +106,7 @@ await Promise.all(['en', 'el'].map(async (lang) => {
   must(page, `hreflang="en" href="${base}/contact/"`, 'English Contact alternate');
   must(page, `hreflang="el" href="${base}/el/contact/"`, 'Greek Contact alternate');
   must(page, `hreflang="x-default" href="${base}/contact/"`, 'Contact x-default');
-  must(page, 'name="robots" content="noindex, follow"', 'Contact noindex');
+  auditIndexing(page, `${lang} Contact`);
   must(page, '"@type":"ContactPage"', 'Contact schema');
   must(page, '"@type":"BreadcrumbList"', 'Contact breadcrumbs');
   must(page, '"@type":"Organization"', 'Contact publisher');
@@ -102,6 +120,11 @@ await Promise.all(['en', 'el'].map(async (lang) => {
     must(page, '<fieldset disabled>', 'Contact disabled input');
     mustNot(page, 'action="https://', 'unconfigured form submission');
     mustNot(page, 'href="mailto:', 'invented contact address');
+  } else if (contactConfig.formEndpoint) {
+    must(page, `action="${contactConfig.formEndpoint}" method="post"`, 'approved Contact POST endpoint');
+    must(page, 'data-contact-mode="endpoint"', 'active Contact mode');
+    must(page, `name="${contactConfig.honeypotField}" tabindex="-1" autocomplete="off"`, 'Contact honeypot');
+    if (/<(?:fieldset|button)\b[^>]*\bdisabled\b/.test(page)) throw new Error('Native Contact submission must be enabled without JavaScript.');
   }
   must(sitemap, `<loc>${base}${path}</loc>`, 'Contact sitemap route');
   for (const document of [page, lang === 'el' ? greekHome : home]) {
@@ -115,6 +138,16 @@ const published = content.filter((item) => item.status === 'published');
 const drafts = content.filter((item) => item.status !== 'published');
 const removedSlugs = ['first-story', 'ideas-placeholder', 'people-placeholder'];
 const forbiddenSlugs = [...drafts.map((item) => item.slug), ...removedSlugs];
+
+await Promise.all(drafts.flatMap((item) => ['en', 'el'].map(async (lang) => {
+  const path = `${lang === 'el' ? '/el' : ''}/articles/${item.slug}/`;
+  auditIndexing(await get(path, 'text/html', { noindex: true }), `${lang} draft ${item.slug}`, true);
+})));
+
+await Promise.all([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(async ([, url]) => {
+  const path = new URL(url).pathname;
+  auditIndexing(await get(path, 'text/html'), `sitemap page ${path}`);
+}));
 
 for (const [label, document] of Object.entries({ home, greekHome, rss, greekRss, sitemap })) {
   for (const slug of forbiddenSlugs) mustNot(document, slug, `${label} unpublished content`);
@@ -133,7 +166,7 @@ await Promise.all(published.flatMap((item) => ['en', 'el'].map(async (lang) => {
   must(page, `hreflang="en" href="${base}/articles/${item.slug}/"`, 'English article alternate');
   must(page, `hreflang="el" href="${base}/el/articles/${item.slug}/"`, 'Greek article alternate');
   must(page, `hreflang="x-default" href="${base}/articles/${item.slug}/"`, 'article x-default');
-  must(page, 'name="robots" content="noindex, follow"', 'article noindex');
+  auditIndexing(page, `${lang} article ${item.slug}`);
   must(page, 'property="og:type" content="article"', 'Open Graph article');
   must(page, 'name="twitter:card" content="summary_large_image"', 'Twitter card');
   must(page, '"@type":"BreadcrumbList"', 'article breadcrumbs');

@@ -11,6 +11,7 @@ interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
 const { email, formEndpoint, honeypotField } = siteConfig.contact;
 const mode = formEndpoint ? 'endpoint' : email ? 'mailto' : 'unavailable';
+const usesFormspree = formEndpoint && new URL(formEndpoint).hostname === 'formspree.io';
 const copy = lang === 'el' ? {
   title: 'Επικοινωνία',
   invitation: 'Έχεις μια ιστορία, ένα project, έναν άνθρωπο ή μια ιδέα που θα μπορούσε να βρει θέση στο Storyfields;',
@@ -21,6 +22,7 @@ const copy = lang === 'el' ? {
   unavailable: 'Ο τρόπος άμεσης επικοινωνίας θα είναι διαθέσιμος εδώ σύντομα.',
   mailto: 'Η φόρμα ανοίγει ένα προσχέδιο στην εφαρμογή email σου. Η αποστολή γίνεται από εκεί.',
   endpoint: 'Το όνομα, το email και το μήνυμά σου διαβιβάζονται στην υπηρεσία επικοινωνίας μας για την παράδοση του μηνύματος.',
+  formspree: 'Το όνομα, το email, το θέμα και το μήνυμά σου αποστέλλονται μέσω Formspree για να φτάσουν στο Storyfields.',
   noScript: 'Μπορείς να επικοινωνήσεις μέσω του συνδέσμου email.',
 } : {
   title: 'Contact',
@@ -32,9 +34,10 @@ const copy = lang === 'el' ? {
   unavailable: 'A direct way to get in touch will be available here soon.',
   mailto: 'This form opens a draft in your email app. You send the message from there.',
   endpoint: 'Your name, email and message are shared with our contact service to deliver your enquiry.',
+  formspree: 'Your name, email, subject and message are sent through Formspree to reach Storyfields.',
   noScript: 'You can get in touch using the email link.',
 };
-const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? copy.mailto : copy.endpoint;
+const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? copy.mailto : usesFormspree ? copy.formspree : copy.endpoint;
 ---
 
 <BaseLayout

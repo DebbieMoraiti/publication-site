@@ -2,7 +2,7 @@
 
 Independent bilingual editorial publication built with Astro.
 
-Live preview: https://debbiemoraiti.github.io/publication-site/
+Live publication: https://storyfields.gr/
 
 ## Current scope
 
@@ -53,17 +53,17 @@ The repository validates slugs, dates, author/topic references, article status a
 - `wrangler.jsonc`: optional Cloudflare static-assets deployment.
 - `.github/workflows/publication-preview.yml`: GitHub Pages preview build/deploy.
 
-Keep `seo.indexable` set to `false` until the final brand, domain and launch content are ready.
+Public indexing is enabled with `seo.indexable: true`. Published pages allow crawling and appear in the bilingual sitemap. Draft article previews and `/image-preview/` retain page-level `noindex` and are excluded from the sitemap, feeds and public listings. Setting `seo.indexable` to `false` blocks crawling and adds global `noindex` again.
 
 ## Contact delivery
 
-Contact is available at `/contact/` and `/el/contact/`. Delivery settings live in `src/config/site.json` under `contact`; they intentionally start empty, so the page explains that contact is not yet available and disables message entry and submission.
+Contact is available at `/contact/` and `/el/contact/`. Delivery settings live in `src/config/site.json` under `contact`. The approved Formspree endpoint is `https://formspree.io/f/xjygwnwe`, with `_gotcha` as its honeypot field.
 
-To activate email delivery, set `contact.email` to an approved **public editorial email address** and rebuild/deploy. The form then opens a draft in the visitor’s email app, with the subject and message filled in. The visitor sends it from their email app. The direct email link also works without JavaScript. This mode does not provide server-side form delivery.
+The Astro/static site uses a native HTML form with `method="post"` and the configured endpoint as its `action`. Name, email, subject and message are submitted only when the visitor sends the form; Formspree handles delivery and the response page. The form works without JavaScript and needs no React, SDK or external script. The destination inbox and any provider credentials are configured in Formspree, never in the repository or browser code.
 
-To activate direct form delivery, create or supply an approved **public HTTPS POST form endpoint**, configure its destination inbox at the provider, and set `contact.formEndpoint` to that URL. It must accept `name`, `email`, `subject` and `message` and return its own accessible success/error page. No account or endpoint has been created for this repository. Credentials, API keys, private recipient addresses and other secrets belong on the provider/server, never in this config or browser code. The build rejects credentials and query parameters in the endpoint URL. An optional public `contact.email` remains the direct fallback when a form endpoint is configured.
+An approved **public editorial email address** can optionally be set in `contact.email` to display a direct email link. If the endpoint is removed, the form instead opens a draft in the visitor’s email app; the visitor sends it from there. With neither delivery option configured, entry and submission are disabled. The build rejects credentials and query parameters in endpoint URLs.
 
-The form uses native required/email validation and length limits. `contact.honeypotField` defaults to `website`; set it to the provider’s supported honeypot field name and enable its server-side spam protection and rate limiting. The browser honeypot alone is not a spam filter. The generated CSP allows form submissions only to the configured endpoint origin; without an endpoint, `form-action` is `none`. No third-party scripts, embeds, analytics, browser storage or background form requests are used.
+The form uses native required/email validation and length limits. Its hidden `_gotcha` field is supported by Formspree’s server-side honeypot protection. The generated CSP allows form submissions only to the configured endpoint origin (`https://formspree.io`); without an endpoint, `form-action` is `none`. No third-party scripts, embeds, analytics, browser storage or background form requests are used.
 
 ## Documentation
 

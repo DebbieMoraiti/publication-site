@@ -3,6 +3,7 @@ import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 
 const base = (process.env.AUDIT_SITE_URL || 'https://storyfields.gr').replace(/\/$/, '');
 const revision = process.env.GITHUB_SHA;
+const contactConfig = JSON.parse(await readFile('src/config/site.json', 'utf8')).contact;
 const output = 'responsive-reports';
 const articleFiles = (await readdir('src/content/articles')).filter((file) => file.endsWith('.json'));
 const articleContent = await Promise.all(articleFiles.map(async (file) => JSON.parse(await readFile(`src/content/articles/${file}`, 'utf8'))));
@@ -88,6 +89,9 @@ try {
           images: document.images.length,
           contact: document.querySelector('.contact-form') ? {
             mode: document.querySelector('.contact-form').dataset.contactMode,
+            action: document.querySelector('.contact-form').action,
+            method: document.querySelector('.contact-form').method,
+            honeypot: document.querySelector('.contact-honeypot input')?.name,
             fields: Array.from(document.querySelectorAll('.contact-field input, .contact-field textarea')).map(field => ({
               name: field.name, label: field.labels?.[0]?.textContent?.trim(), required: field.required, disabled: field.matches(':disabled'),
             })),
@@ -102,6 +106,9 @@ try {
         }
         if (route === 'contact/' && (!metrics.contact || metrics.contact.fields.length !== 4 || metrics.contact.fields.some(field => !field.label || !field.required) || (metrics.contact.mode === 'unavailable' && (!metrics.contact.buttonDisabled || metrics.contact.fields.some(field => !field.disabled))))) {
           throw new Error(`Invalid accessible Contact form: ${JSON.stringify({ url, metrics })}`);
+        }
+        if (route === 'contact/' && contactConfig.formEndpoint && (metrics.contact.mode !== 'endpoint' || metrics.contact.action !== contactConfig.formEndpoint || metrics.contact.method !== 'post' || metrics.contact.honeypot !== contactConfig.honeypotField || metrics.contact.buttonDisabled || metrics.contact.fields.some(field => field.disabled))) {
+          throw new Error(`Invalid active Contact submission: ${JSON.stringify({ url, metrics })}`);
         }
         results.push({ lang, route: route || 'home', ...metrics });
         if ([390, 1440].includes(width) && ['', 'contact/', 'articles/small-moments-big-value/'].includes(route)) {

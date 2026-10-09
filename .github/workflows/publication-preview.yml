@@ -48,11 +48,8 @@ jobs:
       - name: Build preview
         run: npm run build
 
-      - name: Verify generated security policy
-        run: |
-          test -f dist/_headers
-          grep -q "Content-Security-Policy:" dist/_headers
-          grep -q "X-Robots-Tag: noindex" dist/_headers
+      - name: Verify indexing, preview protection and Contact policy
+        run: node scripts/audit-build.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -147,6 +144,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
+          const indexable = JSON.parse(fs.readFileSync('src/config/site.json', 'utf8')).seo.indexable === true;
           const files = ['lighthouse-home.json', 'lighthouse-article.json', 'lighthouse-contact-en.json', 'lighthouse-contact-el.json', 'lighthouse-prisoners.json'];
           let failed = false;
           for (const file of files) {
@@ -158,6 +156,7 @@ jobs:
             if (scores.performance < 0.85) failed = true;
             if (scores.accessibility < 0.95) failed = true;
             if (scores['best-practices'] < 0.95) failed = true;
+            if (indexable && scores.seo < 0.95) failed = true;
           }
           if (failed) {
             throw new Error('Lighthouse quality threshold failed.');
