@@ -2,9 +2,11 @@ export type LanguageCode = 'en' | 'el';
 export type Localized = { en: string; el: string };
 
 export type ArticleSection = {
-  type: 'paragraph' | 'heading' | 'quote';
+  type: 'paragraph' | 'heading' | 'quote' | 'link';
   text: Localized;
   attribution?: Localized;
+  url?: string;
+  description?: Localized;
 };
 
 export type Article = {

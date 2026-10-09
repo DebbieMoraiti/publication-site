@@ -84,6 +84,15 @@ const related = relatedArticles(article, 3);
         <div class="article-body">
           {sections.length > 0 ? sections.map((section) => {
             if (section.type === 'heading') return <h2>{section.text[lang]}</h2>;
+            if (section.type === 'link') return (
+              <p class="article-source-link">
+                <a href={section.url} target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+                  {section.text[lang]}
+                  <span class="visually-hidden">{lang === 'el' ? ' (ανοίγει σε νέα καρτέλα)' : ' (opens in a new tab)'}</span>
+                </a>
+                {section.description?.[lang] && <small>{section.description[lang]}</small>}
+              </p>
+            );
             if (section.type === 'quote') return (
               <blockquote>
                 <p>{section.text[lang]}</p>

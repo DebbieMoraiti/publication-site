@@ -3,7 +3,7 @@ import { articles, authors, topics } from './editorial';
 const slugPattern = /^[a-z0-9-]+$/;
 const tagPattern = /^[a-z0-9-]+$/;
 const articleTypes = new Set(['feature', 'profile', 'essay', 'interview', 'review', 'update']);
-const sectionTypes = new Set(['paragraph', 'heading', 'quote']);
+const sectionTypes = new Set(['paragraph', 'heading', 'quote', 'link']);
 
 function unique(values: string[], label: string) {
   const seen = new Set<string>();
@@ -112,6 +112,14 @@ export function validatePublicationContent() {
       }
       requiredText(section.text?.en, `Article "${article.slug}" section ${index + 1} English text`);
       requiredText(section.text?.el, `Article "${article.slug}" section ${index + 1} Greek text`);
+      if (section.type === 'link') {
+        try {
+          const url = new URL(section.url || '');
+          if (url.protocol !== 'https:' || url.username || url.password) throw new Error();
+        } catch {
+          throw new Error(`Article "${article.slug}" section ${index + 1} requires a public HTTPS link without credentials.`);
+        }
+      }
     }
 
     if (article.status === 'published') {

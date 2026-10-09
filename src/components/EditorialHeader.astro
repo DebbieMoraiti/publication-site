@@ -14,8 +14,8 @@ const wordmarkSrcset = logo === '/brand/storyfields-wordmark.webp'
   ? [400, 800, 1600].map((width) => `${assetPath(width === 1600 ? logo : `/brand/storyfields-wordmark-${width}.webp`)} ${width}w`).join(', ')
   : undefined;
 const labels = lang === 'el'
-  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', music: 'Μουσική', everyday: 'Καθημερινότητα', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση', edition: 'Ανεξάρτητη έκδοση', location: 'Αθήνα' }
-  : { stories: 'Stories', people: 'People', ideas: 'Ideas', music: 'Music', everyday: 'Everyday life', culture: 'Culture', archive: 'Archive', menu: 'Navigation', edition: 'Independent publication', location: 'Athens' };
+  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', music: 'Μουσική', everyday: 'Καθημερινότητα', culture: 'Πολιτισμός', archive: 'Αρχείο', contact: 'Επικοινωνία', menu: 'Πλοήγηση', edition: 'Ανεξάρτητη έκδοση', location: 'Αθήνα' }
+  : { stories: 'Stories', people: 'People', ideas: 'Ideas', music: 'Music', everyday: 'Everyday life', culture: 'Culture', archive: 'Archive', contact: 'Contact', menu: 'Navigation', edition: 'Independent publication', location: 'Athens' };
 ---
 
 <header class:list={['editorial-header', { 'editorial-header--compact': !!page }]}>
@@ -45,6 +45,7 @@ const labels = lang === 'el'
       <a href={languagePath(lang, 'topics/everyday-life')} aria-current={isCurrent('topics/everyday-life') ? 'page' : undefined}>{labels.everyday}</a>
       <a href={languagePath(lang, 'topics/culture')} aria-current={isCurrent('topics/culture') ? 'page' : undefined}>{labels.culture}</a>
       <a href={languagePath(lang, 'archive')} aria-current={isCurrent('archive') ? 'page' : undefined}>{labels.archive}</a>
+      <a href={languagePath(lang, 'contact')} aria-current={isCurrent('contact') ? 'page' : undefined}>{labels.contact}</a>
     </nav>
 
     <nav class="editorial-languages" aria-label={lang === 'el' ? 'Γλώσσα' : 'Language'}>

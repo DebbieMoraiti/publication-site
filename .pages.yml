@@ -190,7 +190,7 @@ content:
         type: block
         list: true
         blockKey: type
-        description: Build the article from paragraphs, subheadings and quotes. Drafts may be incomplete; published articles must contain content.
+        description: Build the article from paragraphs, subheadings, quotes and public external links. Drafts may be incomplete; published articles must contain content.
         blocks:
           - name: paragraph
             label: Paragraph / Παράγραφος
@@ -212,6 +212,23 @@ content:
                 component: requiredLongCopy
               - name: attribution
                 label: Attribution / Απόδοση
+                component: shortCopy
+
+          - name: link
+            label: External link / Εξωτερικός σύνδεσμος
+            fields:
+              - name: text
+                label: Link label / Κείμενο συνδέσμου
+                component: titleCopy
+              - name: url
+                label: Public HTTPS URL
+                type: string
+                required: true
+                pattern:
+                  regex: "^https://.+$"
+                  message: "Use a full public HTTPS URL without credentials."
+              - name: description
+                label: Source note / Σημείωση πηγής
                 component: shortCopy
 
   - name: authors

@@ -2,6 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 
 const base = (process.env.AUDIT_SITE_URL || 'https://storyfields.gr').replace(/\/$/, '');
 const expectedRevision = process.env.GITHUB_SHA;
+const contactConfig = JSON.parse(await readFile('src/config/site.json', 'utf8')).contact;
 
 async function get(path, expectedType) {
   const accepted = Array.isArray(expectedType) ? expectedType : expectedType ? [expectedType] : [];
@@ -78,6 +79,36 @@ must(sitemap, 'hreflang="x-default"', 'sitemap x-default alternate');
 must(sitemap, articleSlug, 'published article in sitemap');
 must(robots, 'Disallow: /', 'robots indexing block');
 
+await Promise.all(['en', 'el'].map(async (lang) => {
+  const prefix = lang === 'el' ? '/el' : '';
+  const path = `${prefix}/contact/`;
+  const page = await get(path, 'text/html');
+  must(page, `<html lang="${lang}"`, 'Contact language');
+  must(page, `rel="canonical" href="${base}${path}"`, 'Contact canonical');
+  must(page, `hreflang="en" href="${base}/contact/"`, 'English Contact alternate');
+  must(page, `hreflang="el" href="${base}/el/contact/"`, 'Greek Contact alternate');
+  must(page, `hreflang="x-default" href="${base}/contact/"`, 'Contact x-default');
+  must(page, 'name="robots" content="noindex, follow"', 'Contact noindex');
+  must(page, '"@type":"ContactPage"', 'Contact schema');
+  must(page, '"@type":"BreadcrumbList"', 'Contact breadcrumbs');
+  must(page, '"@type":"Organization"', 'Contact publisher');
+  must(page, '"@type":"WebSite"', 'Contact WebSite schema');
+  must(page, 'name="twitter:card" content="summary_large_image"', 'Contact Twitter card');
+  must(page, 'property="og:type" content="website"', 'Contact Open Graph');
+  for (const field of ['name', 'email', 'subject', 'message']) must(page, `name="${field}"`, `Contact ${field}`);
+  must(page, 'aria-describedby="contact-form-note"', 'Contact availability description');
+  if (!contactConfig.email && !contactConfig.formEndpoint) {
+    must(page, 'data-contact-mode="unavailable"', 'Contact unavailable mode');
+    must(page, '<fieldset disabled>', 'Contact disabled input');
+    mustNot(page, 'action="https://', 'unconfigured form submission');
+    mustNot(page, 'href="mailto:', 'invented contact address');
+  }
+  must(sitemap, `<loc>${base}${path}</loc>`, 'Contact sitemap route');
+  for (const document of [page, lang === 'el' ? greekHome : home]) {
+    if ((document.match(new RegExp(`href="${path}"`, 'g')) || []).length < 2) throw new Error('Contact must appear in both navigation and footer.');
+  }
+}));
+
 const contentFiles = (await readdir('src/content/articles')).filter((file) => file.endsWith('.json'));
 const content = await Promise.all(contentFiles.map(async (file) => JSON.parse(await readFile(`src/content/articles/${file}`, 'utf8'))));
 const published = content.filter((item) => item.status === 'published');
@@ -111,6 +142,12 @@ await Promise.all(published.flatMap((item) => ['en', 'el'].map(async (lang) => {
   must(page, 'class="article-pager"', 'article navigation');
   must(page, 'class="responsive-image responsive-image--hero"', 'responsive hero');
   must(page, 'width=', 'image dimensions');
+  if (item.slug === 'the-prisoners-eightball-sold-out-2026') {
+    must(page, lang === 'el' ? 'δύο διαφορετικά κοστούμια του Eddie' : 'Two different Eddie costumes', 'Eddie editorial update');
+    must(page, lang === 'el' ? 'Δείτε: ο Eddie στη σκηνή' : 'Watch: Eddie on stage', 'Eddie video label');
+    must(page, 'href="https://www.facebook.com/share/v/1DThvLJayf/" target="_blank" rel="noopener noreferrer"', 'safe Facebook external link');
+    mustNot(page, '<iframe', 'third-party video embed');
+  }
   for (const slug of forbiddenSlugs) mustNot(page, slug, 'unpublished related story');
 })));
 

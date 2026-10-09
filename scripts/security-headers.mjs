@@ -6,6 +6,7 @@ const dist = path.resolve('dist');
 const site = JSON.parse(await readFile('src/config/site.json', 'utf8'));
 const hashes = new Set();
 const embedsEnabled = site.privacy?.allowThirdPartyEmbeds === true;
+const formOrigin = site.contact?.formEndpoint?.trim() ? new URL(site.contact.formEndpoint).origin : null;
 
 async function htmlFiles(folder) {
   const files = [];
@@ -40,7 +41,7 @@ const policy = [
     ? "frame-src https://www.youtube-nocookie.com https://player.vimeo.com"
     : "frame-src 'none'",
   "connect-src 'self'",
-  "form-action 'self'",
+  `form-action ${formOrigin || "'none'"}`,
   "object-src 'none'",
   "base-uri 'self'",
   "frame-ancestors 'none'",

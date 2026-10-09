@@ -1,6 +1,6 @@
 ---
 import publication from '../content/publication.json';
-import type { LanguageCode } from '../i18n/routes';
+import { languagePath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
@@ -14,6 +14,7 @@ const { lang } = Astro.props;
     </div>
     <div class="editorial-footer__meta">
       <span>© {new Date().getFullYear()} {publication.identity.name}</span>
+      <a href={languagePath(lang, 'contact')}>{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</a>
       <a href="#top">{lang === 'el' ? 'Επιστροφή στην κορυφή' : 'Back to top'}</a>
     </div>
   </div>

@@ -94,6 +94,7 @@ export function publicationCollectionSchema(
   page: string,
   name: string,
   description: string,
+  pageType: 'CollectionPage' | 'ContactPage' = 'CollectionPage',
 ) {
   const home = absoluteUrl(languagePath(lang));
   const url = absoluteUrl(languagePath(lang, page));
@@ -110,7 +111,7 @@ export function publicationCollectionSchema(
         inLanguage: ['en', 'el'],
       },
       {
-        '@type': 'CollectionPage',
+        '@type': pageType,
         '@id': `${url}#webpage`,
         url,
         name,
@@ -129,6 +130,10 @@ export function publicationCollectionSchema(
       },
     ],
   };
+}
+
+export function publicationContactSchema(lang: LanguageCode, name: string, description: string) {
+  return publicationCollectionSchema(lang, 'contact', name, description, 'ContactPage');
 }
 
 export function publicationAuthorSchema(lang: LanguageCode, author: Author) {

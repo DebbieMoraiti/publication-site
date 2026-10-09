@@ -1,0 +1,5 @@
+---
+import ContactPage from '../components/ContactPage.astro';
+import { siteConfig } from '../config';
+---
+<ContactPage lang={siteConfig.localization.defaultLanguage as 'en' | 'el'} />

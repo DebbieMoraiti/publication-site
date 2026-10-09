@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import publication from '../content/publication.json';
+import { siteConfig } from '../config';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+import { publicationContactSchema } from '../lib/publication-schema';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+const { email, formEndpoint, honeypotField } = siteConfig.contact;
+const mode = formEndpoint ? 'endpoint' : email ? 'mailto' : 'unavailable';
+const copy = lang === 'el' ? {
+  title: 'Επικοινωνία',
+  invitation: 'Έχεις μια ιστορία, ένα project, έναν άνθρωπο ή μια ιδέα που θα μπορούσε να βρει θέση στο Storyfields;',
+  description: 'Για προτάσεις θεμάτων, συνεργασίες, διορθώσεις ή γενική επικοινωνία, μπορείς να επικοινωνήσεις μαζί μας.',
+  heading: 'Γράψε μας',
+  name: 'Όνομα', subject: 'Θέμα', message: 'Μήνυμα', send: 'Αποστολή',
+  required: 'Όλα τα πεδία είναι απαραίτητα.',
+  unavailable: 'Ο τρόπος άμεσης επικοινωνίας θα είναι διαθέσιμος εδώ σύντομα.',
+  mailto: 'Η φόρμα ανοίγει ένα προσχέδιο στην εφαρμογή email σου. Η αποστολή γίνεται από εκεί.',
+  endpoint: 'Το όνομα, το email και το μήνυμά σου διαβιβάζονται στην υπηρεσία επικοινωνίας μας για την παράδοση του μηνύματος.',
+  noScript: 'Μπορείς να επικοινωνήσεις μέσω του συνδέσμου email.',
+} : {
+  title: 'Contact',
+  invitation: 'Have a story, project, person or idea that might belong in Storyfields?',
+  description: 'For editorial suggestions, collaborations, corrections or general enquiries, get in touch.',
+  heading: 'Write to us',
+  name: 'Name', subject: 'Subject', message: 'Message', send: 'Send',
+  required: 'All fields are required.',
+  unavailable: 'A direct way to get in touch will be available here soon.',
+  mailto: 'This form opens a draft in your email app. You send the message from there.',
+  endpoint: 'Your name, email and message are shared with our contact service to deliver your enquiry.',
+  noScript: 'You can get in touch using the email link.',
+};
+const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? copy.mailto : copy.endpoint;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${copy.title} — ${publication.identity.name}`}
+  description={copy.description}
+  structuredData={publicationContactSchema(lang, copy.title, copy.description)}
+  skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}
+>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="contact-page content-container" aria-labelledby="contact-title">
+        <nav class="editorial-breadcrumbs" aria-label={lang === 'el' ? 'Πλοήγηση' : 'Breadcrumb'}>
+          <a href={languagePath(lang)}>{lang === 'el' ? 'Αρχική' : 'Home'}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{copy.title}</span>
+        </nav>
+        <h1 id="contact-title">{copy.title}</h1>
+        <div class="contact-columns">
+          <div class="contact-intro">
+            <p class="contact-dek">{copy.invitation}</p>
+            <p>{copy.description}</p>
+            {email && <p class="contact-email"><a href={`mailto:${encodeURIComponent(email).replace(/%40/gi, '@')}`}>{email}</a></p>}
+          </div>
+          <div class="contact-correspondence">
+            <h2 id="contact-form-title">{copy.heading}</h2>
+            <p class="contact-form-note" id="contact-form-note">{note}</p>
+            <form
+              class="contact-form"
+              action={formEndpoint || undefined}
+              method="post"
+              data-contact-mode={mode}
+              data-contact-email={email || undefined}
+              data-contact-honeypot={honeypotField}
+              aria-labelledby="contact-form-title"
+              aria-describedby="contact-form-note"
+            >
+              <fieldset disabled={mode !== 'endpoint'}>
+                <legend class="visually-hidden">{copy.heading}</legend>
+                <p class="contact-required" id="contact-required">{copy.required}</p>
+                <div class="contact-field-pair">
+                  <div class="contact-field">
+                    <label for="contact-name">{copy.name}</label>
+                    <input id="contact-name" name="name" autocomplete="name" required maxlength="120" />
+                  </div>
+                  <div class="contact-field">
+                    <label for="contact-email">Email</label>
+                    <input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="254" />
+                  </div>
+                </div>
+                <div class="contact-field">
+                  <label for="contact-subject">{copy.subject}</label>
+                  <input id="contact-subject" name="subject" required maxlength="160" />
+                </div>
+                <div class="contact-field">
+                  <label for="contact-message">{copy.message}</label>
+                  <textarea id="contact-message" name="message" rows="8" required maxlength="5000"></textarea>
+                </div>
+                <div class="contact-honeypot" aria-hidden="true">
+                  <label for="contact-website">Website</label>
+                  <input id="contact-website" name={honeypotField} tabindex="-1" autocomplete="off" />
+                </div>
+                <button type="submit" disabled={mode !== 'endpoint'} aria-describedby="contact-form-note">{copy.send}</button>
+              </fieldset>
+            </form>
+            {mode === 'mailto' && <noscript><p class="contact-form-note">{copy.noScript}</p></noscript>}
+          </div>
+        </div>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>
+
+<script>
+  import { contactMailto } from '../lib/contact';
+  const form = document.querySelector<HTMLFormElement>('.contact-form');
+  if (form) {
+    const mode = form.dataset.contactMode;
+    const email = form.dataset.contactEmail || '';
+    form.addEventListener('submit', (event) => {
+      const data = new FormData(form);
+      if (mode === 'unavailable' || data.get(form.dataset.contactHoneypot || 'website')) {
+        event.preventDefault();
+        return;
+      }
+      if (mode !== 'mailto') return;
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const value = (name: string) => String(data.get(name) || '');
+      window.location.href = contactMailto(email, {
+        name: value('name'), email: value('email'), subject: value('subject'), message: value('message'),
+      });
+    });
+    if (mode === 'mailto' && email) {
+      const fieldset = form.querySelector('fieldset');
+      const button = form.querySelector('button');
+      if (fieldset) fieldset.disabled = false;
+      if (button) button.disabled = false;
+    }
+  }
+</script>

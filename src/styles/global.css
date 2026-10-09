@@ -1331,6 +1331,191 @@ body {
   text-shadow: .015em .02em .01em rgba(23, 22, 17, .12);
 }
 
+.contact-page h1,
+.contact-page h2 {
+  color: var(--newspaper-ink);
+  font-family: var(--font-heading);
+  letter-spacing: -.018em;
+  text-shadow: .015em .02em .01em rgba(23, 22, 17, .12);
+}
+
+.contact-page {
+  padding-block: clamp(2rem,5vw,4rem) clamp(3.5rem,6vw,5rem);
+}
+
+.contact-page .editorial-breadcrumbs {
+  justify-content: flex-start;
+}
+
+.contact-page h1 {
+  padding-bottom: 1.1rem;
+  border-bottom: 3px double var(--newspaper-ink);
+  font-size: clamp(2.7rem,6vw,4.6rem);
+  line-height: 1.05;
+}
+
+.contact-columns {
+  display: grid;
+  grid-template-columns: minmax(0,.8fr) minmax(0,1fr);
+  gap: clamp(2rem,5vw,4.5rem);
+  padding-top: clamp(1.6rem,3vw,2.5rem);
+}
+
+.contact-intro {
+  padding-right: clamp(1.5rem,3vw,3rem);
+  border-right: 1px solid var(--newspaper-rule);
+}
+
+.contact-intro p {
+  max-width: 35ch;
+  margin: 0 0 1.3rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+.contact-intro .contact-dek {
+  font-size: clamp(1.35rem,2.2vw,1.8rem);
+  line-height: 1.45;
+}
+
+.contact-email a {
+  overflow-wrap: anywhere;
+  text-underline-offset: .2em;
+}
+
+.contact-correspondence h2 {
+  font-size: 1.7rem;
+}
+
+.contact-form-note {
+  margin: .65rem 0 1.4rem;
+  color: var(--newspaper-muted);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: .93rem;
+  line-height: 1.6;
+}
+
+.contact-form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.contact-required {
+  margin: 0 0 1rem;
+  color: var(--newspaper-muted);
+  font-size: .78rem;
+}
+
+.contact-field-pair {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 1.2rem;
+}
+
+.contact-field {
+  min-width: 0;
+  margin-bottom: 1.15rem;
+}
+
+.contact-field label {
+  display: block;
+  margin-bottom: .4rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: .94rem;
+  font-weight: 700;
+}
+
+.contact-field input,
+.contact-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 2.8rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--newspaper-rule);
+  border-radius: 0;
+  background: var(--newspaper-paper-light);
+  color: var(--newspaper-ink);
+  font: inherit;
+  line-height: 1.5;
+  box-shadow: none;
+}
+
+.contact-field textarea {
+  resize: vertical;
+}
+
+.contact-field input:disabled,
+.contact-field textarea:disabled {
+  opacity: 1;
+  background: transparent;
+}
+
+.contact-form button {
+  min-height: 2.8rem;
+  padding: .65rem 1.6rem;
+  border: 1px solid var(--newspaper-ink);
+  border-radius: 0;
+  background: var(--newspaper-ink);
+  color: var(--newspaper-paper-light);
+  font: 700 .95rem Georgia, 'Times New Roman', serif;
+  cursor: pointer;
+}
+
+.contact-form button:disabled {
+  opacity: 1;
+  color: var(--newspaper-muted);
+  border-color: var(--newspaper-rule);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.contact-honeypot {
+  display: none;
+}
+
+.article-body .article-source-link {
+  padding-block: .85rem;
+  border-block: 1px solid var(--newspaper-rule);
+  font-size: .97rem;
+}
+
+.article-source-link a {
+  text-underline-offset: .22em;
+}
+
+.article-source-link small {
+  display: block;
+  margin-top: .35rem;
+  color: var(--newspaper-muted);
+  font-size: .8rem;
+}
+
+@media (max-width: 52rem) {
+  .contact-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-intro {
+    padding: 0 0 .6rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--newspaper-rule);
+  }
+
+  .contact-intro p {
+    max-width: 48ch;
+  }
+}
+
+@media (max-width: 39rem) {
+  .contact-field-pair {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 .editorial-header__inner {
   min-height: 3.15rem;
   display: grid;

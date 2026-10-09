@@ -42,6 +42,9 @@ jobs:
       - name: Validate Astro
         run: npm run check
 
+      - name: Verify contact configuration and email fallback
+        run: node scripts/audit-contact.mjs
+
       - name: Build preview
         run: npm run build
 
@@ -113,11 +116,38 @@ jobs:
           --output=json
           --output-path=./lighthouse-article.json
 
+      - name: Audit Contact in English
+        run: >
+          npx --yes lighthouse@13.5.0
+          https://storyfields.gr/contact/
+          --chrome-flags="--headless --no-sandbox"
+          --only-categories=performance,accessibility,best-practices,seo
+          --output=json
+          --output-path=./lighthouse-contact-en.json
+
+      - name: Audit Contact in Greek
+        run: >
+          npx --yes lighthouse@13.5.0
+          https://storyfields.gr/el/contact/
+          --chrome-flags="--headless --no-sandbox"
+          --only-categories=performance,accessibility,best-practices,seo
+          --output=json
+          --output-path=./lighthouse-contact-el.json
+
+      - name: Audit The Prisoners article
+        run: >
+          npx --yes lighthouse@13.5.0
+          https://storyfields.gr/articles/the-prisoners-eightball-sold-out-2026/
+          --chrome-flags="--headless --no-sandbox"
+          --only-categories=performance,accessibility,best-practices,seo
+          --output=json
+          --output-path=./lighthouse-prisoners.json
+
       - name: Check Lighthouse thresholds
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const files = ['lighthouse-home.json', 'lighthouse-article.json'];
+          const files = ['lighthouse-home.json', 'lighthouse-article.json', 'lighthouse-contact-en.json', 'lighthouse-contact-el.json', 'lighthouse-prisoners.json'];
           let failed = false;
           for (const file of files) {
             const report = JSON.parse(fs.readFileSync(file, 'utf8'));

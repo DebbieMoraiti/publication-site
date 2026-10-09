@@ -38,5 +38,10 @@
   },
   "privacy": {
     "allowThirdPartyEmbeds": false
+  },
+  "contact": {
+    "email": "",
+    "formEndpoint": "",
+    "honeypotField": "website"
   }
 }

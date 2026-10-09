@@ -53,7 +53,7 @@ try {
   await send('Page.enable');
   await mkdir(output, { recursive: true });
   const results = [];
-  const routes = ['', 'articles/after-40-you-dont-start-from-zero/', 'articles/small-moments-big-value/', 'articles/the-prisoners-eightball-sold-out-2026/'];
+  const routes = ['', 'contact/', 'articles/after-40-you-dont-start-from-zero/', 'articles/small-moments-big-value/', 'articles/the-prisoners-eightball-sold-out-2026/'];
   for (const width of [320, 360, 390, 430, 768, 1024, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width <= 430 });
     for (const lang of ['en', 'el']) {
@@ -86,6 +86,13 @@ try {
           columns: document.querySelector('.editorial-grid') ? getComputedStyle(document.querySelector('.editorial-grid')).gridTemplateColumns.split(' ').length : null,
           shadow: getComputedStyle(document.querySelector('h1')).textShadow,
           images: document.images.length,
+          contact: document.querySelector('.contact-form') ? {
+            mode: document.querySelector('.contact-form').dataset.contactMode,
+            fields: Array.from(document.querySelectorAll('.contact-field input, .contact-field textarea')).map(field => ({
+              name: field.name, label: field.labels?.[0]?.textContent?.trim(), required: field.required, disabled: field.matches(':disabled'),
+            })),
+            buttonDisabled: document.querySelector('.contact-form button').disabled,
+          } : null,
         }))()`);
         if (metrics.width !== width || metrics.scrollWidth > width || metrics.h1 !== 1 || metrics.brand !== 'Storyfields' || metrics.shadow === 'none') {
           throw new Error(`Invalid rendered layout: ${JSON.stringify({ url, metrics })}`);
@@ -93,10 +100,13 @@ try {
         if (!route && (metrics.cards !== publishedCount || metrics.columns !== (width > 832 ? 3 : width > 624 ? 2 : 1))) {
           throw new Error(`Invalid homepage grid: ${JSON.stringify({ url, metrics })}`);
         }
+        if (route === 'contact/' && (!metrics.contact || metrics.contact.fields.length !== 4 || metrics.contact.fields.some(field => !field.label || !field.required) || (metrics.contact.mode === 'unavailable' && (!metrics.contact.buttonDisabled || metrics.contact.fields.some(field => !field.disabled))))) {
+          throw new Error(`Invalid accessible Contact form: ${JSON.stringify({ url, metrics })}`);
+        }
         results.push({ lang, route: route || 'home', ...metrics });
-        if ([390, 1440].includes(width) && ['', 'articles/small-moments-big-value/'].includes(route)) {
+        if ([390, 1440].includes(width) && ['', 'contact/', 'articles/small-moments-big-value/'].includes(route)) {
           const screenshot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
-          await writeFile(`${output}/${lang}-${route ? 'article' : 'home'}-${width}.png`, Buffer.from(screenshot.data, 'base64'));
+          await writeFile(`${output}/${lang}-${route === 'contact/' ? 'contact' : route ? 'article' : 'home'}-${width}.png`, Buffer.from(screenshot.data, 'base64'));
         }
       }
     }
