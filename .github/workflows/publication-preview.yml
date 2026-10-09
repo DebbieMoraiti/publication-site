@@ -21,8 +21,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PUBLIC_BASE_PATH: /publication-site
-      PUBLIC_SITE_URL: https://debbiemoraiti.github.io
+      PUBLIC_BASE_PATH: /
+      PUBLIC_SITE_URL: https://storyfields.gr
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -72,7 +72,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
-
   audit:
     name: Lighthouse audit
     runs-on: ubuntu-latest
@@ -88,13 +87,13 @@ jobs:
 
       - name: Audit deployed SEO and social metadata
         env:
-          AUDIT_SITE_URL: https://debbiemoraiti.github.io/publication-site
+          AUDIT_SITE_URL: https://storyfields.gr
         run: node scripts/audit-deployed.mjs
 
       - name: Audit homepage
         run: >
           npx --yes lighthouse@13.5.0
-          https://debbiemoraiti.github.io/publication-site/
+          https://storyfields.gr/
           --chrome-flags="--headless --no-sandbox"
           --only-categories=performance,accessibility,best-practices,seo
           --output=json
@@ -103,7 +102,7 @@ jobs:
       - name: Audit article
         run: >
           npx --yes lighthouse@13.5.0
-          https://debbiemoraiti.github.io/publication-site/articles/stelios-sioulas-behind-the-kit/
+          https://storyfields.gr/articles/after-40-you-dont-start-from-zero/
           --chrome-flags="--headless --no-sandbox"
           --only-categories=performance,accessibility,best-practices,seo
           --output=json

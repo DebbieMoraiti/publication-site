@@ -1,4 +1,4 @@
-const base = (process.env.AUDIT_SITE_URL || 'https://debbiemoraiti.github.io/publication-site').replace(/\/$/, '');
+const base = (process.env.AUDIT_SITE_URL || 'https://storyfields.gr').replace(/\/$/, '');
 
 async function get(path, expectedType) {
   const response = await fetch(`${base}${path}`, { redirect: 'follow' });
@@ -21,7 +21,7 @@ function mustNot(text, fragment, label) {
 
 const homeUrl = `${base}/`;
 const greekHomeUrl = `${base}/el/`;
-const articleSlug = 'stelios-sioulas-behind-the-kit';
+const articleSlug = 'after-40-you-dont-start-from-zero';
 const articleUrl = `${base}/articles/${articleSlug}/`;
 const greekArticleUrl = `${base}/el/articles/${articleSlug}/`;
 
@@ -46,21 +46,22 @@ must(home, '"@type":"CollectionPage"', 'homepage CollectionPage schema');
 
 must(greekHome, `rel="canonical" href="${greekHomeUrl}"`, 'Greek canonical');
 must(article, `rel="canonical" href="${articleUrl}"`, 'article canonical');
+must(article, `hreflang="x-default" href="${articleUrl}"`, 'article x-default');
 must(article, 'property="og:type" content="article"', 'article Open Graph type');
 must(article, 'name="twitter:card" content="summary_large_image"', 'Twitter large card');
-must(article, 'name="robots" content="noindex, follow"', 'draft/global noindex');
+must(article, 'name="robots" content="noindex, follow"', 'global noindex');
 must(article, '"@type":"BreadcrumbList"', 'article BreadcrumbList schema');
 must(article, '"@type":"Organization"', 'article publisher schema');
-must(article, '"@type":"BlogPosting"', 'profile BlogPosting schema');
+must(article, '"@type":"BlogPosting"', 'essay BlogPosting schema');
 must(greekArticle, `rel="canonical" href="${greekArticleUrl}"`, 'Greek article canonical');
 
 must(rss, '<language>en</language>', 'English RSS language');
 must(greekRss, '<language>el-GR</language>', 'Greek RSS language');
-mustNot(rss, articleSlug, 'draft article in English RSS');
-mustNot(greekRss, articleSlug, 'draft article in Greek RSS');
+must(rss, articleSlug, 'published article in English RSS');
+must(greekRss, articleSlug, 'published article in Greek RSS');
 
 must(sitemap, 'hreflang="x-default"', 'sitemap x-default alternate');
-mustNot(sitemap, articleSlug, 'draft article in sitemap');
+must(sitemap, articleSlug, 'published article in sitemap');
 must(robots, 'Disallow: /', 'robots indexing block');
 
 const share = await get('/social-share.png', 'image/png');

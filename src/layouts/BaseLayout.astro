@@ -82,7 +82,7 @@ const themeVariables = [
     {translations.map(({ lang: alternateLanguage, url }) => (
       <link rel="alternate" hreflang={alternateLanguage} href={url} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={absoluteUrl('/')} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(languagePath(siteConfig.localization.defaultLanguage as LanguageCode, page))} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteConfig.identity.name} />
     <meta property="og:title" content={pageTitle} />
