@@ -52,7 +52,7 @@ must(article, 'name="twitter:card" content="summary_large_image"', 'Twitter larg
 must(article, 'name="robots" content="noindex, follow"', 'global noindex');
 must(article, '"@type":"BreadcrumbList"', 'article BreadcrumbList schema');
 must(article, '"@type":"Organization"', 'article publisher schema');
-must(article, '"@type":"BlogPosting"', 'essay BlogPosting schema');
+must(article, '"@type":"Article"', 'essay Article schema');
 must(greekArticle, `rel="canonical" href="${greekArticleUrl}"`, 'Greek article canonical');
 
 must(rss, '<language>en</language>', 'English RSS language');
