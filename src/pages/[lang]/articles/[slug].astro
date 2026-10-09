@@ -1,11 +1,11 @@
 ---
 import ArticlePage from '../../../components/ArticlePage.astro';
-import { visibleArticles } from '../../../content/publication-data';
+import { allArticles } from '../../../content/publication-data';
 import { secondaryLanguages } from '../../../i18n/routes';
 
 export function getStaticPaths() {
   return secondaryLanguages.flatMap(({ code }) =>
-    visibleArticles().map((article) => ({
+    allArticles().map((article) => ({
       params: { lang: code, slug: article.slug },
       props: { article },
     })),

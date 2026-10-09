@@ -1,7 +1,11 @@
 import { articles, type Article } from './editorial';
 
+export function allArticles() {
+  return articles;
+}
+
 export function visibleArticles() {
-  // Publication status is independent of search-engine indexing.
+  // Only published stories appear in public listings, feeds and sitemap.
   return articles.filter((article) => article.status === 'published');
 }
 
