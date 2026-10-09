@@ -53,7 +53,7 @@ The repository validates slugs, dates, author/topic references, article status a
 - `wrangler.jsonc`: optional Cloudflare static-assets deployment.
 - `.github/workflows/publication-preview.yml`: GitHub Pages preview build/deploy.
 
-Public indexing is enabled with `seo.indexable: true`. Published pages allow crawling and appear in the bilingual sitemap. Draft article previews and `/image-preview/` retain page-level `noindex` and are excluded from the sitemap, feeds and public listings. Setting `seo.indexable` to `false` blocks crawling and adds global `noindex` again.
+Public indexing is enabled with `seo.indexable: true`. Published pages allow crawling and appear in the bilingual sitemap. Draft article previews and `/image-preview/` retain page-level `noindex` and are excluded from the sitemap, feeds and public listings. Empty topic/author archives also remain `noindex` until they have published stories. Setting `seo.indexable` to `false` blocks crawling and adds global `noindex` again.
 
 ## Contact delivery
 

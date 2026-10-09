@@ -15,7 +15,7 @@ const pageDescription = lang === 'el' ? `Άρθρα στη θεματική ${to
 const schema = publicationCollectionSchema(lang, `topics/${topic.slug}`, topic.label[lang], pageDescription);
 ---
 
-<BaseLayout lang={lang} title={`${topic.label[lang]} — ${publication.identity.name}`} description={pageDescription} structuredData={schema}>
+<BaseLayout lang={lang} title={`${topic.label[lang]} — ${publication.identity.name}`} description={pageDescription} structuredData={schema} noindex={related.length === 0}>
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">

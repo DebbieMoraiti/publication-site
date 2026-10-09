@@ -13,6 +13,6 @@ Storyfields is served from GitHub Pages at the final canonical domain, `https://
 
 If both apex and `www` are used, choose one canonical hostname and redirect the other explicitly.
 
-The `/image-preview/` utility remains noindex. Draft previews and this utility are excluded from the sitemap. They remain crawlable so search engines can read their noindex directive.
+The `/image-preview/` utility remains noindex. Draft previews, this utility and empty topic/author archives are excluded from the sitemap and retain page-level noindex. They remain crawlable so search engines can read their noindex directive. An archive automatically becomes indexable once it has a published story.
 
 For launch monitoring, verify ownership of `storyfields.gr` in Google Search Console and Bing Webmaster Tools, then submit `https://storyfields.gr/sitemap.xml`. Verification tokens must come from the property owner; do not invent them. Opening indexing and publishing a sitemap allow discovery but do not guarantee when a search engine will index the pages.

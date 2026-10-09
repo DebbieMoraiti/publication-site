@@ -20,7 +20,7 @@ const authored = sortedVisibleArticles().filter((article) => article.author === 
 const schema = publicationAuthorSchema(lang, author);
 ---
 
-<BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]} structuredData={schema}>
+<BaseLayout lang={lang} title={`${author.name} — ${publication.identity.name}`} description={author.bio?.[lang]} structuredData={schema} noindex={authored.length === 0}>
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">

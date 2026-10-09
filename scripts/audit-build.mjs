@@ -31,6 +31,19 @@ for (const draft of drafts) {
   }
 }
 assert.ok(!sitemap.includes('/image-preview/'), 'Image preview must not appear in sitemap');
+const noindexPaths = new Set(previewPaths);
+for (const [collection, articleField] of [['topics', 'topicSlug'], ['authors', 'author']]) {
+  const files = (await readdir(`src/content/${collection}`)).filter((file) => file.endsWith('.json'));
+  for (const file of files) {
+    const item = JSON.parse(await readFile(`src/content/${collection}/${file}`, 'utf8'));
+    if (articles.some((article) => article.status === 'published' && article[articleField] === item.slug)) continue;
+    assert.ok(!sitemap.includes(`/${collection}/${item.slug}/`), 'Empty editorial archive must not appear in sitemap');
+    for (const language of site.localization.languages) {
+      const prefix = language.code === site.localization.defaultLanguage ? '' : `${language.code}/`;
+      noindexPaths.add(`${prefix}${collection}/${item.slug}/index.html`);
+    }
+  }
+}
 
 async function htmlFiles(folder) {
   const found = [];
@@ -49,10 +62,10 @@ for (const file of pages) {
   const route = path.relative('dist', file).split(path.sep).join('/');
   const robotsMeta = html.match(/<meta\b[^>]*name="robots"[^>]*>/i)?.[0] || '';
   const blocked = /\b(?:noindex|none)\b/i.test(robotsMeta);
-  assert.equal(blocked, !indexable || previewPaths.has(route), `Incorrect indexing metadata: ${route}`);
+  assert.equal(blocked, !indexable || noindexPaths.has(route), `Incorrect indexing metadata: ${route}`);
   documents.set(route, html);
 }
-for (const route of previewPaths) assert.ok(documents.has(route), `Missing protected preview: ${route}`);
+for (const route of noindexPaths) assert.ok(documents.has(route), `Missing protected page: ${route}`);
 
 const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert.ok(locations.length > 0, 'Empty sitemap');
@@ -62,7 +75,7 @@ for (const location of locations) {
   const route = `${url.pathname.replace(/^\//, '')}index.html`;
   const html = documents.get(route);
   assert.ok(html, `Sitemap URL has no built page: ${location}`);
-  assert.ok(!previewPaths.has(route), `Preview in sitemap: ${location}`);
+  assert.ok(!noindexPaths.has(route), `Excluded page in sitemap: ${location}`);
   assert.ok(html.includes(`rel="canonical" href="${location}"`), `Canonical differs from sitemap: ${location}`);
 }
 

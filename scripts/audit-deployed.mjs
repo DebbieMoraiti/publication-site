@@ -144,6 +144,16 @@ await Promise.all(drafts.flatMap((item) => ['en', 'el'].map(async (lang) => {
   auditIndexing(await get(path, 'text/html', { noindex: true }), `${lang} draft ${item.slug}`, true);
 })));
 
+for (const [collection, articleField] of [['topics', 'topicSlug'], ['authors', 'author']]) {
+  const files = (await readdir(`src/content/${collection}`)).filter((file) => file.endsWith('.json'));
+  const items = await Promise.all(files.map(async (file) => JSON.parse(await readFile(`src/content/${collection}/${file}`, 'utf8'))));
+  await Promise.all(items.filter((item) => !published.some((article) => article[articleField] === item.slug)).flatMap((item) => ['en', 'el'].map(async (lang) => {
+    const path = `${lang === 'el' ? '/el' : ''}/${collection}/${item.slug}/`;
+    auditIndexing(await get(path, 'text/html', { noindex: true }), `empty archive ${path}`, true);
+    mustNot(sitemap, path, 'empty archive in sitemap');
+  })));
+}
+
 await Promise.all([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(async ([, url]) => {
   const path = new URL(url).pathname;
   auditIndexing(await get(path, 'text/html'), `sitemap page ${path}`);
