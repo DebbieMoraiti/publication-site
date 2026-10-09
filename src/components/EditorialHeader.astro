@@ -9,13 +9,22 @@ const page = pageFromPath(Astro.url.pathname);
 const homeSection = (id: string) => page ? `${languagePath(lang)}#${id}` : `#${id}`;
 const isCurrent = (target: string) => page === target || page.startsWith(`${target}/`);
 const labels = lang === 'el'
-  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση' }
-  : { stories: 'Stories', people: 'People', ideas: 'Ideas', culture: 'Culture', archive: 'Archive', menu: 'Navigation' };
+  ? { stories: 'Ιστορίες', people: 'Άνθρωποι', ideas: 'Ιδέες', culture: 'Πολιτισμός', archive: 'Αρχείο', menu: 'Πλοήγηση', edition: 'Ανεξάρτητη έκδοση' }
+  : { stories: 'Stories', people: 'People', ideas: 'Ideas', culture: 'Culture', archive: 'Archive', menu: 'Navigation', edition: 'Independent publication' };
 ---
 
 <header class="editorial-header">
-  <div class="editorial-header__inner content-container">
+  <div class="newspaper-topline content-container">
+    <span>{labels.edition}</span>
+    <span>Storyfields · Athens</span>
+  </div>
+
+  <div class="newspaper-masthead content-container">
     <a class="editorial-brand" href={languagePath(lang)}>{publication.identity.name}</a>
+    <p>{publication.identity.tagline[lang]}</p>
+  </div>
+
+  <div class="editorial-header__inner content-container">
     <nav class="editorial-nav" aria-label={labels.menu}>
       <a href={homeSection('stories')} aria-current={!page ? 'page' : undefined}>{labels.stories}</a>
       <a href={languagePath(lang, 'topics/people')} aria-current={isCurrent('topics/people') ? 'page' : undefined}>{labels.people}</a>
@@ -23,6 +32,7 @@ const labels = lang === 'el'
       <a href={languagePath(lang, 'topics/culture')} aria-current={isCurrent('topics/culture') ? 'page' : undefined}>{labels.culture}</a>
       <a href={languagePath(lang, 'archive')} aria-current={isCurrent('archive') ? 'page' : undefined}>{labels.archive}</a>
     </nav>
+
     <nav class="editorial-languages" aria-label={lang === 'el' ? 'Γλώσσα' : 'Language'}>
       {siteConfig.localization.languages.map((language) => (
         <a

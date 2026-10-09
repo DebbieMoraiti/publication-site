@@ -16,25 +16,23 @@ const latest = stories.filter((item) => item.slug !== featured?.slug);
 const title = publication.identity.name;
 const description = publication.identity.tagline[lang];
 const schema = publicationWebsiteSchema(lang);
+const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-life'];
 ---
 
 <BaseLayout title={title} description={description} lang={lang} structuredData={schema} skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}>
   <div class="site-shell publication-shell" id="top">
     <EditorialHeader lang={lang} />
     <main id="main-content" tabindex="-1">
-      <section class="publication-masthead content-container">
-        <p class="publication-kicker">{lang === 'el' ? 'Ανεξάρτητη έκδοση' : 'Independent publication'}</p>
-        <h1>{publication.identity.name}</h1>
-        <p class="publication-tagline">{publication.identity.tagline[lang]}</p>
+      <section class="frontpage-intro content-container">
+        <p class="publication-kicker">{lang === 'el' ? 'ΣΗΜΕΡΑ ΣΤΟ STORYFIELDS' : 'TODAY IN STORYFIELDS'}</p>
         <p class="publication-intro">{publication.intro[lang]}</p>
       </section>
 
       {featured && (
         <section class="editorial-feature content-container" id="stories" aria-labelledby="featured-heading">
-          <div class="feature-rule"></div>
           <div class="feature-copy">
             <p class="story-meta">{topicBySlug.get(featured.topicSlug)?.label[lang] ?? featured.topic?.[lang] ?? featured.topicSlug} · {featured.date}</p>
-            <h2 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h2>
+            <h1 id="featured-heading"><a href={languagePath(lang, `articles/${featured.slug}`)}>{featured.title[lang]}</a></h1>
             <p>{featured.dek[lang]}</p>
             {featured.status === 'draft' && (
               <span class="story-status">{lang === 'el' ? 'Προσχέδιο' : 'Draft'}</span>
@@ -46,7 +44,7 @@ const schema = publicationWebsiteSchema(lang);
             </figure>
           ) : (
             <div class="feature-placeholder" aria-hidden="true">
-              <span>{lang === 'el' ? 'Χώρος κύριας εικόνας' : 'Feature image area'}</span>
+              <span>{lang === 'el' ? 'Κύρια ιστορία' : 'Lead story'}</span>
             </div>
           )}
         </section>
@@ -54,7 +52,7 @@ const schema = publicationWebsiteSchema(lang);
 
       <section class="latest-section content-container" aria-labelledby="latest-heading">
         <div class="section-heading-row">
-          <h2 id="latest-heading">{lang === 'el' ? 'Πρόσφατα' : 'Latest stories'}</h2>
+          <h2 id="latest-heading">{lang === 'el' ? 'Τελευταίες ιστορίες' : 'Latest stories'}</h2>
           <span>{latest.length.toString().padStart(2, '0')}</span>
         </div>
         <div class="editorial-grid">
@@ -65,7 +63,7 @@ const schema = publicationWebsiteSchema(lang);
                   <img src={assetPath(article.image)} alt={article.imageAlt?.[lang] ?? ''} loading="lazy" decoding="async" />
                 </figure>
               ) : (
-                <div class="story-card__image" aria-hidden="true"></div>
+                <div class="story-card__image newspaper-placeholder" aria-hidden="true"></div>
               )}
               <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · {article.date}</p>
               <h3><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h3>
@@ -75,12 +73,30 @@ const schema = publicationWebsiteSchema(lang);
         </div>
       </section>
 
-      <section class="publication-note content-container" id="culture">
-        <p class="story-meta">{lang === 'el' ? 'Κατεύθυνση' : 'Editorial direction'}</p>
-        <h2>{lang === 'el' ? 'Χωρίς ένα μόνο θέμα.' : 'Not confined to one subject.'}</h2>
+      <section class="topic-rack content-container" aria-labelledby="topics-heading">
+        <div class="section-heading-row">
+          <h2 id="topics-heading">{lang === 'el' ? 'Θεματικές' : 'Explore topics'}</h2>
+        </div>
+        <div class="topic-rack__grid">
+          {topicSlugs.map((slug) => {
+            const topic = topicBySlug.get(slug);
+            if (!topic) return null;
+            return (
+              <a href={languagePath(lang, `topics/${slug}`)}>
+                <span>{topic.label[lang]}</span>
+                <small>{lang === 'el' ? 'Άνοιγμα θεματικής →' : 'Explore section →'}</small>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="publication-note content-container">
+        <p class="story-meta">{lang === 'el' ? 'Σημείωμα σύνταξης' : 'Editorial note'}</p>
+        <h2>{lang === 'el' ? 'Ιστορίες που αξίζει να μείνουν.' : 'Stories worth keeping.'}</h2>
         <p>{lang === 'el'
-          ? 'Μουσική, άνθρωποι, πολιτισμός, τεχνολογία, δημιουργική δουλειά και καθημερινές παρατηρήσεις μπορούν να συνυπάρχουν, αρκεί κάθε δημοσίευση να έχει πραγματικό λόγο ύπαρξης.'
-          : 'Music, people, culture, technology, creative work and everyday observations can live together, as long as every piece has a genuine reason to exist.'}</p>
+          ? 'Άνθρωποι, μουσική, πολιτισμός, τεχνολογία, δημιουργική δουλειά και μικρές παρατηρήσεις από την καθημερινή ζωή — χωρίς να περιοριζόμαστε σε ένα μόνο θέμα.'
+          : 'People, music, culture, technology, creative work and small observations from everyday life — without being confined to a single subject.'}</p>
       </section>
     </main>
     <EditorialFooter lang={lang} />
