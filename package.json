@@ -9,6 +9,8 @@
     "precheck": "node scripts/build-images.mjs",
     "postbuild": "node scripts/sanitize-deployed-images.mjs && node scripts/security-headers.mjs",
     "check": "astro check",
+    "test:inline-links": "node --test scripts/inline-links.test.mjs",
+    "test:inline-links:build": "node scripts/audit-inline-links-build.mjs",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",

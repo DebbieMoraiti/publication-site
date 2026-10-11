@@ -1,4 +1,5 @@
 import type { Article, LanguageCode } from '../content/editorial';
+import { parseInlineLinks } from './inline-links.ts';
 
 export function formatPublicationDate(date: string, lang: LanguageCode, month: 'long' | 'short' = 'long') {
   return new Intl.DateTimeFormat(lang === 'el' ? 'el-GR' : 'en-GB', {
@@ -10,9 +11,12 @@ export function formatPublicationDate(date: string, lang: LanguageCode, month: '
 }
 
 export function readingTime(article: Article, lang: LanguageCode) {
+  const paragraphText = (text: string) => parseInlineLinks(text).map((segment) => segment.text).join('');
   const paragraphs = article.sections?.length
-    ? article.sections.filter((section) => section.type !== 'link').map((section) => section.text[lang])
-    : article.body?.[lang] ?? [];
+    ? article.sections.filter((section) => section.type !== 'link').map((section) =>
+      section.type === 'paragraph' ? paragraphText(section.text[lang]) : section.text[lang],
+    )
+    : (article.body?.[lang] ?? []).map(paragraphText);
   const text = [article.title[lang], article.dek[lang], ...paragraphs].join(' ');
   const words = Array.from(new Intl.Segmenter(lang, { granularity: 'word' }).segment(text))
     .filter((segment) => segment.isWordLike).length;

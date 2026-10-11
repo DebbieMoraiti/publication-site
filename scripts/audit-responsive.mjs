@@ -9,6 +9,23 @@ const articleFiles = (await readdir('src/content/articles')).filter((file) => fi
 const articleContent = await Promise.all(articleFiles.map(async (file) => JSON.parse(await readFile(`src/content/articles/${file}`, 'utf8'))));
 const publishedCount = articleContent.filter((article) => article.status === 'published').length;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function neutralSvg(src) {
+  const url = new URL(src);
+  if (url.origin !== new URL(base).origin || !url.pathname.startsWith('/uploads/') || !url.pathname.endsWith('.svg')) return false;
+  const svg = await readFile(`public${decodeURIComponent(url.pathname)}`, 'utf8');
+  if (/<(?:style|script|foreignObject)\b|\bstyle\s*=/i.test(svg)) return false;
+  const paints = [...svg.matchAll(/(?:fill|stroke|stop-color|color)\s*=\s*"([^"]+)"/gi)].map((match) => match[1]);
+  return paints.length > 0 && paints.every((paint) => {
+    if (paint === 'none' || /^url\(#[\w-]+\)$/.test(paint)) return true;
+    if (!/^#(?:[a-f\d]{3}|[a-f\d]{6})$/i.test(paint)) return false;
+    const hex = paint.length === 4 ? [...paint.slice(1)].map((digit) => digit + digit).join('') : paint.slice(1);
+    const channels = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
+    // Neutral SVG artwork may use slightly warm greys to match the newspaper paper.
+    return Math.max(...channels) - Math.min(...channels) <= 6;
+  });
+}
+
 const chrome = spawn(process.env.CHROME_PATH || '/usr/bin/google-chrome', [
   '--headless', '--no-sandbox', '--disable-dev-shm-usage',
   '--remote-debugging-port=9222', '--user-data-dir=/tmp/storyfields-responsive', 'about:blank',
@@ -95,6 +112,7 @@ try {
             topics: Array.from(document.querySelectorAll('.topic-rack__grid a')).map(link => ({
               label: link.textContent.trim(),
               image: !!link.querySelector('img'),
+              src: link.querySelector('img')?.currentSrc,
               filter: link.querySelector('img') ? getComputedStyle(link.querySelector('img')).filter : null,
             })),
           } : null,
@@ -119,7 +137,10 @@ try {
         if (!route && (metrics.cards !== publishedCount || metrics.columns !== (width > 832 ? 3 : width > 624 ? 2 : 1))) {
           throw new Error(`Invalid homepage grid: ${JSON.stringify({ url, metrics })}`);
         }
-        if (!route && (!metrics.homepage?.date || !/min read|λεπτά? ανάγνωσης/u.test(metrics.homepage.byline || '') || metrics.homepage.featuredFilter.includes('grayscale') || metrics.homepage.storyFilters.some(filter => !filter.includes('grayscale(1)')) || metrics.homepage.topics.length !== 6 || metrics.homepage.topics.some(topic => !topic.label || !topic.image || !topic.filter.includes('grayscale(1)')))) {
+        const topicImageryValid = route || (metrics.homepage && (await Promise.all(metrics.homepage.topics.map(async (topic) =>
+          !!topic.label && topic.image && (topic.filter.includes('grayscale(1)') || await neutralSvg(topic.src)),
+        ))).every(Boolean));
+        if (!route && (!metrics.homepage?.date || !/min read|λεπτά? ανάγνωσης/u.test(metrics.homepage.byline || '') || metrics.homepage.featuredFilter.includes('grayscale') || metrics.homepage.storyFilters.some(filter => !filter.includes('grayscale(1)')) || metrics.homepage.topics.length !== 6 || !topicImageryValid)) {
           throw new Error(`Invalid front-page imagery or story details: ${JSON.stringify({ url, metrics })}`);
         }
         if (route === 'articles/stelios-sioulas-behind-the-kit/' && (!metrics.croppedHero || Math.abs(metrics.croppedHero.width - metrics.croppedHero.height) > 1)) {

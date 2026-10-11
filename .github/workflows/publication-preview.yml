@@ -42,6 +42,9 @@ jobs:
       - name: Validate Astro
         run: npm run check
 
+      - name: Verify safe inline link parsing
+        run: npm run test:inline-links
+
       - name: Verify contact configuration and email fallback
         run: node scripts/audit-contact.mjs
 
@@ -50,6 +53,9 @@ jobs:
 
       - name: Verify indexing, preview protection and Contact policy
         run: node scripts/audit-build.mjs
+
+      - name: Verify inline link rendering and draft exclusion
+        run: npm run test:inline-links:build
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
