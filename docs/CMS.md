@@ -31,7 +31,7 @@ Complete:
 5. **Publication date**.
 6. **Author** — select an existing author from the Authors collection.
 7. **Topic** — select an existing curated topic.
-8. **Tags** — optional reusable lowercase tags such as `music`, `live-music`, `web`.
+8. **Tags** — choose 2–4 specific entries from the shared **Tags / Ετικέτες** collection. Search using Greek, English or the stable slug.
 9. **English and Greek title**.
 10. **English and Greek summary/dek**.
 11. Optional **hero image** and bilingual alt text.
@@ -80,7 +80,8 @@ The publication validates:
 - existing topic references;
 - required English and Greek titles;
 - required English and Greek summaries;
-- lowercase reusable tag format;
+- bilingual tag labels and unique canonical slugs/compatibility aliases;
+- lowercase reusable tag format and references to existing catalog entries;
 - duplicate tags within an article;
 - maximum one featured article;
 - HTTPS-only public author links;
@@ -114,18 +115,21 @@ Topics are curated, relatively broad sections such as:
 
 The article stores only the topic slug. The visible bilingual topic label comes from the Topics collection, so renaming a topic label updates all related article displays without editing every article.
 
+**Active on website / Ενεργή στο site** controls visibility throughout the website. Missing values preserve the original active behavior. `culture` is currently inactive: its menu entry, homepage tile, topic routes and any associated article routes, listings, tag catalogs, related stories, RSS and sitemap entries are suppressed. Its JSON, translations and images remain stored. Turn the switch back on to restore the section on the next successful build. A build clears old output so disabled routes cannot survive from a previous build.
+
 ## Tags
 
-Tags are lighter metadata stored directly on articles.
+Tags live in `src/content/tags/`. Articles continue to store a list of stable slugs, so the article JSON structure is unchanged. The CMS offers a searchable multiple-reference field rather than free-text entry. See the [Pages CMS reference field documentation](https://pagescms.org/docs/configuration/fields/reference/).
 
-Keep them:
+Select 2–4 specific, reusable tags. The article header displays the first four in the stored order, in the reader's language. Older additional entries stay available for taxonomy pages and related-story matching, preserving existing tag URLs. Unused tags and tags used only by drafts do not create public pages; draft headers link only to existing public tag pages.
 
-- lowercase;
-- short;
-- reusable;
-- Latin-letter slugs with hyphens.
+For example, `cats` displays **Γάτες** in Greek and **Cats** in English; `small-joys` displays **Μικρές χαρές** / **Small joys**. Tag page headings, metadata and article schema keywords use the same localized labels. Artist and venue names keep their official spelling.
 
-Prefer reusing an existing tag instead of creating small variations such as `website`, `websites` and `web-site`.
+Use the existing three homepage topics (**Άνθρωποι, Μουσική, Καθημερινότητα**) for broad navigation; tags describe more specific subjects. Prefer reusing an existing tag instead of creating variations such as `website`, `websites` and `web-site`.
+
+To add a genuinely new subject, first create an entry under **Tags / Ετικέτες** with a lowercase Latin slug and both Greek and English labels, then select it in an article. Edit the labels to rename it without changing its slug or URL. Removing an entry still referenced by an article causes the build to fail.
+
+`heavy-metal` is a compatibility alias of `metal`: both old addresses remain functional, while new links and the sitemap use `metal`. Alias pages use the canonical tag's localized title, article list, canonical URL and language alternatives. Compatibility aliases are read-only in the CMS and maintained through code review.
 
 ## Images
 

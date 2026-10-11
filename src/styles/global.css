@@ -1453,7 +1453,8 @@ body {
   background: transparent;
 }
 
-.contact-form button {
+.contact-form button,
+.contact-dialog button {
   min-height: 2.8rem;
   padding: .65rem 1.6rem;
   border: 1px solid var(--newspaper-ink);
@@ -1474,6 +1475,57 @@ body {
 
 .contact-honeypot {
   display: none;
+}
+
+.contact-status {
+  margin: 1rem 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.6;
+}
+
+.contact-status:empty {
+  display: none;
+}
+
+.contact-status[data-error] {
+  padding: .75rem 1rem;
+  border-left: 3px solid var(--newspaper-ink);
+}
+
+.contact-dialog {
+  width: min(30rem, calc(100% - 2rem));
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: clamp(1.4rem, 5vw, 2.4rem);
+  overflow: auto;
+  border: 1px solid var(--newspaper-rule);
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255,255,255,.34), transparent 28rem),
+    linear-gradient(rgba(66,55,36,.018) 1px, transparent 1px),
+    var(--newspaper-paper);
+  background-size: auto, 100% 4px, auto;
+  color: var(--newspaper-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  box-shadow: 0 .6rem 2.5rem rgba(23,22,17,.2);
+}
+
+.contact-dialog::backdrop {
+  background: rgba(23,22,17,.4);
+}
+
+.contact-dialog h2 {
+  margin: .8rem 0 1rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 6vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -.018em;
+  text-shadow: .015em .02em .01em rgba(23,22,17,.12);
+}
+
+.contact-dialog > p:not(.publication-kicker) {
+  margin: 0 0 1.5rem;
+  line-height: 1.65;
 }
 
 .article-body .article-source-link {

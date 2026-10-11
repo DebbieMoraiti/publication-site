@@ -26,6 +26,8 @@ External links and future integrations should use HTTPS and be reviewed before p
 
 Production builds generate security headers and a build-specific Content Security Policy. Third-party frames are disabled by default. Do not weaken the CSP merely to make an unreviewed integration work.
 
+Contact uses an AJAX POST to the configured HTTPS form endpoint, with JSON responses, no cookies/referrer and no redirects. CSP `connect-src` permits only this exact provider origin alongside the site itself; `form-action` preserves the same configured provider for the no-JavaScript fallback. The success dialog opens only after confirmation from the service; failed/ambiguous requests keep the text for retry. No third-party script is loaded.
+
 ## Images
 
 Uploads are limited to JPG/JPEG, PNG, WebP and AVIF. The build validates image data and size, creates responsive variants and sanitizes deployed uploads.

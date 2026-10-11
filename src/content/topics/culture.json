@@ -1,5 +1,6 @@
 {
   "slug": "culture",
+  "active": false,
   "label": {
     "en": "Culture",
     "el": "Πολιτισμός"

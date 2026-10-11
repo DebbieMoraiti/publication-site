@@ -1,4 +1,4 @@
-import { articles } from '../content/editorial';
+import { sortedVisibleArticles } from '../content/publication-data';
 import publication from '../content/publication.json';
 import { absoluteUrl, languagePath, type LanguageCode } from '../i18n/routes';
 
@@ -7,9 +7,7 @@ const escapeXml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
 })[character]!);
 
 export function renderRss(lang: LanguageCode) {
-  const published = articles
-    .filter((article) => article.status === 'published')
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const published = sortedVisibleArticles();
 
   const items = published.map((article) => {
     const url = absoluteUrl(languagePath(lang, `articles/${article.slug}`));

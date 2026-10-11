@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "predev": "node scripts/build-images.mjs",
-    "prebuild": "node scripts/build-images.mjs",
+    "prebuild": "node scripts/clean-build.mjs && node scripts/build-images.mjs",
     "precheck": "node scripts/build-images.mjs",
     "postbuild": "node scripts/sanitize-deployed-images.mjs && node scripts/security-headers.mjs",
     "check": "astro check",
