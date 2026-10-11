@@ -18,8 +18,9 @@ const server = createServer(async (request, response) => {
     const file = path.resolve(root, `.${route.endsWith('/') ? `${route}index.html` : route}`);
     if (!file.startsWith(`${root}/`)) throw new Error();
     const type = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml' }[path.extname(file)] || 'application/octet-stream';
+    const content = await readFile(file);
     response.writeHead(200, { 'Content-Type': type, 'Content-Security-Policy': csp });
-    response.end(await readFile(file));
+    response.end(content);
   } catch { response.writeHead(404); response.end(); }
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
