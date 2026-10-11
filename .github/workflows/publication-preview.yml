@@ -39,8 +39,8 @@ jobs:
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
-      - name: Validate Astro
-        run: npm run check
+      - name: Verify tags, inactive topics and contact submission
+        run: node --test scripts/tags.test.mjs scripts/topic-visibility.test.mjs scripts/contact-ajax.test.mjs
 
       - name: Verify contact configuration and email fallback
         run: node scripts/audit-contact.mjs
@@ -48,8 +48,17 @@ jobs:
       - name: Build preview
         run: npm run build
 
+      - name: Validate Astro
+        run: npm run astro -- check
+
       - name: Verify indexing, preview protection and Contact policy
         run: node scripts/audit-build.mjs
+
+      - name: Verify tag navigation and localized archives
+        run: node scripts/audit-tags.mjs
+
+      - name: Verify contact dialog without sending real email
+        run: node scripts/audit-contact-ui.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

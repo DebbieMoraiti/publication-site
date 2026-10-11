@@ -34,3 +34,26 @@ export function contactMailto(email: string, fields: { name: string; email: stri
   const recipient = encodeURIComponent(email).replace(/%40/gi, '@');
   return `mailto:${recipient}?subject=${encodeURIComponent(oneLine(fields.subject))}&body=${encodeURIComponent(body)}`;
 }
+
+export async function submitContactForm(endpoint: string, data: FormData) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' },
+      credentials: 'omit',
+      redirect: 'error',
+      referrerPolicy: 'no-referrer',
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error('Contact submission was not accepted.');
+    if (new URL(endpoint).hostname === 'formspree.io') {
+      const result = await response.json();
+      if (result?.ok !== true || result.errors?.length) throw new Error('Contact submission was not confirmed.');
+    }
+  } finally {
+    clearTimeout(timer);
+  }
+}

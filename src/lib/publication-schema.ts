@@ -1,7 +1,8 @@
 import { absoluteUrl, languagePath, type LanguageCode } from '../i18n/routes';
 import publication from '../content/publication.json';
 import { siteConfig } from '../config';
-import { topicBySlug } from '../content/editorial';
+import { topicBySlug, tagBySlug } from '../content/editorial';
+import { resolveArticleTags } from './tags';
 
 type Localized = { en: string; el: string };
 type Author = {
@@ -214,7 +215,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         description: article.dek[lang],
         datePublished: article.date,
         inLanguage: lang,
-        keywords: article.tags ?? [],
+        keywords: resolveArticleTags(article.tags, tagBySlug).map((tag) => tag.label[lang]),
         articleSection: topicLabel,
         image: articleImage,
         isPartOf: { '@id': websiteId() },

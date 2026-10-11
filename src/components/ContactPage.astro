@@ -24,6 +24,11 @@ const copy = lang === 'el' ? {
   endpoint: 'Το όνομα, το email και το μήνυμά σου διαβιβάζονται στην υπηρεσία επικοινωνίας μας για την παράδοση του μηνύματος.',
   formspree: 'Το όνομα, το email, το θέμα και το μήνυμά σου αποστέλλονται μέσω Formspree για να φτάσουν στο Storyfields.',
   noScript: 'Μπορείς να επικοινωνήσεις μέσω του συνδέσμου email.',
+  sending: 'Αποστολή…',
+  error: 'Δεν μπορέσαμε να επιβεβαιώσουμε την αποστολή. Το κείμενό σου διατηρήθηκε. Δοκίμασε ξανά σε λίγο.',
+  successTitle: 'Το μήνυμά σου στάλθηκε',
+  successMessage: 'Ευχαριστούμε που επικοινώνησες με το Storyfields. Θα διαβάσουμε το μήνυμά σου και θα επανέλθουμε σύντομα.',
+  close: 'Κλείσιμο',
 } : {
   title: 'Contact',
   invitation: 'Have a story, project, person or idea that might belong in Storyfields?',
@@ -36,6 +41,11 @@ const copy = lang === 'el' ? {
   endpoint: 'Your name, email and message are shared with our contact service to deliver your enquiry.',
   formspree: 'Your name, email, subject and message are sent through Formspree to reach Storyfields.',
   noScript: 'You can get in touch using the email link.',
+  sending: 'Sending…',
+  error: 'We could not confirm your submission. Your text has been kept. Please try again in a moment.',
+  successTitle: 'Your message has been sent',
+  successMessage: 'Thank you for contacting Storyfields. We will read your message and get back to you soon.',
+  close: 'Close',
 };
 const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? copy.mailto : usesFormspree ? copy.formspree : copy.endpoint;
 ---
@@ -73,6 +83,9 @@ const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? cop
               data-contact-mode={mode}
               data-contact-email={email || undefined}
               data-contact-honeypot={honeypotField}
+              data-contact-sending={copy.sending}
+              data-contact-error={copy.error}
+              data-contact-success={copy.successTitle}
               aria-labelledby="contact-form-title"
               aria-describedby="contact-form-note"
             >
@@ -104,40 +117,81 @@ const note = mode === 'unavailable' ? copy.unavailable : mode === 'mailto' ? cop
                 <button type="submit" disabled={mode !== 'endpoint'} aria-describedby="contact-form-note">{copy.send}</button>
               </fieldset>
             </form>
+            <p class="contact-status" role="status" aria-live="polite" aria-atomic="true"></p>
             {mode === 'mailto' && <noscript><p class="contact-form-note">{copy.noScript}</p></noscript>}
           </div>
         </div>
       </section>
+      {mode === 'endpoint' && <dialog class="contact-dialog" aria-labelledby="contact-success-title" aria-describedby="contact-success-message">
+        <p class="publication-kicker">Storyfields</p>
+        <h2 id="contact-success-title">{copy.successTitle}</h2>
+        <p id="contact-success-message">{copy.successMessage}</p>
+        <button type="button" class="contact-dialog-close" autofocus>{copy.close}</button>
+      </dialog>}
     </main>
     <EditorialFooter lang={lang} />
   </div>
 </BaseLayout>
 
 <script>
-  import { contactMailto } from '../lib/contact';
+  import { contactMailto, submitContactForm } from '../lib/contact';
   const form = document.querySelector<HTMLFormElement>('.contact-form');
   if (form) {
     const mode = form.dataset.contactMode;
     const email = form.dataset.contactEmail || '';
-    form.addEventListener('submit', (event) => {
+    const fieldset = form.querySelector('fieldset');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = document.querySelector<HTMLElement>('.contact-status');
+    const dialog = document.querySelector<HTMLDialogElement>('.contact-dialog');
+    const close = dialog?.querySelector<HTMLButtonElement>('.contact-dialog-close');
+    const sendLabel = button?.textContent || '';
+    let submitting = false;
+    close?.addEventListener('click', () => dialog?.close());
+    dialog?.addEventListener('close', () => button?.focus());
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (submitting || !form.reportValidity()) return;
       const data = new FormData(form);
       if (mode === 'unavailable' || data.get(form.dataset.contactHoneypot || 'website')) {
-        event.preventDefault();
         return;
       }
-      if (mode !== 'mailto') return;
-      event.preventDefault();
-      if (!form.reportValidity()) return;
-      const value = (name: string) => String(data.get(name) || '');
-      window.location.href = contactMailto(email, {
-        name: value('name'), email: value('email'), subject: value('subject'), message: value('message'),
-      });
+      if (mode === 'mailto') {
+        const value = (name: string) => String(data.get(name) || '');
+        window.location.href = contactMailto(email, {
+          name: value('name'), email: value('email'), subject: value('subject'), message: value('message'),
+        });
+        return;
+      }
+      if (mode !== 'endpoint') return;
+      submitting = true;
+      form.setAttribute('aria-busy', 'true');
+      if (fieldset) fieldset.disabled = true;
+      if (button) button.textContent = form.dataset.contactSending || '';
+      if (status) {
+        status.textContent = form.dataset.contactSending || '';
+        status.removeAttribute('data-error');
+      }
+      try {
+        await submitContactForm(form.action, data);
+        form.reset();
+        if (status) status.textContent = form.dataset.contactSuccess || '';
+        if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+      } catch {
+        if (status) {
+          status.textContent = form.dataset.contactError || '';
+          status.dataset.error = 'true';
+        }
+      } finally {
+        submitting = false;
+        form.removeAttribute('aria-busy');
+        if (fieldset) fieldset.disabled = false;
+        if (button) button.textContent = sendLabel;
+      }
     });
     if (mode === 'mailto' && email) {
-      const fieldset = form.querySelector('fieldset');
-      const button = form.querySelector('button');
       if (fieldset) fieldset.disabled = false;
       if (button) button.disabled = false;
     }
+    form.dataset.contactEnhanced = 'true';
   }
 </script>

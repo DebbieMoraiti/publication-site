@@ -14,14 +14,17 @@ assert.match(headers, /Content-Security-Policy:/, 'Missing generated CSP');
 assert.equal(/X-Robots-Tag:.*noindex/i.test(headers), !indexable, 'Global indexing header differs from configuration');
 const formOrigin = site.contact.formEndpoint ? new URL(site.contact.formEndpoint).origin : "'none'";
 assert.ok(headers.includes(`form-action ${formOrigin};`), 'CSP must allow only the configured form origin');
-assert.match(headers, /connect-src 'self';/, 'Contact must not need third-party background requests');
+assert.ok(headers.includes(`connect-src 'self'${site.contact.formEndpoint ? ` ${formOrigin}` : ''};`), 'CSP must allow background POST only to the configured contact origin');
 assert.ok(robots.includes(indexable ? 'Allow: /' : 'Disallow: /'), 'Robots crawl policy differs from configuration');
 assert.equal(robots.includes('Disallow: /'), !indexable, 'Unexpected global crawl block');
 assert.ok(robots.includes(`Sitemap: ${base}/sitemap.xml`), 'Missing canonical sitemap in robots');
 
 const files = (await readdir('src/content/articles')).filter((file) => file.endsWith('.json'));
 const articles = await Promise.all(files.map(async (file) => JSON.parse(await readFile(`src/content/articles/${file}`, 'utf8'))));
-const drafts = articles.filter((article) => article.status !== 'published');
+const topics = await Promise.all((await readdir('src/content/topics')).filter((file) => file.endsWith('.json')).map(async (file) => JSON.parse(await readFile(`src/content/topics/${file}`, 'utf8'))));
+const inactive = new Set(topics.filter((topic) => topic.active === false).map((topic) => topic.slug));
+const activeArticles = articles.filter((article) => !inactive.has(article.topicSlug));
+const drafts = activeArticles.filter((article) => article.status !== 'published');
 const previewPaths = new Set(['image-preview/index.html']);
 for (const draft of drafts) {
   assert.ok(!sitemap.includes(`/articles/${draft.slug}/`), 'Draft must not appear in sitemap');
@@ -36,7 +39,11 @@ for (const [collection, articleField] of [['topics', 'topicSlug'], ['authors', '
   const files = (await readdir(`src/content/${collection}`)).filter((file) => file.endsWith('.json'));
   for (const file of files) {
     const item = JSON.parse(await readFile(`src/content/${collection}/${file}`, 'utf8'));
-    if (articles.some((article) => article.status === 'published' && article[articleField] === item.slug)) continue;
+    if (collection === 'topics' && item.active === false) {
+      assert.ok(!sitemap.includes(`/topics/${item.slug}/`), 'Inactive topic in sitemap');
+      continue;
+    }
+    if (activeArticles.some((article) => article.status === 'published' && article[articleField] === item.slug)) continue;
     assert.ok(!sitemap.includes(`/${collection}/${item.slug}/`), 'Empty editorial archive must not appear in sitemap');
     for (const language of site.localization.languages) {
       const prefix = language.code === site.localization.defaultLanguage ? '' : `${language.code}/`;
@@ -66,6 +73,19 @@ for (const file of pages) {
   documents.set(route, html);
 }
 for (const route of noindexPaths) assert.ok(documents.has(route), `Missing protected page: ${route}`);
+for (const topic of inactive) {
+  for (const language of site.localization.languages) {
+    const prefix = language.code === site.localization.defaultLanguage ? '' : `${language.code}/`;
+    assert.ok(!documents.has(`${prefix}topics/${topic}/index.html`), 'Inactive topic route must not be built');
+    for (const html of documents.values()) assert.ok(!html.includes(`href="/${prefix}topics/${topic}/"`), 'Inactive topic link in built page');
+    for (const article of articles.filter((article) => article.topicSlug === topic)) {
+      assert.ok(!documents.has(`${prefix}articles/${article.slug}/index.html`), 'Inactive topic article must not be built');
+      assert.ok(!sitemap.includes(`/articles/${article.slug}/`), 'Inactive topic article in sitemap');
+      const rss = await readFile(`dist/${prefix}rss.xml`, 'utf8');
+      assert.ok(!rss.includes(`/articles/${article.slug}/`), 'Inactive topic article in RSS');
+    }
+  }
+}
 
 const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert.ok(locations.length > 0, 'Empty sitemap');

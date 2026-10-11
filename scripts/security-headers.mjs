@@ -40,7 +40,7 @@ const policy = [
   embedsEnabled
     ? "frame-src https://www.youtube-nocookie.com https://player.vimeo.com"
     : "frame-src 'none'",
-  "connect-src 'self'",
+  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''}`,
   `form-action ${formOrigin || "'none'"}`,
   "object-src 'none'",
   "base-uri 'self'",

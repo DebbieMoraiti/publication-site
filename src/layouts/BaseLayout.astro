@@ -15,6 +15,7 @@ interface Props {
   socialImageAlt?: string;
   publishedTime?: string;
   articleSection?: string;
+  canonicalPage?: string;
 }
 
 const {
@@ -29,9 +30,10 @@ const {
   socialImageAlt,
   publishedTime,
   articleSection,
+  canonicalPage,
 } = Astro.props;
 
-const page = pageFromPath(Astro.url.pathname);
+const page = canonicalPage ?? pageFromPath(Astro.url.pathname);
 const canonical = absoluteUrl(languagePath(lang, page));
 const translations = alternates(page);
 const rss = lang === siteConfig.localization.defaultLanguage
