@@ -85,6 +85,14 @@
       }
     },
     {
+      "type": "link",
+      "text": {
+        "el": "Γνωρίστε τους Obscurus Rex στην επίσημη ιστοσελίδα τους",
+        "en": "Discover Obscurus Rex on their official website"
+      },
+      "url": "https://obscurusrex.com/"
+    },
+    {
       "type": "paragraph",
       "text": {
         "el": "Οι Obscurus Rex δημιουργήθηκαν στην Αθήνα το 2021. Το 2023 κυκλοφόρησαν το EP Stand Up and Be Counted και τώρα ετοιμάζουν το πρώτο ολοκληρωμένο άλμπουμ τους, με τίτλο …et homo factus est. Η μουσική τους κινείται στον χώρο του heavy metal, συνδυάζοντας παραδοσιακές επιρροές με μελωδικά και πιο σκοτεινά στοιχεία.",
@@ -120,6 +128,15 @@
       }
     },
     {
+      "type": "link",
+      "text": {
+        "el": "Διαβάστε επίσης: The Prisoners στο Eightball",
+        "en": "Read also: The Prisoners at Eightball"
+      },
+      "url": "https://storyfields.gr/el/articles/the-prisoners-eightball-sold-out-2026"
+    },
+    
+    {
       "type": "paragraph",
       "text": {
         "el": "Υπάρχει όμως κάτι που δεν μπορεί να λυθεί με μία ακόμη πρόβα: το συναίσθημα του να παρουσιάζεις τη δική σου μουσική μπροστά σε ένα καινούργιο κοινό. Ειδικά όταν πρόκειται για τραγούδια που δεν έχουν ακόμη κυκλοφορήσει, η στιγμή αποκτά μια ιδιαίτερη βαρύτητα.",
@@ -146,6 +163,14 @@
         "el": "Σύμφωνα με τη συναυλιακή ανταπόκριση του Rockpages, παρουσίασαν υλικό από το πρώτο τους EP αλλά και από το επερχόμενο άλμπουμ. Η εμφάνισή τους χαρακτηρίστηκε καλά προετοιμασμένη, ενώ ιδιαίτερη αναφορά έγινε στα τραγούδια Apex Predator και Dance Of A Lesser Demon.",
         "en": "According to Rockpages' concert review, the band performed material from their debut EP and upcoming album. The performance was described as well prepared, with particular mention of Apex Predator and Dance Of A Lesser Demon."
       }
+    },
+    {
+      "type": "link",
+      "text": {
+        "el": "Rockpages — Διαβάστε τη συναυλιακή ανταπόκριση της 9ης Οκτωβρίου",
+        "en": "Rockpages — Read the concert review from 9 October"
+      },
+      "url": "https://rockpages.gr/doro-obscurus-rex-floyd-9-10-2026/?lang=en"
     },
     {
       "type": "heading",
