@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { readFile, mkdir, writeFile, mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 // Serve the actual build and its CSP. Every provider request is intercepted;
@@ -25,19 +26,26 @@ const server = createServer(async (request, response) => {
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}`;
-const chrome = spawn(process.env.CHROME_PATH || '/usr/bin/google-chrome', ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--remote-debugging-port=9223', '--user-data-dir=/tmp/storyfields-contact-ui', 'about:blank'], { stdio: 'ignore' });
+const profile = await mkdtemp(path.join(tmpdir(), 'storyfields-contact-ui-'));
+const chrome = spawn(process.env.CHROME_PATH || '/usr/bin/google-chrome', ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+let chromeLog = '';
+chrome.stderr.on('data', (chunk) => { chromeLog = `${chromeLog}${chunk}`.slice(-16000); });
 let startupError;
 chrome.on('error', (error) => { startupError = error; });
+chrome.on('exit', (code, signal) => { startupError = new Error(`Chrome exited (${code ?? signal}): ${chromeLog}`); });
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 let socket;
 try {
   let target;
-  for (let attempt = 0; attempt < 40; attempt++) {
+  for (let attempt = 0; attempt < 120; attempt++) {
     if (startupError) throw startupError;
-    try { target = await (await fetch('http://127.0.0.1:9223/json/new?about:blank', { method: 'PUT' })).json(); break; }
-    catch { await delay(100); }
+    try {
+      const port = (await readFile(path.join(profile, 'DevToolsActivePort'), 'utf8')).split('\n')[0];
+      target = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' })).json();
+      break;
+    } catch { await delay(250); }
   }
-  assert.ok(target?.webSocketDebuggerUrl, 'Chrome did not start');
+  assert.ok(target?.webSocketDebuggerUrl, `Chrome did not start: ${chromeLog}`);
   socket = new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((resolve, reject) => { socket.addEventListener('open', resolve, { once: true }); socket.addEventListener('error', reject, { once: true }); });
   let sequence = 0;
