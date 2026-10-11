@@ -22,6 +22,11 @@
     "el": "Μια εμφάνιση δίπλα στη Doro, ένας νέος δίσκος και ο αγώνας μιας ελληνικής metal μπάντας να ακουστεί με τη δική της μουσική.",
     "en": "A show alongside Doro, a new album and the struggle of a Greek metal band to be heard through its own music."
   },
+  "image": "/uploads/obscurus-rex-doro-2026.webp",
+  "imageAlt": {
+    "el": "Οι Obscurus Rex κατά την εμφάνισή τους στην Αθήνα στις 9 Οκτωβρίου 2026.",
+    "en": "Obscurus Rex performing live in Athens on 9 October 2026."
+  },
   "sections": [
     {
       "type": "paragraph",
