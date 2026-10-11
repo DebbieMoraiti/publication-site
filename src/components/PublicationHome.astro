@@ -76,7 +76,7 @@ const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-
               ) : (
                 <div class="story-card__image newspaper-placeholder" aria-hidden="true"></div>
               )}
-              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · <time datetime={article.date}>{formatPublicationDate(article.date, lang)}</time></p>
+              <p class="story-meta">{topicBySlug.get(article.topicSlug)?.label[lang] ?? article.topic?.[lang] ?? article.topicSlug} · <time datetime={article.date}>{formatPublicationDate(article.date, lang)}</time> · {readingTime(article, lang)}</p>
               <h3><a href={languagePath(lang, `articles/${article.slug}`)}>{article.title[lang]}</a></h3>
               <p>{article.dek[lang]}</p>
             </article>
