@@ -1,1 +1,235 @@
 
+{
+  "slug": "obscurus-rex-behind-the-lights",
+  "type": "feature",
+  "status": "draft",
+  "featured": false,
+  "date": "2026-10-11",
+  "author": "debbie-moraiti",
+  "topicSlug": "music",
+  "tags": [
+    "obscurus-rex",
+    "heavy-metal",
+    "greek-metal-scene",
+    "original-music",
+    "doro",
+    "live-music"
+  ],
+  "title": {
+    "el": "Obscurus Rex: Πίσω από τα φώτα, εκεί όπου αρχίζει η πραγματική ιστορία",
+    "en": "Obscurus Rex: Behind the Lights, Where the Real Story Begins"
+  },
+  "dek": {
+    "el": "Μια εμφάνιση δίπλα στη Doro, ένας νέος δίσκος και ο αγώνας μιας ελληνικής metal μπάντας να ακουστεί με τη δική της μουσική.",
+    "en": "A show alongside Doro, a new album and the struggle of a Greek metal band to be heard through its own music."
+  },
+  "sections": [
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Υπάρχει μια στιγμή στη ζωή κάθε μουσικού που η απόσταση ανάμεσα στο όνειρο και την πραγματικότητα μοιάζει ξαφνικά να μικραίνει. Για τους Obscurus Rex, μια τέτοια στιγμή ήρθε στις 9 Οκτωβρίου 2026, όταν ανέβηκαν στη σκηνή για να ανοίξουν τη συναυλία της Doro Pesch στην Αθήνα.",
+        "en": "There is a moment in every musician's life when the distance between a dream and reality suddenly seems smaller. For Obscurus Rex, one such moment came on 9 October 2026, when they took the stage to open for Doro Pesch in Athens."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Σαράντα λεπτά μουσικής. Μια σκηνή που λίγο αργότερα θα φιλοξενούσε μία από τις πιο αναγνωρίσιμες μορφές του ευρωπαϊκού heavy metal. Και μια μπάντα που είχε την ευκαιρία να παρουσιάσει τις δικές της συνθέσεις σε ανθρώπους που, σε μεγάλο βαθμό, είχαν έρθει για κάποιον άλλον.",
+        "en": "Forty minutes of music. A stage that would soon welcome one of European heavy metal's most recognizable figures. And a band with the opportunity to present its own songs to an audience that had largely come to see someone else."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Από έξω, είναι εύκολο να δει κανείς μόνο την ευκαιρία, τα φώτα και το χειροκρότημα. Αλλά οι ιστορίες των συγκροτημάτων δεν ξεκινούν όταν ανάβουν οι προβολείς. Συνήθως αρχίζουν πολύ νωρίτερα, σε πρόβες, σε συζητήσεις, σε ατελείωτες ώρες δουλειάς και σε αποφάσεις που παίρνονται χωρίς καμία εγγύηση ότι θα οδηγήσουν κάπου.",
+        "en": "From the outside, it is easy to see only the opportunity, the lights and the applause. But a band's story does not begin when the spotlights come on. It begins much earlier, in rehearsals, conversations, endless hours of work and decisions made without any guarantee of success."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Η δύσκολη διαδρομή της δικής σου μουσικής",
+        "en": "The Difficult Road of Making Your Own Music"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Στην ελληνική heavy metal σκηνή υπάρχουν πολλοί αξιόλογοι μουσικοί. Άνθρωποι με εμπειρία, τεχνική κατάρτιση, δημιουργικότητα και πραγματική αγάπη για αυτό που κάνουν. Το δύσκολο δεν είναι απαραίτητα να δημιουργήσεις ένα καλό τραγούδι. Είναι να καταφέρεις να το ακούσει κάποιος.",
+        "en": "The Greek heavy metal scene is home to many accomplished musicians, people with experience, technical ability, creativity and genuine love for their work. The challenge is not necessarily writing a good song. It is finding a way for someone to hear it."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Για μια μπάντα που επιλέγει να παρουσιάζει πρωτότυπο υλικό, δεν υπάρχει το πλεονέκτημα της αναγνωρισιμότητας που συνοδεύει μια διασκευή. Δεν υπάρχει ένα ήδη αγαπημένο ρεφρέν που θα τραγουδήσει το κοινό από την πρώτη στιγμή. Πρέπει να κερδίσεις την προσοχή του από το μηδέν.",
+        "en": "For a band performing original material, there is no built-in familiarity of a cover song. No beloved chorus the audience can sing from the first note. You have to earn their attention from scratch."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Χρειάζονται πρόβες, ηχογραφήσεις, εξοπλισμός, οργάνωση, επικοινωνία και χρήματα. Πολύ συχνά όλα αυτά συμβαίνουν παράλληλα με επαγγελματικές και προσωπικές υποχρεώσεις. Και ακόμη κι αν τα κάνεις όλα σωστά, δεν υπάρχει καμία βεβαιότητα ότι η μουσική σου θα φτάσει εκεί που θέλεις.",
+        "en": "It takes rehearsals, recording sessions, equipment, organization, communication and money. Much of this happens alongside professional and personal responsibilities. And even when everything is done right, there is no guarantee that the music will reach its intended audience."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Μια κοινή μουσική κατεύθυνση",
+        "en": "A Shared Musical Direction"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Οι Obscurus Rex δημιουργήθηκαν στην Αθήνα το 2021. Το 2023 κυκλοφόρησαν το EP Stand Up and Be Counted και τώρα ετοιμάζουν το πρώτο ολοκληρωμένο άλμπουμ τους, με τίτλο …et homo factus est. Η μουσική τους κινείται στον χώρο του heavy metal, συνδυάζοντας παραδοσιακές επιρροές με μελωδικά και πιο σκοτεινά στοιχεία.",
+        "en": "Obscurus Rex formed in Athens in 2021. In 2023, they released the EP Stand Up and Be Counted, and they are now preparing their first full-length album, …et homo factus est. Their sound draws on traditional heavy metal while incorporating melodic and darker elements."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Όμως μια μπάντα δεν είναι απλώς το άθροισμα των μουσικών της. Είναι μια διαρκής άσκηση συνεργασίας. Διαφορετικές προσωπικότητες, απόψεις, μουσικές καταβολές και προσδοκίες πρέπει να συνυπάρξουν για να δημιουργήσουν κάτι κοινό. Το αποτέλεσμα που ακούει το κοινό είναι μόνο το τελευταίο στάδιο μιας διαδικασίας που σπάνια βλέπει.",
+        "en": "A band, however, is more than the sum of its musicians. It is an ongoing exercise in collaboration. Different personalities, perspectives, musical backgrounds and expectations must come together to create something shared. What an audience hears is only the final stage of a process it rarely sees."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Πριν από τη σκηνή",
+        "en": "Before the Stage"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Όταν παρακολουθούμε ένα live, θυμόμαστε συνήθως τις πιο έντονες στιγμές: ένα δυνατό riff, μια ερμηνεία, την αντίδραση του κόσμου. Σπανιότερα σκεφτόμαστε την προετοιμασία, τον εξοπλισμό, τις τεχνικές λεπτομέρειες, τον συντονισμό και την πίεση του χρόνου που προηγούνται.",
+        "en": "When we attend a live show, we tend to remember its most intense moments: a powerful riff, a vocal performance or the crowd's reaction. We rarely think about the preparation, equipment, technical details, coordination and time pressure involved beforehand."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Για τους Obscurus Rex, η εμφάνιση δίπλα στη Doro ήρθε λίγες μόλις ημέρες μετά τη συναυλία τους στο Eightball της Θεσσαλονίκης, μαζί με τους The Prisoners. Δύο διαφορετικές πόλεις, διαφορετικές συναυλιακές συνθήκες και μια περίοδος δραστηριότητας λίγο πριν από την κυκλοφορία του νέου άλμπουμ.",
+        "en": "For Obscurus Rex, the Doro performance came just days after their show at Eightball in Thessaloniki alongside The Prisoners. Two cities, different live settings and a particularly active period ahead of their new album."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Υπάρχει όμως κάτι που δεν μπορεί να λυθεί με μία ακόμη πρόβα: το συναίσθημα του να παρουσιάζεις τη δική σου μουσική μπροστά σε ένα καινούργιο κοινό. Ειδικά όταν πρόκειται για τραγούδια που δεν έχουν ακόμη κυκλοφορήσει, η στιγμή αποκτά μια ιδιαίτερη βαρύτητα.",
+        "en": "There is something another rehearsal cannot resolve: the feeling of presenting your own music to a new audience. When some of those songs have not yet been released, the experience carries a particular emotional weight."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Σαράντα λεπτά για να αφήσεις το αποτύπωμά σου",
+        "en": "Forty Minutes to Leave a Mark"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Το βράδυ της 9ης Οκτωβρίου, οι Obscurus Rex είχαν περίπου σαράντα λεπτά στη διάθεσή τους. Για μια μπάντα που ανοίγει τη συναυλία ενός καταξιωμένου ονόματος, αυτός ο χρόνος είναι ταυτόχρονα ευκαιρία και δοκιμασία. Το κοινό δεν βρίσκεται απαραίτητα εκεί για να σε ακούσει. Δεν μπορείς να απαιτήσεις την προσοχή του. Πρέπει να την κερδίσεις.",
+        "en": "On 9 October, Obscurus Rex had around forty minutes on stage. For an opening act supporting an established name, that time is both an opportunity and a test. The audience is not necessarily there for you. You cannot demand its attention. You must earn it."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Σύμφωνα με τη συναυλιακή ανταπόκριση του Rockpages, παρουσίασαν υλικό από το πρώτο τους EP αλλά και από το επερχόμενο άλμπουμ. Η εμφάνισή τους χαρακτηρίστηκε καλά προετοιμασμένη, ενώ ιδιαίτερη αναφορά έγινε στα τραγούδια Apex Predator και Dance Of A Lesser Demon.",
+        "en": "According to Rockpages' concert review, the band performed material from their debut EP and upcoming album. The performance was described as well prepared, with particular mention of Apex Predator and Dance Of A Lesser Demon."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Το βάρος του να είσαι νέος",
+        "en": "The Weight of Being New"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Ο χαρακτηρισμός «νέα μπάντα» μπορεί να είναι παραπλανητικός. Ένα συγκρότημα μπορεί να βρίσκεται στα πρώτα του δισκογραφικά βήματα, ενώ τα μέλη του διαθέτουν ήδη πολλά χρόνια μουσικής εμπειρίας. Κι όμως, κάθε νέο εγχείρημα πρέπει να χτίσει τη δική του ταυτότητα, ανεξάρτητα από την προηγούμενη πορεία των ανθρώπων του.",
+        "en": "The label 'new band' can be misleading. A group may be taking its first recording steps while its members already have many years of musical experience. Yet every new project must build its own identity, regardless of the musicians' previous careers."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Το μεγαλύτερο στοίχημα είναι να πάψεις να είσαι απλώς η άγνωστη μπάντα που εμφανίστηκε πριν από έναν διάσημο καλλιτέχνη και να γίνεις το συγκρότημα που κάποιος θα αναζητήσει ξανά, επειδή του άρεσαν τα δικά σου τραγούδια.",
+        "en": "The real challenge is to become more than the unfamiliar band that played before a famous artist. It is to become the group someone looks up afterward because they connected with its own songs."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Όταν τα φώτα σβήνουν",
+        "en": "When the Lights Go Down"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Κάθε συναυλία τελειώνει. Ο εξοπλισμός μαζεύεται, ο χώρος αδειάζει και οι φωτογραφίες αρχίζουν να εμφανίζονται στα κοινωνικά δίκτυα. Για το κοινό, η βραδιά γίνεται ανάμνηση. Για μια μπάντα που προσπαθεί να χτίσει τη διαδρομή της, όμως, η επόμενη ημέρα έχει εξίσου μεγάλη σημασία.",
+        "en": "Every concert ends. Equipment is packed away, the venue empties and photographs begin appearing online. For the audience, the evening becomes a memory. For a band working to establish itself, however, the following day matters just as much."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Πόσοι άνθρωποι ανακάλυψαν τη μουσική σου; Πόσοι θα την αναζητήσουν ξανά; Πώς μετατρέπεται μια σημαντική συναυλιακή ευκαιρία σε συνέχεια; Η εμφάνιση δίπλα στη Doro δεν αποτελεί εγγύηση επιτυχίας. Μπορεί όμως να λειτουργήσει ως ένα σημαντικό σημείο αναφοράς.",
+        "en": "How many people discovered your music? How many will return to it? How does an important concert opportunity become lasting momentum? Opening for Doro is no guarantee of success. But it can become an important milestone."
+      }
+    },
+    {
+      "type": "heading",
+      "text": {
+        "el": "Μια ιστορία που συνεχίζεται",
+        "en": "A Story Still Being Written"
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Οι Obscurus Rex βρίσκονται σε ένα ενδιαφέρον σημείο της διαδρομής τους. Έχουν ήδη κάνει τα πρώτα δισκογραφικά τους βήματα, έχουν αποκτήσει συναυλιακή παρουσία και ετοιμάζουν την πρώτη ολοκληρωμένη δουλειά τους. Η εμφάνιση δίπλα στη Doro ήταν μια σημαντική στιγμή, όχι επειδή αποτελεί κάποια οριστική δικαίωση, αλλά επειδή είναι μέρος μιας ιστορίας που εξακολουθεί να γράφεται.",
+        "en": "Obscurus Rex are at an interesting point in their journey. They have released their first recordings, gained live experience and are preparing their debut full-length album. Opening for Doro was important not because it represents a final breakthrough, but because it is part of a story still being written."
+      }
+    },
+    {
+      "type": "paragraph",
+      "text": {
+        "el": "Και ίσως αυτό να είναι το πιο ενδιαφέρον στοιχείο της. Όχι ότι μια μπάντα βρέθηκε για σαράντα λεπτά κάτω από τα φώτα μιας μεγάλης σκηνής. Αλλά όλα όσα χρειάστηκε να προηγηθούν για να φτάσει εκεί — και όλα όσα θα ακολουθήσουν όταν τα φώτα έχουν πια σβήσει.",
+        "en": "Perhaps that is what makes the story most compelling. Not simply that a band spent forty minutes under the lights of a major stage, but everything it took to get there, and everything that will follow once those lights have gone down."
+      }
+    },
+    {
+      "type": "link",
+      "text": {
+        "el": "Obscurus Rex — Επίσημη ιστοσελίδα",
+        "en": "Obscurus Rex — Official Website"
+      },
+      "url": "https://obscurusrex.com/"
+    },
+    {
+      "type": "link",
+      "text": {
+        "el": "Rockpages — Ανταπόκριση από τη συναυλία",
+        "en": "Rockpages — Concert Review"
+      },
+      "url": "https://rockpages.gr/doro-obscurus-rex-floyd-9-10-2026/?lang=en"
+    },
+    {
+      "type": "link",
+      "text": {
+        "el": "Metal Invader — Συνέντευξη με τους Obscurus Rex",
+        "en": "Metal Invader — Interview with Obscurus Rex"
+      },
+      "url": "https://metalinvader.net/en/%CF%83%CF%85%CE%BD%CE%AD%CE%BD%CF%84%CE%B5%CF%85%CE%BE%CE%B7-%CE%BC%CE%B5-%CF%84%CE%BF%CF%85%CF%82-obscurus-rex/"
+    }
+  ]
+}
+
