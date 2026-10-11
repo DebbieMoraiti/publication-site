@@ -79,9 +79,9 @@ const themeVariables = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={pageDescription} />
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href={assetPath('/favicon.ico')} />
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href={assetPath('/favicon.ico?v=2')} />
     {siteConfig.branding.favicon && <link rel="icon" type="image/png" sizes="32x32" href={assetPath(siteConfig.branding.favicon)} />}
-    <link rel="apple-touch-icon" sizes="180x180" href={assetPath('/apple-touch-icon.png')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={assetPath('/apple-touch-icon.png?v=2')} />
     {buildRevision && <meta name="build-revision" content={buildRevision} />}
     {(noindex || !siteConfig.seo.indexable) && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
