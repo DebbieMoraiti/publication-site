@@ -6,7 +6,7 @@ import ResponsiveImage from './ResponsiveImage.astro';
 import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
 import { articleNeighbors, relatedArticles } from '../content/publication-data';
-import { formatPublicationDate } from '../lib/editorial-format';
+import { formatPublicationDate, readingTime } from '../lib/editorial-format';
 import { publicationArticleSchema } from '../lib/publication-schema';
 import { languagePath, type LanguageCode } from '../i18n/routes';
 
@@ -62,6 +62,8 @@ const related = relatedArticles(article, 3);
             </span>}
             <span aria-hidden="true"> · </span>
             <time datetime={article.date}>{formatPublicationDate(article.date, lang)}</time>
+            <span aria-hidden="true"> · </span>
+            <span>{readingTime(article, lang)}</span>
           </p>
           {article.tags && article.tags.length > 0 && (
             <ul class="article-tags" aria-label={lang === 'el' ? 'Ετικέτες' : 'Tags'}>
