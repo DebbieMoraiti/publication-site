@@ -9,6 +9,7 @@ import { formatPublicationDate, readingTime } from '../lib/editorial-format';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
 import { authorBySlug, topicBySlug } from '../content/editorial';
 import { languagePath, type LanguageCode } from '../i18n/routes';
+import { topicIsActive } from '../lib/topic-visibility';
 
 interface Props { lang: LanguageCode; }
 const { lang } = Astro.props;
@@ -18,7 +19,7 @@ const latest = stories;
 const title = publication.identity.name;
 const description = publication.identity.tagline[lang];
 const schema = publicationWebsiteSchema(lang);
-const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-life'];
+const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-life'].filter((slug) => topicIsActive(slug, topicBySlug));
 ---
 
 <BaseLayout title={title} description={description} lang={lang} structuredData={schema} skipText={lang === 'el' ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}>

@@ -1,6 +1,8 @@
 ---
 import { siteConfig } from '../config';
 import publication from '../content/publication.json';
+import { topicBySlug } from '../content/editorial';
+import { topicIsActive } from '../lib/topic-visibility';
 import { assetPath, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
 
 interface Props { lang: LanguageCode; }
@@ -9,6 +11,7 @@ const page = pageFromPath(Astro.url.pathname);
 const homeSection = (id: string) => page ? `${languagePath(lang)}#${id}` : `#${id}`;
 const isCurrent = (target: string) => page === target || page.startsWith(`${target}/`);
 const logo = siteConfig.branding.logo;
+const navTopics = ['people', 'ideas', 'music', 'everyday-life', 'culture'].filter((slug) => topicIsActive(slug, topicBySlug));
 const wordmarkSizes = page ? '(max-width: 576px) calc(100vw - 32px), 512px' : '(max-width: 928px) calc(100vw - 32px), 864px';
 const wordmarkSrcset = logo === '/brand/storyfields-wordmark.webp'
   ? [400, 800, 1600].map((width) => `${assetPath(width === 1600 ? logo : `/brand/storyfields-wordmark-${width}.webp`)} ${width}w`).join(', ')
@@ -39,11 +42,7 @@ const labels = lang === 'el'
   <div class="editorial-header__inner content-container">
     <nav class="editorial-nav" aria-label={labels.menu}>
       <a href={homeSection('stories')} aria-current={!page ? 'page' : undefined}>{labels.stories}</a>
-      <a href={languagePath(lang, 'topics/people')} aria-current={isCurrent('topics/people') ? 'page' : undefined}>{labels.people}</a>
-      <a href={languagePath(lang, 'topics/ideas')} aria-current={isCurrent('topics/ideas') ? 'page' : undefined}>{labels.ideas}</a>
-      <a href={languagePath(lang, 'topics/music')} aria-current={isCurrent('topics/music') ? 'page' : undefined}>{labels.music}</a>
-      <a href={languagePath(lang, 'topics/everyday-life')} aria-current={isCurrent('topics/everyday-life') ? 'page' : undefined}>{labels.everyday}</a>
-      <a href={languagePath(lang, 'topics/culture')} aria-current={isCurrent('topics/culture') ? 'page' : undefined}>{labels.culture}</a>
+      {navTopics.map((slug) => <a href={languagePath(lang, `topics/${slug}`)} aria-current={isCurrent(`topics/${slug}`) ? 'page' : undefined}>{topicBySlug.get(slug)!.label[lang]}</a>)}
       <a href={languagePath(lang, 'archive')} aria-current={isCurrent('archive') ? 'page' : undefined}>{labels.archive}</a>
       <a href={languagePath(lang, 'contact')} aria-current={isCurrent('contact') ? 'page' : undefined}>{labels.contact}</a>
     </nav>
