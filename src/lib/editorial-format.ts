@@ -18,6 +18,6 @@ export function readingTime(article: Article, lang: LanguageCode) {
     .filter((segment) => segment.isWordLike).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
   return lang === 'el'
-    ? `${minutes} ${minutes === 1 ? 'λεπτό' : 'λεπτά'} ανάγνωσης`
+    ? `${minutes}′ ανάγνωσης`
     : `${minutes} min read`;
 }

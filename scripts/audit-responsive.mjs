@@ -122,7 +122,7 @@ try {
         if (!route && (metrics.cards !== publishedCount || metrics.columns !== (width > 832 ? 3 : width > 624 ? 2 : 1))) {
           throw new Error(`Invalid homepage grid: ${JSON.stringify({ url, metrics })}`);
         }
-        if (!route && (!metrics.homepage?.date || !/min read|λεπτά? ανάγνωσης/u.test(metrics.homepage.byline || '') || metrics.homepage.featuredFilter.includes('grayscale') || metrics.homepage.storyFilters.some(filter => !filter.includes('grayscale(1)')) || metrics.homepage.topics.length !== activeTopicCount || metrics.homepage.topics.some(topic => !topic.label || !topic.image || !topic.filter.includes('grayscale(1)')))) {
+        if (!route && (!metrics.homepage?.date || !/min read|\d+′ ανάγνωσης/u.test(metrics.homepage.byline || '') || metrics.homepage.featuredFilter.includes('grayscale') || metrics.homepage.storyFilters.some(filter => !filter.includes('grayscale(1)')) || metrics.homepage.topics.length !== activeTopicCount || metrics.homepage.topics.some(topic => !topic.label || !topic.image || !topic.filter.includes('grayscale(1)')))) {
           throw new Error(`Invalid front-page imagery or story details: ${JSON.stringify({ url, metrics })}`);
         }
         if (route === 'articles/stelios-sioulas-behind-the-kit/' && (!metrics.croppedHero || Math.abs(metrics.croppedHero.width - metrics.croppedHero.height) > 1)) {
