@@ -4,6 +4,7 @@ import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
 import ResponsiveImage from './ResponsiveImage.astro';
 import publication from '../content/publication.json';
+import { siteConfig } from '../config';
 import { sortedVisibleArticles } from '../content/publication-data';
 import { formatPublicationDate, readingTime } from '../lib/editorial-format';
 import { publicationWebsiteSchema } from '../lib/publication-schema';
@@ -16,8 +17,8 @@ const { lang } = Astro.props;
 const stories = sortedVisibleArticles();
 const featured = stories.find((item) => item.featured) ?? stories[0];
 const latest = stories;
-const title = publication.identity.name;
-const description = publication.identity.tagline[lang];
+const title = `${publication.identity.name} — ${siteConfig.seo.titleSuffix[lang]}`;
+const description = publication.intro[lang];
 const schema = publicationWebsiteSchema(lang);
 const topicSlugs = ['people', 'ideas', 'culture', 'music', 'digital', 'everyday-life'].filter((slug) => topicIsActive(slug, topicBySlug));
 ---
