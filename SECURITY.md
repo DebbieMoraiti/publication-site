@@ -24,9 +24,11 @@ External links and future integrations should use HTTPS and be reviewed before p
 
 ## Browser protections
 
-Production builds generate security headers and a build-specific Content Security Policy. Third-party frames are disabled by default. Do not weaken the CSP merely to make an unreviewed integration work.
+Production builds generate security headers and a build-specific Content Security Policy. An early meta CSP applies supported directives on GitHub Pages, which ignores `_headers`. HTTP-only protections (including frame-ancestors, HSTS and Permissions-Policy) remain inactive there unless applied by a supporting host or edge. Third-party frames are disabled by default. Do not weaken the CSP merely to make an unreviewed integration work.
 
-Contact uses an AJAX POST to the configured HTTPS form endpoint, with JSON responses, no cookies/referrer and no redirects. CSP `connect-src` permits only this exact provider origin alongside the site itself; `form-action` preserves the same configured provider for the no-JavaScript fallback. The success dialog opens only after confirmation from the service; failed/ambiguous requests keep the text for retry. No third-party script is loaded.
+Contact uses an AJAX POST to the configured HTTPS form endpoint, with JSON responses, no cookies/referrer and no redirects. CSP `connect-src` permits this exact provider origin alongside the site itself and the Cloudflare Analytics collection endpoint; `form-action` preserves the configured form provider for the no-JavaScript fallback. The success dialog opens only after confirmation from the service; failed/ambiguous requests keep the text for retry.
+
+The reviewed third-party analytics script is restricted to `https://static.cloudflareinsights.com/beacon.min.js` and sends measurements to `https://cloudflareinsights.com/cdn-cgi/rum`. The local loader restricts activation to the production HTTPS hosts; non-public pages omit it. Cloudflare does not offer safe version pinning/SRI for the manually embedded beacon, so do not add a stale integrity hash. No cookies or browser storage are introduced by our loader. Keep the bilingual visitor notice current when integrations change.
 
 ## Images
 

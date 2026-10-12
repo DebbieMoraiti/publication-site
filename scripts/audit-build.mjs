@@ -14,7 +14,7 @@ assert.match(headers, /Content-Security-Policy:/, 'Missing generated CSP');
 assert.equal(/X-Robots-Tag:.*noindex/i.test(headers), !indexable, 'Global indexing header differs from configuration');
 const formOrigin = site.contact.formEndpoint ? new URL(site.contact.formEndpoint).origin : "'none'";
 assert.ok(headers.includes(`form-action ${formOrigin};`), 'CSP must allow only the configured form origin');
-assert.ok(headers.includes(`connect-src 'self'${site.contact.formEndpoint ? ` ${formOrigin}` : ''};`), 'CSP must allow background POST only to the configured contact origin');
+assert.ok(headers.includes(`connect-src 'self'${site.contact.formEndpoint ? ` ${formOrigin}` : ''} https://cloudflareinsights.com/cdn-cgi/rum;`), 'CSP must allow only the configured contact origin and analytics endpoint alongside self');
 assert.ok(robots.includes(indexable ? 'Allow: /' : 'Disallow: /'), 'Robots crawl policy differs from configuration');
 assert.equal(robots.includes('Disallow: /'), !indexable, 'Unexpected global crawl block');
 assert.ok(robots.includes(`Sitemap: ${base}/sitemap.xml`), 'Missing canonical sitemap in robots');
