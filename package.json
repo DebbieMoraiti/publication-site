@@ -23,7 +23,7 @@
     "@astrojs/check": "0.9.10",
     "@types/node": "26.6.2",
     "typescript": "6.0.3",
-    "wrangler": "4.136.2"
+    "wrangler": "4.149.0"
   },
   "engines": {
     "node": ">=22.19.0"

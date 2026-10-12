@@ -54,6 +54,9 @@ jobs:
       - name: Verify indexing, preview protection and Contact policy
         run: node scripts/audit-build.mjs
 
+      - name: Verify analytics and effective browser CSP
+        run: node scripts/audit-analytics.mjs
+
       - name: Verify tag navigation and localized archives
         run: node scripts/audit-tags.mjs
 

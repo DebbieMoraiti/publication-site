@@ -115,5 +115,8 @@ const themeVariables = [
   <body>
     <a class="skip-link" href="#main-content">{skipText}</a>
     <slot />
+    {!noindex && siteConfig.seo.indexable && (
+      <script is:inline defer src={assetPath('/scripts/web-analytics.js')}></script>
+    )}
   </body>
 </html>

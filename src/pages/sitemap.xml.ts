@@ -18,6 +18,7 @@ export const GET: APIRoute = () => {
     '',
     'archive',
     'contact',
+    'privacy',
     ...publicArticles.map((article) => `articles/${article.slug}`),
     ...authors.filter((author) => usedAuthorSlugs.has(author.slug)).map((author) => `authors/${author.slug}`),
     ...activeTopics().filter((topic) => usedTopicSlugs.has(topic.slug)).map((topic) => `topics/${topic.slug}`),
