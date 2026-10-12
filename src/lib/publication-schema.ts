@@ -72,7 +72,8 @@ export function publicationWebsiteSchema(lang: LanguageCode) {
         '@id': websiteId(),
         url: rootUrl(),
         name: publication.identity.name,
-        description: publication.identity.tagline[lang],
+        alternateName: new URL(rootUrl()).hostname,
+        description: publication.intro[lang],
         publisher: { '@id': publisherId() },
         inLanguage: ['en', 'el'],
       },
@@ -81,7 +82,7 @@ export function publicationWebsiteSchema(lang: LanguageCode) {
         '@id': `${home}#webpage`,
         url: home,
         name: publication.identity.name,
-        description: publication.identity.tagline[lang],
+        description: publication.intro[lang],
         inLanguage: lang,
         isPartOf: { '@id': websiteId() },
         publisher: { '@id': publisherId() },
@@ -110,6 +111,7 @@ export function publicationCollectionSchema(
         name: publication.identity.name,
         publisher: { '@id': publisherId() },
         inLanguage: ['en', 'el'],
+        alternateName: new URL(rootUrl()).hostname,
       },
       {
         '@type': pageType,
@@ -154,6 +156,7 @@ export function publicationAuthorSchema(lang: LanguageCode, author: Author) {
         name: publication.identity.name,
         publisher: { '@id': publisherId() },
         inLanguage: ['en', 'el'],
+        alternateName: new URL(rootUrl()).hostname,
       },
       {
         '@type': 'Person',
@@ -206,6 +209,7 @@ export function publicationArticleSchema(lang: LanguageCode, article: Article, a
         name: publication.identity.name,
         publisher: { '@id': publisherId() },
         inLanguage: ['en', 'el'],
+        alternateName: new URL(rootUrl()).hostname,
       },
       {
         '@type': articleType,
