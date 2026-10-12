@@ -8,9 +8,9 @@ Technical settings such as the final domain, indexing, deployment workflow and s
 
 1. Sign in to Pages CMS with GitHub.
 2. Open `DebbieMoraiti/publication-site`.
-3. Work on the `main` branch.
+3. For the protected publishing workflow, create a fresh content branch from the latest `main` in GitHub, then select that branch in Pages CMS. See [Publishing with checked pull requests](PUBLISHING.md).
 4. Pages CMS reads the root `.pages.yml` configuration.
-5. Every saved content change creates a Git commit and triggers the publication preview deployment.
+5. Every saved content change creates a Git commit on the selected branch. Open a pull request to run validation. The live deployment runs after an approved merge into `main`.
 
 ## Publication identity
 
@@ -148,14 +148,16 @@ When an article uses a meaningful hero image, supply both English and Greek alt 
 
 ## Recommended review workflow
 
-1. Create or edit the article in Pages CMS.
-2. Keep it as `draft`.
-3. Save.
-4. Wait for the GitHub Pages preview workflow to succeed.
-5. Open the article in English and Greek.
-6. Check mobile layout, section order, image crop, author/topic/tag links and archive placement.
-7. Correct the CMS entry if needed.
-8. When the content is final, change status to `published`.
-9. If it should lead the homepage, enable `featured` and make sure no other article is featured.
+1. Create a fresh content branch from the latest `main` and select it in Pages CMS.
+2. Create or edit the article there; keep new work as `draft` while reviewing it.
+3. Save and open a pull request targeting `main`.
+4. Wait for **Publication validation**, job `validation`, to pass.
+5. Review the English and Greek copy, section order, image crop, author/topic/tag links and archive placement. Use a preview or the available reports for layout checks when needed.
+6. Make corrections on the same content branch. New commits rerun PR validation.
+7. If the article is ready to be public, set it to `published` on that branch. If it should lead the homepage, enable `featured` and make sure no other article is featured. Preserve existing publication status when only correcting an already published article.
+8. Merge only after approving the changes and successful checks. Wait for the existing deployment workflow to succeed.
+9. Start the next task from a new branch based on the updated `main`.
+
+The repository administrator enables required pull requests and checks only after a CMS branch save and PR validation have been verified. See [Publishing with checked pull requests](PUBLISHING.md) for the exact settings.
 
 You should not need to edit Astro code to create a normal article, author or topic.
