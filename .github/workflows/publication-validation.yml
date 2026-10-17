@@ -13,7 +13,7 @@ jobs:
           node-version: 22.19.0
           cache: npm
       - run: npm ci
-      - run: node --test scripts/tags.test.mjs scripts/topic-visibility.test.mjs scripts/contact-ajax.test.mjs
+      - run: node --test scripts/tags.test.mjs scripts/topic-visibility.test.mjs scripts/contact-ajax.test.mjs scripts/indexnow.test.mjs
       - run: npm run build
       - run: npm run astro -- check
       - run: node scripts/audit-build.mjs
