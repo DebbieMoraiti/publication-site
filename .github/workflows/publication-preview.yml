@@ -98,6 +98,39 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
 
+  indexnow:
+    name: Notify IndexNow after successful deployment
+    runs-on: ubuntu-latest
+    needs: deploy
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+      - name: Restore previous IndexNow baseline
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow/previous.json
+          key: indexnow-notified-${{ github.run_id }}
+          restore-keys: |
+            indexnow-notified-
+      - name: Download published manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: indexnow-manifest
+          path: .indexnow
+      - name: Notify IndexNow of changed published pages
+        env:
+          INDEXNOW_API_KEY: ${{ secrets.INDEXNOW_API_KEY }}
+        run: node scripts/indexnow.mjs notify
+      - name: Save baseline after accepted notification
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow/previous.json
+          key: indexnow-notified-${{ github.run_id }}
+
   audit:
     name: Lighthouse audit
     runs-on: ubuntu-latest
