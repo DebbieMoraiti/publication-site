@@ -77,7 +77,9 @@ export async function buildManifest(root = DIST) {
   for (const url of sitemapUrls(xml)) {
     const html = await htmlForUrl(root, url);
     const imageHashes = await referencedImageHashes(root, html, url);
-    pages[url] = createHash('sha256').update(html).update('\n').update(imageHashes).digest('hex');
+    // The deployment revision changes every build, even if the page content does not.
+    const stableHtml = html.replace(/<meta\s+name=["']build-revision["']\s+content=["'][^"']*["']\s*\/?>/gi, '');
+    pages[url] = createHash('sha256').update(stableHtml).update('\n').update(imageHashes).digest('hex');
   }
   return { origin: ORIGIN, pages };
 }
