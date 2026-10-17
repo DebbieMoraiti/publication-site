@@ -22,10 +22,13 @@ test('IndexNow sitemap manifest notices edits to HTML and images', async () => {
     await mkdir(join(dist, 'articles', 'example'), { recursive: true });
     await mkdir(join(dist, 'images'));
     await writeFile(join(dist, 'sitemap.xml'), '<urlset><url><loc>' + homepage + '</loc></url><url><loc>' + origin + '/articles/example/</loc></url></urlset>');
-    await writeFile(join(dist, 'index.html'), '<img src="/images/featured.webp">');
+    await writeFile(join(dist, 'index.html'), '<meta name="build-revision" content="commit-a"><img src="/images/featured.webp">');
     await writeFile(join(dist, 'articles', 'example', 'index.html'), '<h1>Article</h1>');
     await writeFile(join(dist, 'images', 'featured.webp'), 'original');
     const first = await buildManifest(dist);
+    await writeFile(join(dist, 'index.html'), '<meta name="build-revision" content="commit-b"><img src="/images/featured.webp">');
+    const onlyRevisionChanged = await buildManifest(dist);
+    assert.deepEqual(changedUrls(first, onlyRevisionChanged), []);
     await writeFile(join(dist, 'images', 'featured.webp'), 'updated');
     const second = await buildManifest(dist);
     assert.deepEqual(changedUrls(first, second), [homepage]);
