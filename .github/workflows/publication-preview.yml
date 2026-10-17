@@ -63,6 +63,20 @@ jobs:
       - name: Verify contact dialog without sending real email
         run: node scripts/audit-contact-ui.mjs
 
+      - name: Prepare IndexNow after build
+        env:
+          INDEXNOW_API_KEY: ${{ secrets.INDEXNOW_API_KEY }}
+        run: |
+          node scripts/indexnow.mjs proof
+          node scripts/indexnow.mjs manifest
+
+      - name: Upload IndexNow manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-manifest
+          path: .indexnow/current.json
+          if-no-files-found: error
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
@@ -83,6 +97,39 @@ jobs:
       - name: Deploy preview
         id: deployment
         uses: actions/deploy-pages@v5
+
+  indexnow:
+    name: Notify IndexNow after successful deployment
+    runs-on: ubuntu-latest
+    needs: deploy
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+      - name: Restore previous IndexNow baseline
+        uses: actions/cache/restore@v4
+        with:
+          path: .indexnow/previous.json
+          key: indexnow-notified-${{ github.run_id }}
+          restore-keys: |
+            indexnow-notified-
+      - name: Download published manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: indexnow-manifest
+          path: .indexnow
+      - name: Notify IndexNow of changed published pages
+        env:
+          INDEXNOW_API_KEY: ${{ secrets.INDEXNOW_API_KEY }}
+        run: node scripts/indexnow.mjs notify
+      - name: Save baseline after accepted notification
+        uses: actions/cache/save@v4
+        with:
+          path: .indexnow/previous.json
+          key: indexnow-notified-${{ github.run_id }}
 
   audit:
     name: Lighthouse audit
