@@ -63,6 +63,20 @@ jobs:
       - name: Verify contact dialog without sending real email
         run: node scripts/audit-contact-ui.mjs
 
+      - name: Prepare IndexNow after build
+        env:
+          INDEXNOW_API_KEY: ${{ secrets.INDEXNOW_API_KEY }}
+        run: |
+          node scripts/indexnow.mjs proof
+          node scripts/indexnow.mjs manifest
+
+      - name: Upload IndexNow manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-manifest
+          path: .indexnow/current.json
+          if-no-files-found: error
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
