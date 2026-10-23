@@ -8,9 +8,9 @@ Technical settings such as the final domain, indexing, deployment workflow and s
 
 1. Sign in to Pages CMS with GitHub.
 2. Open `DebbieMoraiti/publication-site`.
-3. Work on the `main` branch.
+3. For the protected publishing workflow, create a fresh content branch from the latest `main` in GitHub, then select that branch in Pages CMS. See [Publishing with checked pull requests](PUBLISHING.md).
 4. Pages CMS reads the root `.pages.yml` configuration.
-5. Every saved content change creates a Git commit and triggers the publication preview deployment.
+5. Every saved content change creates a Git commit on the selected branch. Open a pull request to run validation. The live deployment runs after an approved merge into `main`.
 
 ## Publication identity
 
@@ -31,7 +31,7 @@ Complete:
 5. **Publication date**.
 6. **Author** — select an existing author from the Authors collection.
 7. **Topic** — select an existing curated topic.
-8. **Tags** — optional reusable lowercase tags such as `music`, `live-music`, `web`.
+8. **Tags** — choose 2–4 specific entries from the shared **Tags / Ετικέτες** collection. Search using Greek, English or the stable slug.
 9. **English and Greek title**.
 10. **English and Greek summary/dek**.
 11. Optional **hero image** and bilingual alt text.
@@ -46,7 +46,6 @@ Available section types:
 - **Paragraph / Παράγραφος** — normal body copy, with optional inline links.
 - **Subheading / Υπότιτλος ενότητας** — divides longer pieces into readable sections.
 - **Quote / Απόσπασμα** — highlighted quotation with optional attribution.
-- **External link / Εξωτερικός σύνδεσμος** — a separate source/reference with an optional source note.
 
 Every section stores English and Greek text together, which keeps both language versions structurally aligned.
 
@@ -84,15 +83,13 @@ The JSON structure remains `type: "paragraph"` with localized `text.el` / `text.
 
 Keep an article as **draft** while writing or reviewing it.
 
-Drafts remain in the repository and CMS, but are excluded from the public homepage, archives, related stories, RSS and sitemap. This applies while indexing is disabled as well. Set the status to **published** when the English and Greek copy is ready.
+Drafts remain in the repository and CMS, but are excluded from the public homepage, article routes, archives, related stories, RSS and sitemap. This applies while indexing is disabled as well. Set the status to **published** when the English and Greek copy is ready.
 
 Draft routes are built for preview, but:
 
 - they carry `noindex`;
 - they are excluded from RSS;
 - they are excluded from the public sitemap when indexing is enabled.
-
-These preview URLs can be opened directly; `draft` controls editorial listings and indexing, not access permissions.
 
 Change the status to **published** only when the article is ready.
 
@@ -111,7 +108,8 @@ The publication validates:
 - existing topic references;
 - required English and Greek titles;
 - required English and Greek summaries;
-- lowercase reusable tag format;
+- bilingual tag labels and unique canonical slugs/compatibility aliases;
+- lowercase reusable tag format and references to existing catalog entries;
 - duplicate tags within an article;
 - maximum one featured article;
 - HTTPS-only public author links;
@@ -145,18 +143,21 @@ Topics are curated, relatively broad sections such as:
 
 The article stores only the topic slug. The visible bilingual topic label comes from the Topics collection, so renaming a topic label updates all related article displays without editing every article.
 
+**Active on website / Ενεργή στο site** controls visibility throughout the website. Missing values preserve the original active behavior. `culture` is currently inactive: its menu entry, homepage tile, topic routes and any associated article routes, listings, tag catalogs, related stories, RSS and sitemap entries are suppressed. Its JSON, translations and images remain stored. Turn the switch back on to restore the section on the next successful build. A build clears old output so disabled routes cannot survive from a previous build.
+
 ## Tags
 
-Tags are lighter metadata stored directly on articles.
+Tags live in `src/content/tags/`. Articles continue to store a list of stable slugs, so the article JSON structure is unchanged. The CMS offers a searchable multiple-reference field rather than free-text entry. See the [Pages CMS reference field documentation](https://pagescms.org/docs/configuration/fields/reference/).
 
-Keep them:
+Select 2–4 specific, reusable tags. The article header displays the first four in the stored order, in the reader's language. Older additional entries stay available for taxonomy pages and related-story matching, preserving existing tag URLs. Unused tags and tags used only by drafts do not create public pages; draft headers link only to existing public tag pages.
 
-- lowercase;
-- short;
-- reusable;
-- Latin-letter slugs with hyphens.
+For example, `cats` displays **Γάτες** in Greek and **Cats** in English; `small-joys` displays **Μικρές χαρές** / **Small joys**. Tag page headings, metadata and article schema keywords use the same localized labels. Artist and venue names keep their official spelling.
 
-Prefer reusing an existing tag instead of creating small variations such as `website`, `websites` and `web-site`.
+Use the existing three homepage topics (**Άνθρωποι, Μουσική, Καθημερινότητα**) for broad navigation; tags describe more specific subjects. Prefer reusing an existing tag instead of creating variations such as `website`, `websites` and `web-site`.
+
+To add a genuinely new subject, first create an entry under **Tags / Ετικέτες** with a lowercase Latin slug and both Greek and English labels, then select it in an article. Edit the labels to rename it without changing its slug or URL. Removing an entry still referenced by an article causes the build to fail.
+
+`heavy-metal` is a compatibility alias of `metal`: both old addresses remain functional, while new links and the sitemap use `metal`. Alias pages use the canonical tag's localized title, article list, canonical URL and language alternatives. Compatibility aliases are read-only in the CMS and maintained through code review.
 
 ## Images
 
@@ -175,14 +176,16 @@ When an article uses a meaningful hero image, supply both English and Greek alt 
 
 ## Recommended review workflow
 
-1. Create or edit the article in Pages CMS.
-2. Keep it as `draft`.
-3. Save.
-4. Wait for the GitHub Pages preview workflow to succeed.
-5. Open the article in English and Greek.
-6. Check mobile layout, section order, image crop, author/topic/tag links and archive placement.
-7. Correct the CMS entry if needed.
-8. When the content is final, change status to `published`.
-9. If it should lead the homepage, enable `featured` and make sure no other article is featured.
+1. Create a fresh content branch from the latest `main` and select it in Pages CMS.
+2. Create or edit the article there; keep new work as `draft` while reviewing it.
+3. Save and open a pull request targeting `main`.
+4. Wait for **Publication validation**, job `validation`, to pass.
+5. Review the English and Greek copy, section order, image crop, author/topic/tag links and archive placement. Use a preview or the available reports for layout checks when needed.
+6. Make corrections on the same content branch. New commits rerun PR validation.
+7. If the article is ready to be public, set it to `published` on that branch. If it should lead the homepage, enable `featured` and make sure no other article is featured. Preserve existing publication status when only correcting an already published article.
+8. Merge only after approving the changes and successful checks. Wait for the existing deployment workflow to succeed.
+9. Start the next task from a new branch based on the updated `main`.
+
+The repository administrator enables required pull requests and checks only after a CMS branch save and PR validation have been verified. See [Publishing with checked pull requests](PUBLISHING.md) for the exact settings.
 
 You should not need to edit Astro code to create a normal article, author or topic.

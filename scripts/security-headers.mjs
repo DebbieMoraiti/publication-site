@@ -31,7 +31,7 @@ for (const file of pages) {
 
 const policy = [
   "default-src 'self'",
-  `script-src 'self' ${[...hashes].sort().join(' ')}`,
+  `script-src 'self' https://static.cloudflareinsights.com/beacon.min.js ${[...hashes].sort().join(' ')}`,
   "script-src-attr 'none'",
   "style-src 'self' 'unsafe-inline'", // Astro theme variables and image focal values are inline styles.
   "img-src 'self' data:",
@@ -40,7 +40,7 @@ const policy = [
   embedsEnabled
     ? "frame-src https://www.youtube-nocookie.com https://player.vimeo.com"
     : "frame-src 'none'",
-  "connect-src 'self'",
+  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''} https://cloudflareinsights.com/cdn-cgi/rum`,
   `form-action ${formOrigin || "'none'"}`,
   "object-src 'none'",
   "base-uri 'self'",
@@ -63,4 +63,19 @@ const headers = [
   '',
 ].join('\n');
 await writeFile(path.join(dist, '_headers'), headers);
+// GitHub Pages ignores _headers. Apply supported CSP directives before any
+// resource loads; frame-ancestors and the other HTTP headers still need an edge
+// or host that supports response headers. Keep _headers for such deployments.
+const metaPolicy = policy.replace(/; frame-ancestors 'none'$/, '');
+const escapedPolicy = metaPolicy.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+for (const file of pages) {
+  const html = (await readFile(file, 'utf8'))
+    .replace(/<meta\b[^>]*http-equiv="Content-Security-Policy"[^>]*>/gi, '')
+    .replace(/<meta\b[^>]*name="referrer"[^>]*>/gi, '');
+  // Preserve Google's exact plaintext ownership-verification response.
+  if (path.basename(file).startsWith('google') && /^google-site-verification: [\w.-]+\s*$/.test(html)) continue;
+  const charset = /<meta\b[^>]*charset=[^>]+>/i;
+  if (!charset.test(html)) throw new Error(`Missing charset for CSP insertion: ${file}`);
+  await writeFile(file, html.replace(charset, `$&<meta http-equiv="Content-Security-Policy" content="${escapedPolicy}"><meta name="referrer" content="strict-origin-when-cross-origin">`));
+}
 console.log(`Generated security headers with ${hashes.size} inline script hash(es) from ${pages.length} pages.`);

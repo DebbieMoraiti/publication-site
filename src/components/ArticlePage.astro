@@ -6,7 +6,8 @@ import ResponsiveImage from './ResponsiveImage.astro';
 import InlineLinks from './InlineLinks.astro';
 import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
-import { articleNeighbors, relatedArticles } from '../content/publication-data';
+import { articleNeighbors, relatedArticles, articleTags, publicTags } from '../content/publication-data';
+import { articleTagDisplayLimit } from '../lib/tags';
 import { formatPublicationDate, readingTime } from '../lib/editorial-format';
 import { publicationArticleSchema } from '../lib/publication-schema';
 import { languagePath, type LanguageCode } from '../i18n/routes';
@@ -24,6 +25,8 @@ const topic = topicBySlug.get(article.topicSlug);
 const schema = publicationArticleSchema(lang, article, author);
 const { newer, older } = articleNeighbors(article);
 const related = relatedArticles(article, 3);
+const publicTagSlugs = new Set(publicTags().map((tag) => tag.slug));
+const displayedTags = articleTags(article).filter((tag) => publicTagSlugs.has(tag.slug)).slice(0, articleTagDisplayLimit);
 ---
 
 <BaseLayout
@@ -66,9 +69,9 @@ const related = relatedArticles(article, 3);
             <span aria-hidden="true"> · </span>
             <span>{readingTime(article, lang)}</span>
           </p>
-          {article.tags && article.tags.length > 0 && (
+          {displayedTags.length > 0 && (
             <ul class="article-tags" aria-label={lang === 'el' ? 'Ετικέτες' : 'Tags'}>
-              {article.tags.map((tag) => <li><a href={languagePath(lang, `tags/${tag}`)}>{tag}</a></li>)}
+              {displayedTags.map((tag) => <li><a href={languagePath(lang, `tags/${tag.slug}`)}>{tag.label[lang]}</a></li>)}
             </ul>
           )}
         </header>

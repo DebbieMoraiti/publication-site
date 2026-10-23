@@ -59,11 +59,21 @@ Public indexing is enabled with `seo.indexable: true`. Published pages allow cra
 
 Contact is available at `/contact/` and `/el/contact/`. Delivery settings live in `src/config/site.json` under `contact`. The approved Formspree endpoint is `https://formspree.io/f/xjygwnwe`, with `_gotcha` as its honeypot field.
 
-The Astro/static site uses a native HTML form with `method="post"` and the configured endpoint as its `action`. Name, email, subject and message are submitted only when the visitor sends the form; Formspree handles delivery and the response page. The form works without JavaScript and needs no React, SDK or external script. The destination inbox and any provider credentials are configured in Formspree, never in the repository or browser code.
+The Astro/static site uses a native HTML form with `method="post"` and the configured endpoint as its `action`. Name, email, subject and message are submitted only when the visitor sends the form; Formspree handles delivery and the response page. The form uses JavaScript to submit messages asynchronously to Formspree and displays a styled success dialog after successful delivery confirmation, without redirecting the visitor. If JavaScript is disabled, the native HTML form submits directly to Formspree. No React or external SDK is required. The destination inbox and provider credentials are configured in Formspree, never in the repository or browser code.
 
 An approved **public editorial email address** can optionally be set in `contact.email` to display a direct email link. If the endpoint is removed, the form instead opens a draft in the visitor’s email app; the visitor sends it from there. With neither delivery option configured, entry and submission are disabled. The build rejects credentials and query parameters in endpoint URLs.
 
-The form uses native required/email validation and length limits. Its hidden `_gotcha` field is supported by Formspree’s server-side honeypot protection. The generated CSP allows form submissions only to the configured endpoint origin (`https://formspree.io`); without an endpoint, `form-action` is `none`. No third-party scripts, embeds, analytics, browser storage or background form requests are used.
+The form uses native required/email validation and length limits. Its hidden `_gotcha` field is supported by Formspree’s server-side honeypot protection. The generated CSP allows form submissions only to the configured endpoint origin (`https://formspree.io`); without an endpoint, `form-action` is `none`. AJAX delivery uses no cookies or referrer and shows the existing success dialog after provider confirmation.
+
+## Web Analytics
+
+Cloudflare Web Analytics is loaded by `public/scripts/web-analytics.js` only on HTTPS `storyfields.gr` and `www.storyfields.gr`. Local development, preview hosts and noindex pages are excluded. The public beacon token is not an account credential. No additional analytics service or custom click tracking is installed.
+
+Visitor information is available at `/privacy/` and `/el/privacy/`, linked from the footer. Cloudflare documents its beacon as using no cookies or browser storage. This describes the analytics integration, not a blanket legal exemption for future integrations.
+
+The postbuild script emits both `_headers` for compatible hosts and an early meta CSP for GitHub Pages, which does not apply `_headers`. The script source and collection endpoint are explicitly allowed without script wildcards or `unsafe-inline`. HTTP-only protections such as `frame-ancestors`, HSTS and Permissions-Policy require a host or edge that supports response headers; the meta CSP cannot replace these.
+
+Run `node scripts/audit-analytics.mjs` after building. It checks every HTML page's effective policy, script hashes, noindex exclusions, production host guards and duplicate prevention. View collected measurements in Cloudflare → Web Analytics → storyfields.gr. Ad blockers and browsers that block the beacon will reduce measured traffic.
 
 ## Documentation
 

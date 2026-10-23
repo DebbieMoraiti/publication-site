@@ -1,11 +1,11 @@
 ---
 import TopicPage from '../../../components/TopicPage.astro';
-import { topics } from '../../../content/editorial';
+import { activeTopics } from '../../../content/publication-data';
 import { secondaryLanguages } from '../../../i18n/routes';
 
 export function getStaticPaths() {
   return secondaryLanguages.flatMap(({ code }) =>
-    topics.map((topic) => ({ params: { lang: code, slug: topic.slug }, props: { topic } })),
+    activeTopics().map((topic) => ({ params: { lang: code, slug: topic.slug }, props: { topic } })),
   );
 }
 const { topic } = Astro.props;

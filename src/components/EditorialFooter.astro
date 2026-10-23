@@ -15,6 +15,7 @@ const { lang } = Astro.props;
     <div class="editorial-footer__meta">
       <span>© {new Date().getFullYear()} {publication.identity.name}</span>
       <a href={languagePath(lang, 'contact')}>{lang === 'el' ? 'Επικοινωνία' : 'Contact'}</a>
+      <a href={languagePath(lang, 'privacy')}>{lang === 'el' ? 'Ιδιωτικότητα & cookies' : 'Privacy & cookies'}</a>
       <a href="#top">{lang === 'el' ? 'Επιστροφή στην κορυφή' : 'Back to top'}</a>
     </div>
   </div>

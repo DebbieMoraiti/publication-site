@@ -120,7 +120,7 @@ test('reading time counts visible labels, without inflating it with URL words', 
       const article = (text) => structured
         ? { ...metadata, sections: [{ type: 'paragraph', text: { [lang]: text } }] }
         : { ...metadata, body: { [lang]: [text] } };
-      assert.equal(readingTime(article(copy), lang), lang === 'el' ? '1 λεπτό ανάγνωσης' : '1 min read');
+      assert.equal(readingTime(article(copy), lang), lang === 'el' ? '1′ ανάγνωσης' : '1 min read');
       assert.equal(readingTime(article(linkedCopy), lang), readingTime(article(copy), lang));
     }
   }

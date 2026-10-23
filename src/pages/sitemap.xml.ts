@@ -1,25 +1,27 @@
 import type { APIRoute } from 'astro';
 import { absoluteUrl, alternates, languagePath, type LanguageCode } from '../i18n/routes';
 import { siteConfig } from '../config';
-import { articles, authors, topics } from '../content/editorial';
+import { authors } from '../content/editorial';
+import { publicTags, visibleArticles, activeTopics } from '../content/publication-data';
 
 const escapeXml = (value: string) => value.replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
 })[character]!);
 
 export const GET: APIRoute = () => {
-  const publicArticles = articles.filter((article) => article.status === 'published');
+  const publicArticles = visibleArticles();
   const usedAuthorSlugs = new Set(publicArticles.map((article) => article.author));
   const usedTopicSlugs = new Set(publicArticles.map((article) => article.topicSlug));
-  const tags = [...new Set(publicArticles.flatMap((article) => article.tags ?? []))];
+  const tags = publicTags().map((tag) => tag.slug);
 
   const pages = [
     '',
     'archive',
     'contact',
+    'privacy',
     ...publicArticles.map((article) => `articles/${article.slug}`),
     ...authors.filter((author) => usedAuthorSlugs.has(author.slug)).map((author) => `authors/${author.slug}`),
-    ...topics.filter((topic) => usedTopicSlugs.has(topic.slug)).map((topic) => `topics/${topic.slug}`),
+    ...activeTopics().filter((topic) => usedTopicSlugs.has(topic.slug)).map((topic) => `topics/${topic.slug}`),
     ...tags.map((tag) => `tags/${tag}`),
   ];
 

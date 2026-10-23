@@ -159,12 +159,14 @@ content:
           label: "{fields.label.en}"
       - name: tags
         label: Tags / Ετικέτες
-        type: string
-        list: true
-        pattern:
-          regex: "^[a-z0-9-]+$"
-          message: "Use lowercase Latin letters, digits and hyphens only."
-        description: Reuse existing tags when possible, e.g. music, live-music, web.
+        type: reference
+        options:
+          collection: tags
+          multiple: true
+          search: "label.el,label.en,slug"
+          value: "{fields.slug}"
+          label: "{fields.label.el} / {fields.label.en}"
+        description: Επιλέξτε 2–4 συγκεκριμένες ετικέτες από τον κοινό κατάλογο. Εμφανίζονται οι πρώτες 4· οι υπόλοιπες διατηρούνται για τις υπάρχουσες σελίδες ετικετών. / Choose 2–4 specific tags; only the first 4 are displayed.
       - name: title
         label: Title / Τίτλος
         component: titleCopy
@@ -198,7 +200,7 @@ content:
               - name: text
                 label: Text / Κείμενο
                 component: requiredLongCopy
-                description: 'Inline links / Σύνδεσμοι μέσα στο κείμενο: [Obscurus Rex](https://obscurusrex.com/) ή [άρθρο](/el/articles/slug/). English article paths use /articles/slug/. HTML is displayed as text.'
+                description: 'Inline links: [Obscurus Rex](https://obscurusrex.com/) or [άρθρο](/el/articles/slug/). English paths use /articles/slug/. No HTML.'
           - name: heading
             label: Subheading / Υπότιτλος ενότητας
             fields:
@@ -281,6 +283,38 @@ content:
               regex: "^https://.+$"
               message: "Use a full HTTPS URL."
 
+  - name: tags
+    label: Tags / Ετικέτες
+    type: collection
+    path: src/content/tags
+    format: json
+    filename:
+      template: "{slug}.json"
+      field: false
+    view:
+      primary: label.el
+      fields: [slug, label.el, label.en]
+      sort: [slug, label.el]
+      search: [slug, label.el, label.en]
+    fields:
+      - name: slug
+        label: Stable tag ID / Σταθερό αναγνωριστικό
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: "Use lowercase Latin letters, digits and hyphens only."
+        description: Do not change after use; the slug is part of the tag URL. Reuse an existing tag before adding a synonym.
+      - name: label
+        label: Label / Ονομασία
+        component: titleCopy
+      - name: aliases
+        label: Previous IDs / Παλιά αναγνωριστικά
+        type: string
+        list: true
+        readonly: true
+        description: Compatibility IDs are maintained in code review to preserve old links.
+
   - name: topics
     label: Topics / Θεματικές
     type: collection
@@ -305,3 +339,8 @@ content:
       - name: label
         label: Label / Ονομασία
         component: titleCopy
+      - name: active
+        label: Active on website / Ενεργή στο site
+        type: boolean
+        default: true
+        description: Disable to hide the topic and its articles throughout the website without deleting content. / Απενεργοποιήστε για απόκρυψη σε όλο το site χωρίς διαγραφή.

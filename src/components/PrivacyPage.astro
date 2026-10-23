@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EditorialHeader from './EditorialHeader.astro';
+import EditorialFooter from './EditorialFooter.astro';
+import { languagePath, type LanguageCode } from '../i18n/routes';
+
+interface Props { lang: LanguageCode; }
+const { lang } = Astro.props;
+const el = lang === 'el';
+const title = el ? 'Ιδιωτικότητα & cookies' : 'Privacy & cookies';
+const description = el ? 'Πώς λειτουργούν τα στατιστικά επισκεψιμότητας και η επικοινωνία στο Storyfields.' : 'How visitor statistics and contact work on Storyfields.';
+---
+<BaseLayout lang={lang} title={`${title} — Storyfields`} description={description} skipText={el ? 'Μετάβαση στο περιεχόμενο' : 'Skip to content'}>
+  <div class="site-shell publication-shell" id="top">
+    <EditorialHeader lang={lang} />
+    <main id="main-content" tabindex="-1">
+      <section class="contact-page content-container" aria-labelledby="privacy-title">
+        <nav class="editorial-breadcrumbs" aria-label={el ? 'Πλοήγηση' : 'Breadcrumb'}>
+          <a href={languagePath(lang)}>{el ? 'Αρχική' : 'Home'}</a><span aria-hidden="true">/</span><span aria-current="page">{title}</span>
+        </nav>
+        <h1 id="privacy-title">{title}</h1>
+        <div class="article-body">
+          <h2>{el ? 'Στατιστικά επισκεψιμότητας' : 'Visitor statistics'}</h2>
+          <p>{el ? 'Χρησιμοποιούμε το Cloudflare Web Analytics για συγκεντρωτικά στοιχεία επισκεψιμότητας και απόδοσης, όπως οι σελίδες που προβάλλονται, η πηγή επίσκεψης και ο χρόνος φόρτωσης. Ο browser συνδέεται με την Cloudflare για να φορτώσει τον κώδικα και να στείλει τις μετρήσεις. Το περιεχόμενο της φόρμας επικοινωνίας δεν αποστέλλεται στο Analytics.' : 'We use Cloudflare Web Analytics for aggregate traffic and performance statistics, such as page views, referral sources and load times. Your browser connects to Cloudflare to load its code and send measurements. Contact form contents are not sent to Analytics.'}</p>
+          <p>{el ? 'Σύμφωνα με την Cloudflare, ο κώδικας μετρήσεων δεν χρησιμοποιεί cookies, localStorage ή sessionStorage και δεν παρακολουθεί μεμονωμένους χρήστες μεταξύ ιστοτόπων.' : 'According to Cloudflare, its measurement code does not use cookies, localStorage or sessionStorage and does not track individual users across websites.'}</p>
+          <p><a href="https://developers.cloudflare.com/speed/observatory/rum-beacon/" target="_blank" rel="noopener noreferrer">{el ? 'Πληροφορίες για τις μετρήσεις της Cloudflare' : 'About Cloudflare measurements'}</a></p>
+          <h2>{el ? 'Επικοινωνία' : 'Contact'}</h2>
+          <p>{el ? 'Όταν στέλνεις μήνυμα, το όνομα, το email, το θέμα και το κείμενό σου διαβιβάζονται μέσω Formspree στο Storyfields για να διαβάσουμε και να απαντήσουμε στην επικοινωνία σου. Μην συμπεριλαμβάνεις ευαίσθητα προσωπικά δεδομένα που δεν χρειάζονται για το αίτημά σου.' : 'When you send a message, your name, email, subject and message are delivered through Formspree to Storyfields so we can read and respond to your enquiry. Please avoid including sensitive personal information that is unnecessary for your request.'}</p>
+          <p><a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">{el ? 'Πολιτική ιδιωτικότητας Formspree' : 'Formspree privacy policy'}</a></p>
+          <h2>{el ? 'Σύνδεσμοι προς άλλους ιστοτόπους' : 'Links to other websites'}</h2>
+          <p>{el ? 'Τα βίντεο και τα κοινωνικά δίκτυα ανοίγουν μέσω συνδέσμων· δεν φορτώνουμε ενσωματωμένους players τρίτων. Όταν επισκέπτεσαι άλλη υπηρεσία, ισχύει η δική της πολιτική ιδιωτικότητας.' : 'Videos and social networks are opened through links; we do not load embedded third-party players. When you visit another service, its own privacy policy applies.'}</p>
+          <p><a href={languagePath(lang, 'contact')}>{el ? 'Επικοινώνησε μαζί μας για ερωτήσεις σχετικά με τα δεδομένα σου.' : 'Contact us with questions about your data.'}</a></p>
+        </div>
+      </section>
+    </main>
+    <EditorialFooter lang={lang} />
+  </div>
+</BaseLayout>

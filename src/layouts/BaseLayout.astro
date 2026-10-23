@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { siteConfig, themeConfig } from '../config';
-import { absoluteUrl, alternates, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
+import { absoluteUrl, alternates, assetPath, languagePath, pageFromPath, type LanguageCode } from '../i18n/routes';
 
 interface Props {
   title?: string;
@@ -15,6 +15,7 @@ interface Props {
   socialImageAlt?: string;
   publishedTime?: string;
   articleSection?: string;
+  canonicalPage?: string;
 }
 
 const {
@@ -29,9 +30,10 @@ const {
   socialImageAlt,
   publishedTime,
   articleSection,
+  canonicalPage,
 } = Astro.props;
 
-const page = pageFromPath(Astro.url.pathname);
+const page = canonicalPage ?? pageFromPath(Astro.url.pathname);
 const canonical = absoluteUrl(languagePath(lang, page));
 const translations = alternates(page);
 const rss = lang === siteConfig.localization.defaultLanguage
@@ -77,6 +79,9 @@ const themeVariables = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href={assetPath('/favicon.ico?v=2')} />
+    {siteConfig.branding.favicon && <link rel="icon" type="image/png" sizes="32x32" href={assetPath(siteConfig.branding.favicon)} />}
+    <link rel="apple-touch-icon" sizes="180x180" href={assetPath('/apple-touch-icon.png?v=2')} />
     {buildRevision && <meta name="build-revision" content={buildRevision} />}
     {(noindex || !siteConfig.seo.indexable) && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
@@ -110,5 +115,8 @@ const themeVariables = [
   <body>
     <a class="skip-link" href="#main-content">{skipText}</a>
     <slot />
+    {!noindex && siteConfig.seo.indexable && (
+      <script is:inline defer src={assetPath('/scripts/web-analytics.js')}></script>
+    )}
   </body>
 </html>

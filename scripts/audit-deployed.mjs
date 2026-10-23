@@ -134,10 +134,20 @@ await Promise.all(['en', 'el'].map(async (lang) => {
 
 const contentFiles = (await readdir('src/content/articles')).filter((file) => file.endsWith('.json'));
 const content = await Promise.all(contentFiles.map(async (file) => JSON.parse(await readFile(`src/content/articles/${file}`, 'utf8'))));
-const published = content.filter((item) => item.status === 'published');
-const drafts = content.filter((item) => item.status !== 'published');
+const topics = await Promise.all((await readdir('src/content/topics')).filter((file) => file.endsWith('.json')).map(async (file) => JSON.parse(await readFile(`src/content/topics/${file}`, 'utf8'))));
+const inactive = new Set(topics.filter((topic) => topic.active === false).map((topic) => topic.slug));
+const published = content.filter((item) => item.status === 'published' && !inactive.has(item.topicSlug));
+const drafts = content.filter((item) => item.status !== 'published' && !inactive.has(item.topicSlug));
 const removedSlugs = ['first-story', 'ideas-placeholder', 'people-placeholder'];
-const forbiddenSlugs = [...drafts.map((item) => item.slug), ...removedSlugs];
+const forbiddenSlugs = [...content.filter((item) => item.status !== 'published' || inactive.has(item.topicSlug)).map((item) => item.slug), ...removedSlugs];
+for (const topic of inactive) {
+  for (const lang of ['en', 'el']) {
+    const path = `${lang === 'el' ? '/el' : ''}/topics/${topic}/`;
+    const response = await fetch(`${base}${path}`);
+    if (response.status !== 404) throw new Error(`Inactive topic must return 404: ${path}`);
+    for (const document of [home, greekHome, sitemap]) mustNot(document, path, 'inactive topic link');
+  }
+}
 
 await Promise.all(drafts.flatMap((item) => ['en', 'el'].map(async (lang) => {
   const path = `${lang === 'el' ? '/el' : ''}/articles/${item.slug}/`;
@@ -147,7 +157,7 @@ await Promise.all(drafts.flatMap((item) => ['en', 'el'].map(async (lang) => {
 for (const [collection, articleField] of [['topics', 'topicSlug'], ['authors', 'author']]) {
   const files = (await readdir(`src/content/${collection}`)).filter((file) => file.endsWith('.json'));
   const items = await Promise.all(files.map(async (file) => JSON.parse(await readFile(`src/content/${collection}/${file}`, 'utf8'))));
-  await Promise.all(items.filter((item) => !published.some((article) => article[articleField] === item.slug)).flatMap((item) => ['en', 'el'].map(async (lang) => {
+  await Promise.all(items.filter((item) => (collection !== 'topics' || item.active !== false) && !published.some((article) => article[articleField] === item.slug)).flatMap((item) => ['en', 'el'].map(async (lang) => {
     const path = `${lang === 'el' ? '/el' : ''}/${collection}/${item.slug}/`;
     auditIndexing(await get(path, 'text/html', { noindex: true }), `empty archive ${path}`, true);
     mustNot(sitemap, path, 'empty archive in sitemap');

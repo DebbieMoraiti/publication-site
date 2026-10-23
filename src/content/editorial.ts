@@ -1,3 +1,5 @@
+import { createTagIndex, type Tag } from '../lib/tags';
+
 export type LanguageCode = 'en' | 'el';
 export type Localized = { en: string; el: string };
 
@@ -42,6 +44,7 @@ export type Author = {
 export type Topic = {
   slug: string;
   label: Localized;
+  active?: boolean;
   image?: string;
   imageFocusX?: number;
 };
@@ -49,10 +52,13 @@ export type Topic = {
 const articleModules = import.meta.glob('./articles/*.json', { eager: true, import: 'default' }) as Record<string, Article>;
 const authorModules = import.meta.glob('./authors/*.json', { eager: true, import: 'default' }) as Record<string, Author>;
 const topicModules = import.meta.glob('./topics/*.json', { eager: true, import: 'default' }) as Record<string, Topic>;
+const tagModules = import.meta.glob('./tags/*.json', { eager: true, import: 'default' }) as Record<string, Tag>;
 
 export const articles = Object.values(articleModules);
 export const authors = Object.values(authorModules);
 export const topics = Object.values(topicModules);
+export const tags = Object.values(tagModules);
+export const tagBySlug = createTagIndex(tags);
 
 export const authorBySlug = new Map(authors.map((author) => [author.slug, author]));
 export const topicBySlug = new Map(topics.map((topic) => [topic.slug, topic]));

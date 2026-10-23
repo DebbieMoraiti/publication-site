@@ -1,4 +1,5 @@
-import { articles, authors, topics } from './editorial';
+import { articles, authors, topics, tagBySlug } from './editorial';
+import { resolveArticleTags } from '../lib/tags';
 
 const slugPattern = /^[a-z0-9-]+$/;
 const tagPattern = /^[a-z0-9-]+$/;
@@ -51,6 +52,9 @@ export function validatePublicationContent() {
   }
 
   for (const topic of topics) {
+    if (topic.active !== undefined && typeof topic.active !== 'boolean') {
+      throw new Error(`Topic "${topic.slug}" active must be a boolean.`);
+    }
     requiredText(topic.label.en, `Topic "${topic.slug}" English label`);
     requiredText(topic.label.el, `Topic "${topic.slug}" Greek label`);
   }
@@ -78,6 +82,8 @@ export function validatePublicationContent() {
     requiredText(article.dek.el, `Article "${article.slug}" Greek summary`);
 
     const tags = article.tags ?? [];
+    if (!Array.isArray(tags)) throw new Error(`Article "${article.slug}" tags must be a list.`);
+    resolveArticleTags(tags, tagBySlug);
     const seenTags = new Set<string>();
     for (const tag of tags) {
       if (!tagPattern.test(tag)) {

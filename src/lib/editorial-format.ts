@@ -11,17 +11,15 @@ export function formatPublicationDate(date: string, lang: LanguageCode, month: '
 }
 
 export function readingTime(article: Article, lang: LanguageCode) {
-  const paragraphText = (text: string) => parseInlineLinks(text).map((segment) => segment.text).join('');
+  const visible = (text: string) => parseInlineLinks(text).map((part) => part.text).join('');
   const paragraphs = article.sections?.length
-    ? article.sections.filter((section) => section.type !== 'link').map((section) =>
-      section.type === 'paragraph' ? paragraphText(section.text[lang]) : section.text[lang],
-    )
-    : (article.body?.[lang] ?? []).map(paragraphText);
+    ? article.sections.filter((section) => section.type !== 'link').map((section) => section.type === 'paragraph' ? visible(section.text[lang]) : section.text[lang])
+    : (article.body?.[lang] ?? []).map(visible);
   const text = [article.title[lang], article.dek[lang], ...paragraphs].join(' ');
   const words = Array.from(new Intl.Segmenter(lang, { granularity: 'word' }).segment(text))
     .filter((segment) => segment.isWordLike).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
   return lang === 'el'
-    ? `${minutes} ${minutes === 1 ? 'λεπτό' : 'λεπτά'} ανάγνωσης`
+    ? `${minutes}′ ανάγνωσης`
     : `${minutes} min read`;
 }
