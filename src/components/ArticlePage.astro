@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHeader from './EditorialHeader.astro';
 import EditorialFooter from './EditorialFooter.astro';
 import ResponsiveImage from './ResponsiveImage.astro';
+import InlineLinks from './InlineLinks.astro';
 import publication from '../content/publication.json';
 import { authorBySlug, topicBySlug, type Article } from '../content/editorial';
 import { articleNeighbors, relatedArticles, articleTags, publicTags } from '../content/publication-data';
@@ -111,8 +112,8 @@ const displayedTags = articleTags(article).filter((tag) => publicTagSlugs.has(ta
                 {section.attribution?.[lang] && <cite>{section.attribution[lang]}</cite>}
               </blockquote>
             );
-            return <p>{section.text[lang]}</p>;
-          }) : body.length > 0 ? body.map((paragraph) => <p>{paragraph}</p>) : (
+            return <p><InlineLinks text={section.text[lang]} lang={lang} /></p>;
+          }) : body.length > 0 ? body.map((paragraph) => <p><InlineLinks text={paragraph} lang={lang} /></p>) : (
             <p class="article-placeholder">
               {lang === 'el'
                 ? 'Το άρθρο είναι ακόμη προσχέδιο. Το layout είναι έτοιμο για το τελικό κείμενο.'

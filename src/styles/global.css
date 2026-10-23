@@ -1538,6 +1538,21 @@ body {
   text-underline-offset: .22em;
 }
 
+.article-body .article-inline-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: .06em;
+  text-underline-offset: .18em;
+  overflow-wrap: anywhere;
+}
+.article-body .article-inline-link:hover {
+  color: var(--newspaper-muted);
+  text-decoration-thickness: .12em;
+}
+.article-body .article-inline-link:focus-visible {
+  outline: 2px solid var(--newspaper-ink);
+  outline-offset: 3px;
+}
 .article-source-link small {
   display: block;
   margin-top: .35rem;

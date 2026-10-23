@@ -200,6 +200,7 @@ content:
               - name: text
                 label: Text / Κείμενο
                 component: requiredLongCopy
+                description: 'Inline links: [Obscurus Rex](https://obscurusrex.com/) or [άρθρο](/el/articles/slug/). English paths use /articles/slug/. No HTML.'
           - name: heading
             label: Subheading / Υπότιτλος ενότητας
             fields:

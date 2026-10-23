@@ -1,0 +1,22 @@
+---
+import { parseInlineLinks } from '../lib/inline-links';
+import type { LanguageCode } from '../i18n/routes';
+
+interface Props {
+  text: string;
+  lang: LanguageCode;
+}
+
+const { text, lang } = Astro.props;
+const segments = parseInlineLinks(text);
+---
+
+{segments.map((segment) => segment.type === 'text' ? segment.text : (
+  <a
+    class="article-inline-link"
+    href={segment.href}
+    target={segment.external ? '_blank' : undefined}
+    rel={segment.external ? 'noopener noreferrer' : undefined}
+    referrerpolicy={segment.external ? 'no-referrer' : undefined}
+  >{segment.text}{segment.external && <span class="visually-hidden">{lang === 'el' ? ' (ανοίγει σε νέα καρτέλα)' : ' (opens in a new tab)'}</span>}</a>
+))}

@@ -43,13 +43,41 @@ New articles use structured sections rather than one large text field.
 
 Available section types:
 
-- **Paragraph / Παράγραφος** — normal body copy.
+- **Paragraph / Παράγραφος** — normal body copy, with optional inline links.
 - **Subheading / Υπότιτλος ενότητας** — divides longer pieces into readable sections.
 - **Quote / Απόσπασμα** — highlighted quotation with optional attribution.
 
 Every section stores English and Greek text together, which keeps both language versions structurally aligned.
 
 Older draft articles that still use the legacy paragraph-array `body` continue to render. Pages CMS uses merge mode so those legacy keys are preserved during edits until an article is converted to the new section model.
+
+### Inline links / Σύνδεσμοι μέσα στις παραγράφους
+
+Στο **Paragraph / Παράγραφος → Text / Κείμενο**, γράψε `[κείμενο συνδέσμου](URL)` απευθείας στο ελληνικό ή αγγλικό πεδίο. Μόνο το κείμενο μέσα στις αγκύλες γίνεται σύνδεσμος· η υπόλοιπη παράγραφος παραμένει κανονικό κείμενο. Δεν χρειάζεται αλλαγή σε Astro ή JSON.
+
+Εξωτερικός σύνδεσμος / External link:
+
+```text
+Οι [Obscurus Rex](https://obscurusrex.com/) εμφανίστηκαν μαζί με τη Doro.
+Discover [Obscurus Rex](https://obscurusrex.com/).
+```
+
+Περισσότεροι σύνδεσμοι στην ίδια παράγραφο / Multiple links in one paragraph:
+
+```text
+Οι [Obscurus Rex](https://obscurusrex.com/) έπαιξαν μαζί με τους [The Prisoners](/el/articles/the-prisoners-eightball-sold-out-2026/).
+[Obscurus Rex](https://obscurusrex.com/) played alongside [The Prisoners](/articles/the-prisoners-eightball-sold-out-2026/).
+```
+
+- Use the published article's exact path. Storyfields uses `/el/articles/.../` for Greek and `/articles/.../` for English, its default language; there is no `/en/` prefix in the current site.
+- Public external links require a full `https://` URL and open in a new tab with an accessible announcement. Credentials, single-label hosts, local hostname suffixes, IP literals, other protocols and ambiguous URLs are not accepted.
+- Internal links start with one `/` and open in the same tab. Bare relative paths, protocol-relative `//...` links and backslashes are not accepted.
+- Only inline links are interpreted. HTML, image syntax, link titles and nested/escaped Markdown labels are not supported. Malformed or unsafe links are displayed literally as ordinary escaped text, so check the preview for visible `[...](...)` after saving.
+- Spaces in URLs should be encoded as `%20`. URL parentheses may be balanced or encoded as `%28` and `%29`.
+- The same link syntax also works in legacy `body` paragraphs. Existing plain paragraphs need no conversion. Headings, quotations, summaries and titles retain their existing plain-text behavior.
+- Reading time counts the visible link labels rather than words inside the URL.
+
+The JSON structure remains `type: "paragraph"` with localized `text.el` / `text.en` strings. Keep useful reporting/interview sources as separate **External link** sections when they help readers find the references.
 
 ## Drafts and publishing
 

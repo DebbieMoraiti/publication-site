@@ -38,6 +38,8 @@ jobs:
 
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
+      - name: Test safe inline links
+        run: node --test scripts/inline-links.test.mjs
 
       - name: Verify tags, inactive topics and contact submission
         run: node --test scripts/tags.test.mjs scripts/topic-visibility.test.mjs scripts/contact-ajax.test.mjs
@@ -53,6 +55,8 @@ jobs:
 
       - name: Verify indexing, preview protection and Contact policy
         run: node scripts/audit-build.mjs
+      - name: Verify safe inline links in the built site
+        run: node scripts/audit-inline-links-build.mjs
 
       - name: Verify analytics and effective browser CSP
         run: node scripts/audit-analytics.mjs
