@@ -16,9 +16,11 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - run: node --test scripts/inline-links.test.mjs
       - run: node --test scripts/tags.test.mjs scripts/topic-visibility.test.mjs scripts/contact-ajax.test.mjs scripts/indexnow.test.mjs
+      - run: node --test scripts/internal-links.test.mjs
       - run: npm run build
       - run: npm run astro -- check
       - run: node scripts/audit-build.mjs
+      - run: node scripts/audit-internal-links.mjs
       - run: node scripts/audit-inline-links-build.mjs
       - run: node scripts/audit-analytics.mjs
       - run: node scripts/audit-tags.mjs
