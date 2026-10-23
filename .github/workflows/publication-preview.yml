@@ -47,6 +47,9 @@ jobs:
       - name: Verify contact configuration and email fallback
         run: node scripts/audit-contact.mjs
 
+      - name: Test internal link auditor
+        run: node --test scripts/internal-links.test.mjs
+
       - name: Build preview
         run: npm run build
 
@@ -57,6 +60,9 @@ jobs:
         run: node scripts/audit-build.mjs
       - name: Verify safe inline links in the built site
         run: node scripts/audit-inline-links-build.mjs
+
+      - name: Verify all internal links resolve to built pages or assets
+        run: node scripts/audit-internal-links.mjs
 
       - name: Verify analytics and effective browser CSP
         run: node scripts/audit-analytics.mjs
