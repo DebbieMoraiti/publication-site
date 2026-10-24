@@ -41,7 +41,7 @@ export function getInternalTargets(html, sourceRoute, siteUrl) {
       continue;
     }
     const key = pathname.replace(/^\/+/, '');
-    results.push({ href, candidates: pathname.endsWith('/') ? [key + 'index.html'] : [key, key + '/index.html'] });
+    results.push({ href, fragment: target.hash ? target.hash.slice(1) : '', candidates: pathname.endsWith('/') ? [key + 'index.html'] : [key, key + '/index.html'] });
   }
   return results;
 }
@@ -65,8 +65,21 @@ export async function checkInternalLinks(root = 'dist', siteUrl = 'https://story
     for (const entry of getInternalTargets(html, sourceRoute, siteUrl)) {
       if (entry.error) { broken.push(key + ': ' + entry.href + ' (' + entry.error + ')'); continue; }
       checked++;
-      if (!entry.candidates.some(candidate => files.has(candidate))) {
+      const destination = entry.candidates.find(candidate => files.has(candidate));
+      if (!destination) {
         broken.push(key + ': ' + entry.href + ' (target not in build output)');
+      } else if (entry.fragment && destination.endsWith('.html')) {
+        let fragment;
+        try { fragment = decodeURIComponent(entry.fragment); }
+        catch { broken.push(key + ': ' + entry.href + ' (invalid fragment encoding)'); continue; }
+        const targetHtml = await readFile(files.get(destination), 'utf8');
+        const ids = [...targetHtml.matchAll(/\bid\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)]
+          .map(match => decodeAttribute(match[1] ?? match[2]));
+        const namedAnchors = [...targetHtml.matchAll(/<a\b[^>]*\bname\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)]
+          .map(match => decodeAttribute(match[1] ?? match[2]));
+        if (!ids.includes(fragment) && !namedAnchors.includes(fragment)) {
+          broken.push(key + ': ' + entry.href + ' (fragment not found in target page)');
+        }
       }
     }
   }
